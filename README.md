@@ -19,22 +19,22 @@ yarn install
 
 ## Database Setup
 
-There are 2 databases:
-
+There are 3 databases:
+- `aggregator_cases`: this is populated by running the aggregator
 - `pipeline_cases`: this is populated by running the pipeline and is not affected by the parsers
 - `cases`: this is populated and mutated by running the parsers
 
 ### Description
 
-- Procurement gets data from a `datasource` and loads it into MySQL into a separate immutable database.
+- Procurement gets data from a `datasource` and loads it into PostgresSQL into a separate immutable database.
 
 A `case` datastore must return an array of:
 
 ```javascript
 {
-  pdf_provider: "<string>", // e.g. jdo
-  pdf_db_key: "<string>", // (must be unique)
-  pdf_url: "<string>" // location of pdf file,
+  file_provider: "<string>", // e.g. jdo
+  file_key: "<string>", // (must be unique) source-date-hash
+  file_url: "<string>" // location of pdf file,
   case_name: "<string>" // case name,
   case_date: "<string>" // case date,
   citations: "<array<string>>" // citations string array
