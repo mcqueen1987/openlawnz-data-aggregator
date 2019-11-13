@@ -8,54 +8,49 @@ const path = require('path');
 const run = async (connection, pgPromise, datasource, datalocation) => {
   console.log("Getting cases data file");
 
-  const insertCase = (data, db = connection) => new Promise((resolve, reject) => {
+  const insertCase = async (data, db = connection) =>  {
     const { file_key, case_name, file_provider, file_url, case_date, citations } = data;
     const sql = `INSERT INTO aggregator_cases.cases 
     (file_key, file_provider, file_url, case_date)
-    VALUES ($1,$2,$3,$4)
-    RETURNING file_key`;
-    db.query(sql, [file_key, file_provider, file_url, case_date])
-    .then(fk => {
-      return insertCaseName({ file_key, name: case_name });
-    })
-      .then(async fk => {
+    VALUES ($1,$2,$3,$4) RETURNING file_key`;
+    try {
+      const fk = await db.query(sql, [file_key, file_provider, file_url, case_date]);
+      if (fk){
         const promises = citations.map(citation => insertCitation({ file_key, citation }));
+        promises.push(insertCaseName({ file_key, name: case_name }));
         const caughtPromises = promises.map(promise => promise.catch(Error));
         return Promise.all(caughtPromises);
-      })
-      .then(() => resolve())
-      .catch(e => reject(e));
-  });
-  
-  const insertCitation = ({ file_key, citation }, db = connection) => new Promise((resolve, reject) => {
-    const sql = `INSERT 
-    INTO aggregator_cases.citations (file_key, citation) VALUES ($1,$2)`;
-    db.query(sql, [file_key, citation])
-    .then(() => resolve())
-    .catch(e => reject(e));
-  });
-  
-  const insertCaseName = ({ file_key, name }, db = connection) => new Promise((resolve, reject) => {
-    const sql = `INSERT 
-    INTO aggregator_cases.case_names (file_key, name) VALUES ($1,$2)
-    RETURNING file_key`;
-    db.query(sql, [file_key, name])
-      .then(() => resolve())
-      .catch(e => reject(e));
-  });  
+      }
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  };
+
+  const insertCitation = async ({ file_key, citation }, db = connection) => {
+    const sql = 'INSERT INTO aggregator_cases.citations (file_key, citation) VALUES ($1,$2) RETURNING file_key';
+    try {
+      const res = await db.query(sql, [file_key, citation]);
+      if (res) return Promise.resolve();
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  };
+
+  const insertCaseName = async ({ file_key, name }, db = connection) => {
+    try {
+      const sql = 'INSERT INTO aggregator_cases.case_names (file_key, name) VALUES ($1,$2) RETURNING file_key';
+      const res = await db.query(sql, [file_key, name]);
+      if (res) return Promise.resolve(res);
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  };
 
   try {
     const dataFile = await getDataFile(datasource, datalocation);
-    const promises = dataFile.map(c => insertCase(c,connection));
+    const promises = dataFile.map(c => insertCase(c, connection));
     const caughtPromises = promises.map(promise => promise.catch(Error));
-    return Promise
-      .all(caughtPromises)
-      .then(() => {
-        console.log('Done');
-      })
-      .catch(e => {
-        console.error(e);
-      });
+    return Promise.all(caughtPromises);
   } catch (e) {
     throw e;
   }
