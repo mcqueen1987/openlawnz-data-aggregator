@@ -75,6 +75,17 @@ cd pipeline
 node getCases.js --env=<env> --datasource=<datasource>
 ```
 
+*If one insert fails* you have to individually delete the rows of each table an issue has been create to resolve the issue.
+
+Like So:  
+```sql
+DELETE FROM aggregator_cases.cases;
+DELETE FROM aggregator_cases.case_names;
+DELETE FROM aggregator_cases.citations;
+
+SELECT * FROM aggregator_cases.cases;
+```
+
 #### Get Legislation
 
 ```bash
