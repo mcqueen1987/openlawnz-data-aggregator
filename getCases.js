@@ -8,14 +8,14 @@ const path = require('path');
 const run = async (connection, pgPromise, datasource, datalocation) => {
   console.log("Getting cases data file");
 
-  const insertCase = async (data, db = connection) =>  {
+  const insertCase = async (data, db = connection) => {
     const { file_key, case_name, file_provider, file_url, case_date, citations } = data;
     const sql = `INSERT INTO aggregator_cases.cases 
     (file_key, file_provider, file_url, case_date)
     VALUES ($1,$2,$3,$4) RETURNING file_key`;
     try {
       const fk = await db.query(sql, [file_key, file_provider, file_url, case_date]);
-      if (fk){
+      if (fk) {
         const promises = citations.map(citation => insertCitation({ file_key, citation }));
         promises.push(insertCaseName({ file_key, name: case_name }));
         const caughtPromises = promises.map(promise => promise.catch(Error));
@@ -51,10 +51,9 @@ const run = async (connection, pgPromise, datasource, datalocation) => {
     const promises = dataFile.map(c => insertCase(c, connection));
     const caughtPromises = promises.map(promise => promise.catch(Error));
     return Promise.all(caughtPromises);
-  } catch (e) {
-    throw e;
+  } catch (err) {
+    return Promise.reject(err);
   }
-
 };
 
 if (require.main === module) {
