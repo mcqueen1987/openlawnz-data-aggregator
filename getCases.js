@@ -1,4 +1,6 @@
 const getDataFile = require("./getDataFile");
+const path = require('path');
+
 /**
  * Get cases
  * @param Postgres pipeline_connection
@@ -6,26 +8,52 @@ const getDataFile = require("./getDataFile");
 const run = async (connection, pgPromise, datasource, datalocation) => {
   console.log("Getting cases data file");
 
-  const dataFile = await getDataFile(datasource, datalocation);
+  const insertCase = async (data, db = connection) => {
+    const { file_key, case_name, file_provider, file_url, case_date, citations } = data;
+    const sql = `INSERT INTO aggregator_cases.cases 
+    (file_key, file_provider, file_url, case_date)
+    VALUES ($1,$2,$3,$4) RETURNING file_key`;
+    try {
+      const fk = await db.query(sql, [file_key, file_provider, file_url, case_date]);
+      if (fk) {
+        const promises = citations.map(citation => insertCitation({ file_key, citation }));
+        promises.push(insertCaseName({ file_key, name: case_name }));
+        const caughtPromises = promises.map(promise => promise.catch(Error));
+        return Promise.all(caughtPromises);
+      }
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  };
 
-  const cs = new pgPromise.helpers.ColumnSet(
-    ["processing_status", "date_inserted", "date_pdf_stored"],
-    { table: "pipeline_cases" }
-  );
+  const insertCitation = async ({ file_key, citation }, db = connection) => {
+    const sql = 'INSERT INTO aggregator_cases.citations (file_key, citation) VALUES ($1,$2) RETURNING file_key';
+    try {
+      const res = await db.query(sql, [file_key, citation]);
+      if (res) return Promise.resolve();
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  };
 
-  const values = dataFile.map(d => ({
-    ...d,
-    date_aggregated: +new Date(),
-    processing_status: 0
-  }));
+  const insertCaseName = async ({ file_key, name }, db = connection) => {
+    try {
+      const sql = 'INSERT INTO aggregator_cases.case_names (file_key, name) VALUES ($1,$2) RETURNING file_key';
+      const res = await db.query(sql, [file_key, name]);
+      if (res) return Promise.resolve(res);
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  };
 
-  const query =
-    pgPromise.helpers.insert(values, cs) +
-    " ON CONFLICT(id) DO UPDATE SET " +
-    cs.assignColumns({ from: "EXCLUDED", skip: "pdf_db_key" });
-
-    await connection.none(query);
-    
+  try {
+    const dataFile = await getDataFile(datasource, datalocation);
+    const promises = dataFile.map(c => insertCase(c, connection));
+    const caughtPromises = promises.map(promise => promise.catch(Error));
+    return Promise.all(caughtPromises);
+  } catch (err) {
+    return Promise.reject(err);
+  }
 };
 
 if (require.main === module) {
