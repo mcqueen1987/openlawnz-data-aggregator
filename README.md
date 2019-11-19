@@ -5,6 +5,15 @@
 - Yarn
 - Rename `.env.sample` to .env.`env` (e.g. `.env.local`) and fill in with Postgres details.
 
+## Database Setup
+We use Docker to download and provision the OpenLaw NZ database. Simply run docker.sh from [openlawnz-orchestration](https://github.com/openlawnz/openlawnz-orchestration) and then update your .env file.
+
+There are 3 schemas:
+`aggregator_cases`: this is populated by running the aggregator getCases
+`pipeline_cases`: this is populated by running the pipeline and is not affected by the parsers
+`cases`: this is populated and mutated by running the parsers
+And check if it has correctly restored SQL dump file.
+
 ## env
 
 Where you see the `env` option in a command, it will look for the corresponding ".env.`env`" file in the root of the project. You could have `.env.local` and `.env.dev`, for example.
@@ -16,13 +25,6 @@ If you're using [apify](https://www.apify.com/), then fill those details in your
 ```bash
 yarn install
 ```
-
-## Database Setup
-
-There are 3 databases:
-- `aggregator_cases`: this is populated by running the aggregator
-- `pipeline_cases`: this is populated by running the pipeline and is not affected by the parsers
-- `cases`: this is populated and mutated by running the parsers
 
 ### Description
 
