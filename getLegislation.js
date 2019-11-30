@@ -1,25 +1,36 @@
 const getDataFile = require('./getDataFile');
 /**
  * Parse Legislation
- * @param MysqlConnection pipeline_connection
+ *
+ * @param pipeline_connection
+ * @param pgPromise
+ * @param datasource
+ * @param datalocation
+ * @returns {Promise<*>}
  */
-const run = async (pipeline_connection, datasource, datalocation) => {
+const run = async (pipeline_connection, pgPromise, datasource, datalocation) => {
 
-    /**
-     * insert ONE legislation data per time
-     *
-     * @param data
-     * @param db
-     * @returns {Promise<*>}
-     */
-    const insertLegislation = async (data, db = pipeline_connection) => {
-        const [title, link, year, alerts] = data;
-        const sql = `INSERT INTO aggregator_cases.legislation 
-                    (title, link, year, alerts)
-                    VALUES ($1,$2,$3,$4) RETURNING id`;
+    const insertLegislation = async (dataArr, db = pipeline_connection, pgp = pgPromise) => {
+        if (dataArr.length < 1) {
+            return Promise.reject('Empty Legislation Data');
+        }
+
+        // multi-row insert with pg-promise
+        const legislationColumnSet = new pgp.helpers.ColumnSet(
+            ['title', 'link', 'year', 'alerts'],
+            {table: {table: 'legislation', schema: 'aggregator_cases'}}
+        );
+
+        // generating a multi-row insert query:
+        const sql = pgp.helpers.insert(dataArr, legislationColumnSet);
         try {
-            const res = await db.query(sql, [title, link, year, alerts]);
-            return res ? Promise.resolve(res) : Promise.reject();
+            return db.none(sql)
+                .then(data => { // success
+                    return Promise.resolve(data);
+                })
+                .catch(error => { // error
+                    return Promise.reject(error);
+                });
         } catch (err) {
             return Promise.reject(err);
         }
@@ -27,28 +38,21 @@ const run = async (pipeline_connection, datasource, datalocation) => {
 
     try {
         const legislationData = await getDataFile(datasource, datalocation);
-        let insertValues = legislationData.map(legislation => [
-            legislation.title,
-            legislation.link,
-            legislation.year,
-            legislation.alerts
-        ]);
-        const promises = insertValues.map(item => insertLegislation(item, pipeline_connection));
-        const caughtPromises = promises.map(promise => promise.catch(Error));
-        return Promise.all(caughtPromises);
+        const promises = insertLegislation(legislationData, pipeline_connection);
+        return Promise.all([promises]);
     } catch (err) {
         return Promise.reject(err);
     }
-
 };
 
 if (require.main === module) {
     const argv = require("yargs").argv;
     (async () => {
         try {
-            const {connection} = await require("./common/setup")(argv.env);
+            const {connection, pgPromise} = await require("./common/setup")(argv.env);
             await run(
                 connection,
+                pgPromise,
                 argv.datasource,
                 argv.datalocation
             );

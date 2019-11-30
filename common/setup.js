@@ -5,6 +5,7 @@ const uuidv1 = require('uuid/v1');
 module.exports = async (env, resumeSessionId) => {
 
     const options = {
+        capSQL: true, // capitalize all generated SQL
         schema: ['pipeline_cases'],
         error(error, e) {
             if (e.cn) {
