@@ -15,6 +15,7 @@ module.exports = async (env, resumeSessionId) => {
         }
     };
 
+    const { Pool } = require("pg");
     const pgPromise = require('pg-promise')(options);
     const rootDir = path.resolve(__dirname + '/../');
     const sessionId = resumeSessionId || uuidv1();
@@ -26,7 +27,7 @@ module.exports = async (env, resumeSessionId) => {
     }
 
     require('dotenv').config({
-        path: rootDir + '/' + env
+        path: rootDir + '/.env.' + env
     });
 
     // Ensure cache directory exists
@@ -44,13 +45,13 @@ module.exports = async (env, resumeSessionId) => {
         client_encoding: 'UTF8'
     };
 
-    let connection = pgPromise(conn);
+    let pgPoolConnection = new Pool(conn);
 
     return {
         sessionId,
         cacheDir,
         logDir,
         pgPromise,
-        connection
+        pgPoolConnection
     };
 };
