@@ -125,3 +125,12 @@ module.exports.getCitation = function(str) {
 		}
 	}
 };
+
+module.exports.isJsonString = function(str){
+	try{
+		JSON.parse(str);
+	} catch (e){
+		return false;
+	}
+	return true;
+}

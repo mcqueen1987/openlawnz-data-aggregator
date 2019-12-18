@@ -5,7 +5,7 @@ const path = require('path');
  * Get cases
  * @param Postgres pipeline_connection
  */
-const run = async (connection, pgPromise, datasource, datalocation) => {
+const run = async (connection, pgPromise, dataSource, dataLocation) => {
   console.log("Getting cases data file");
 
   const insertCase = async (data, db = connection) => {
@@ -47,7 +47,7 @@ const run = async (connection, pgPromise, datasource, datalocation) => {
   };
 
   try {
-    const dataFile = await getDataFile(datasource, datalocation);
+    const dataFile = await getDataFile(pgPool, pgPromise, dataSource, dataLocation);
     const promises = dataFile.map(c => insertCase(c, connection));
     const caughtPromises = promises.map(promise => promise.catch(Error));
     return Promise.all(caughtPromises);
