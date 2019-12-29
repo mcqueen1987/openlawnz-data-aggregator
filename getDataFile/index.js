@@ -1,4 +1,4 @@
-module.exports = async (pgPool, pgPromise, dataSource, dataLocation) => {
+module.exports = async (pgPool, pgPromise, dataSource, dataLocation, startIndex = 0, batchSize = 1) => {
     if (!dataSource) {
         throw new Error("Missing datasource");
     }
@@ -26,7 +26,7 @@ module.exports = async (pgPool, pgPromise, dataSource, dataLocation) => {
             retData = await require("./generic/localfile")(dataLocation);
             break;
         case 'tt':
-            retData = await require("./ttCases")(pgPool, pgPromise);
+            retData = await require("./ttCases")(pgPool, pgPromise, startIndex, batchSize);
             break;
         default:
             try {

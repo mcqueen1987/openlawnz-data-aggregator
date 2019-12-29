@@ -27,7 +27,7 @@ const run = async (pgPool, pgPromise, dataSource, dataLocation) => {
         await client.query('COMMIT');
     } catch (err) {
         await client.query('ROLLBACK');
-        throw err
+        throw err;
     } finally {
         client && client.release();
     }
