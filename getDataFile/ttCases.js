@@ -12,13 +12,11 @@ const MAX_CASE_COUNT = 60000;
 /**
  * get Tenancy Tribunal data from server
  *
- * @param pgPool
- * @param pgPromise
  * @param startIndex
  * @param batchSize
  * @returns {Promise<*>}
  */
-const run = async (pgPool, pgPromise, startIndex, batchSize) => {
+const run = async (startIndex, batchSize) => {
     try {
         console.log(`get data: start case: [${startIndex}], page size : [${batchSize}]`);
         if (startIndex > MAX_CASE_COUNT) {

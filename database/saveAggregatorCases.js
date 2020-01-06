@@ -1,17 +1,20 @@
 /**
  * save cases
  *
- * @param data
  * @param pgPool
  * @param pgPromise
+ * @param data
+ * @param mockSchemaName, the mock schema name used for test, test data will save to mock schema but not dev/live db
  * @returns {Promise<never>}
  */
-const run = async (data, pgPool, pgPromise) => {
+const run = async (pgPool, pgPromise, data, mockSchemaName = '') => {
+
+    const dbSchema = mockSchemaName ? mockSchemaName : 'aggregator_cases';
 
     const getInsertCaseSql = (data) => {
         let casesColumnSet = new pgPromise.helpers.ColumnSet(
             ['file_key', 'file_provider', 'file_url', 'case_date', 'case_text'],
-            {table: {table: 'cases', schema: 'aggregator_cases'}}
+            {table: {table: 'cases', schema: dbSchema}}
         );
         const onConflictSql = ' ON CONFLICT(file_url) DO NOTHING RETURNING file_key';
         return pgPromise.helpers.insert(data, casesColumnSet) + onConflictSql;
@@ -20,7 +23,7 @@ const run = async (data, pgPool, pgPromise) => {
     const getInsertCaseNamesSql = (data) => {
         let caseNamesColumnSet = new pgPromise.helpers.ColumnSet(
             ['file_key', 'name'],
-            {table: {table: 'case_names', schema: 'aggregator_cases'}}
+            {table: {table: 'case_names', schema: dbSchema}}
         );
         return pgPromise.helpers.insert(data, caseNamesColumnSet);
     };
@@ -29,7 +32,7 @@ const run = async (data, pgPool, pgPromise) => {
         const {file_key, citations} = data;
         let citationsColumnSet = new pgPromise.helpers.ColumnSet(
             ['file_key', 'citation'],
-            {table: {table: 'citations', schema: 'aggregator_cases'}}
+            {table: {table: 'citations', schema: dbSchema}}
         );
         let wrappedCitations = citations.map(citation => ({
             file_key,

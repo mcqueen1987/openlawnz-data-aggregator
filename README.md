@@ -74,8 +74,10 @@ A `legislation` datastore must return an array of:
 
 ```bash
 cd pipeline
-node getCases.js --env=<env> --datasource=<datasource>
+node getCases.js --env=<env> --datasource=<datasource> --pagesize=<pagesize>
 ```
+  - `pagesize` if we need to get data from datasource by chunks, pagesize is the number of cases per request
+               without pagesize or pagesize=0 means get data from datasource at once, without pagination
 
 *If one insert fails* you have to individually delete the rows of each table an issue has been create to resolve the issue.
 

@@ -1,5 +1,5 @@
 const getDataFile = require("./getDataFile");
-const saveAggregaterCases = require("./Database/saveAggregaterCases");
+const saveAggregatorCases = require("./Database/saveAggregatorCases");
 // case count per request
 const BATCH_SIZE = 1000;
 // sleep 5 seconds per request
@@ -18,8 +18,8 @@ const run = async (pgPoolConnection, pgPromise, argvs) => {
     try {
         // without pagination
         if (isNaN(pageSize)) {
-            const dataFile = await getDataFile(pgPoolConnection, pgPromise, dataSource, dataLocation);
-            await saveAggregaterCases(dataFile, pgPoolConnection, pgPromise);
+            const dataFile = await getDataFile(dataSource, dataLocation);
+            await saveAggregatorCases(pgPoolConnection, pgPromise, dataFile);
             return Promise.resolve();
         }
 
@@ -28,7 +28,7 @@ const run = async (pgPoolConnection, pgPromise, argvs) => {
         let startIndex = 0;
         const safePageSize = pageSize <= 0 ? BATCH_SIZE : pageSize;
         for (let startIndex = 0; startIndex <= totalCaseCount; startIndex += safePageSize) {
-            const dataFile = await getDataFile(pgPoolConnection, pgPromise, dataSource, dataLocation, startIndex, safePageSize);
+            const dataFile = await getDataFile(dataSource, dataLocation, startIndex, safePageSize);
             if (!dataFile) {
                 return Promise.reject('get empty data from server, need to debug manually!');
             }
@@ -37,7 +37,7 @@ const run = async (pgPoolConnection, pgPromise, argvs) => {
                 totalCaseCount = dataFile['case_count_from_page'];
                 console.log(`total case count: [${totalCaseCount}]`);
             }
-            await saveAggregaterCases(dataFile['data'], pgPoolConnection, pgPromise);
+            await saveAggregatorCases(pgPoolConnection, pgPromise, dataFile['data']);
             // sleep between calls
             await new Promise(resolve => setTimeout(resolve, REQUEST_INTERVAL_MS));
             console.log(`data saved: start index [${startIndex}] page size [${safePageSize}]`);

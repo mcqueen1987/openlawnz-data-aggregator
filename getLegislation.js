@@ -11,7 +11,7 @@ const getDataFile = require('./getDataFile');
  */
 const run = async (pgPool, pgPromise, dataSource, dataLocation) => {
     // get multi-row insert sql
-    const legislationData = await getDataFile(pgPool, pgPromise, dataSource, dataLocation);
+    const legislationData = await getDataFile(dataSource, dataLocation);
     let legislationColumnSet = new pgPromise.helpers.ColumnSet(
         ['title', 'link', 'year', 'alerts'],
         {table: {table: 'legislation', schema: 'aggregator_cases'}}
