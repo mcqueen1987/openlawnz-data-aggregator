@@ -1,73 +1,66 @@
 const getDataFile = require("./getDataFile");
-const path = require('path');
+const saveAggregaterCases = require("./Database/saveAggregaterCases");
+// case count per request
+const BATCH_SIZE = 1000;
+// sleep 5 seconds per request
+const REQUEST_INTERVAL_MS = 5000;
 
 /**
- * Get cases
- * @param Postgres pipeline_connection
+ * get cases
+ *
+ * @param pgPoolConnection
+ * @param pgPromise
+ * @param argvs
+ * @returns {Promise<*>}
  */
-const run = async (connection, pgPromise, datasource, datalocation) => {
-  console.log("Getting cases data file");
-
-  const insertCase = async (data, db = connection) => {
-    const { file_key, case_name, file_provider, file_url, case_date, citations } = data;
-    const sql = `INSERT INTO aggregator_cases.cases 
-    (file_key, file_provider, file_url, case_date)
-    VALUES ($1,$2,$3,$4) RETURNING file_key`;
+const run = async (pgPoolConnection, pgPromise, argvs) => {
+    const {'datasource': dataSource, 'datalocation': dataLocation, 'pagesize': pageSize} = argvs;
     try {
-      const fk = await db.query(sql, [file_key, file_provider, file_url, case_date]);
-      if (fk) {
-        const promises = citations.map(citation => insertCitation({ file_key, citation }));
-        promises.push(insertCaseName({ file_key, name: case_name }));
-        const caughtPromises = promises.map(promise => promise.catch(Error));
-        return Promise.all(caughtPromises);
-      }
-    } catch (err) {
-      return Promise.reject(err);
-    }
-  };
+        // without pagination
+        if (isNaN(pageSize)) {
+            const dataFile = await getDataFile(pgPoolConnection, pgPromise, dataSource, dataLocation);
+            await saveAggregaterCases(dataFile, pgPoolConnection, pgPromise);
+            return Promise.resolve();
+        }
 
-  const insertCitation = async ({ file_key, citation }, db = connection) => {
-    const sql = 'INSERT INTO aggregator_cases.citations (file_key, citation) VALUES ($1,$2) RETURNING file_key';
-    try {
-      const res = await db.query(sql, [file_key, citation]);
-      if (res) return Promise.resolve();
+        // get and save data by pagination, one page per request, default page size is BATCH_SIZE;
+        let totalCaseCount = 0;
+        let startIndex = 0;
+        const safePageSize = pageSize <= 0 ? BATCH_SIZE : pageSize;
+        for (let startIndex = 0; startIndex <= totalCaseCount; startIndex += safePageSize) {
+            const dataFile = await getDataFile(pgPoolConnection, pgPromise, dataSource, dataLocation, startIndex, safePageSize);
+            if (!dataFile) {
+                return Promise.reject('get empty data from server, need to debug manually!');
+            }
+            // set total case count if not set
+            if (!totalCaseCount) {
+                totalCaseCount = dataFile['case_count_from_page'];
+                console.log(`total case count: [${totalCaseCount}]`);
+            }
+            await saveAggregaterCases(dataFile['data'], pgPoolConnection, pgPromise);
+            // sleep between calls
+            await new Promise(resolve => setTimeout(resolve, REQUEST_INTERVAL_MS));
+            console.log(`data saved: start index [${startIndex}] page size [${safePageSize}]`);
+        }
     } catch (err) {
-      return Promise.reject(err);
+        return Promise.reject(err);
     }
-  };
-
-  const insertCaseName = async ({ file_key, name }, db = connection) => {
-    try {
-      const sql = 'INSERT INTO aggregator_cases.case_names (file_key, name) VALUES ($1,$2) RETURNING file_key';
-      const res = await db.query(sql, [file_key, name]);
-      if (res) return Promise.resolve(res);
-    } catch (err) {
-      return Promise.reject(err);
-    }
-  };
-
-  try {
-    const dataFile = await getDataFile(datasource, datalocation);
-    const promises = dataFile.map(c => insertCase(c, connection));
-    const caughtPromises = promises.map(promise => promise.catch(Error));
-    return Promise.all(caughtPromises);
-  } catch (err) {
-    return Promise.reject(err);
-  }
 };
 
 if (require.main === module) {
-  const argv = require("yargs").argv;
-  (async () => {
-    try {
-      const { connection, pgPromise } = await require("./common/setup")(
-        argv.env
-      );
-      await run(connection, pgPromise, argv.datasource, argv.datalocation);
-    } catch (ex) {
-      console.log(ex);
-    }
-  })().finally(process.exit);
+    const argv = require("yargs").argv;
+    (async () => {
+        try {
+            const {pgPoolConnection, pgPromise} = await require("./common/setup")(argv.env);
+            await run(
+                pgPoolConnection,
+                pgPromise,
+                argv
+            );
+        } catch (ex) {
+            console.log(ex);
+        }
+    })().finally(process.exit);
 } else {
-  module.exports = run;
+    module.exports = run;
 }

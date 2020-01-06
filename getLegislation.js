@@ -5,19 +5,19 @@ const getDataFile = require('./getDataFile');
  *
  * @param pgPool
  * @param pgPromise
- * @param datasource
- * @param datalocation
+ * @param dataSource
+ * @param dataLocation
  * @returns {Promise<void>}
  */
-const run = async (pgPool, pgPromise, datasource, datalocation) => {
+const run = async (pgPool, pgPromise, dataSource, dataLocation) => {
     // get multi-row insert sql
-    const legislationData = await getDataFile(datasource, datalocation);
-    const legislationColumnSet = new pgPromise.helpers.ColumnSet(
+    const legislationData = await getDataFile(pgPool, pgPromise, dataSource, dataLocation);
+    let legislationColumnSet = new pgPromise.helpers.ColumnSet(
         ['title', 'link', 'year', 'alerts'],
         {table: {table: 'legislation', schema: 'aggregator_cases'}}
     );
 
-    // insert sql within a Transaction
+    // insert sql within a transaction
     let client = null;
     try {
         client = await pgPool.connect();
@@ -27,9 +27,9 @@ const run = async (pgPool, pgPromise, datasource, datalocation) => {
         await client.query('COMMIT');
     } catch (err) {
         await client.query('ROLLBACK');
-        throw err
+        throw err;
     } finally {
-        client.release();
+        client && client.release();
     }
 };
 
