@@ -1,3 +1,6 @@
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+![](https://badgen.net/dependabot/openlawnz/openlawnz-data-aggregator/214537725=?icon=dependabot)
+
 # openlawnz-data-aggregator
 
 ## General requirements
