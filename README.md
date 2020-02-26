@@ -13,7 +13,9 @@ We use Docker to download and provision the OpenLaw NZ database. Simply run dock
 
 There are 3 schemas:
 `aggregator_cases`: this is populated by running the aggregator getCases
+
 `pipeline_cases`: this is populated by running the pipeline and is not affected by the parsers
+
 `cases`: this is populated and mutated by running the parsers
 And check if it has correctly restored SQL dump file.
 
