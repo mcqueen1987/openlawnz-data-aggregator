@@ -1,6 +1,6 @@
 
 
-PCOresponse = {
+const PCOresponse = {
     title: 'title',
     link: 'link',
     year: 'year',

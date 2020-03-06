@@ -1,4 +1,4 @@
-const urlAdapter = require("./generic/url");
+const urlAdapter = require("./generic/url")
 
 const run = async () => {
 
@@ -8,27 +8,27 @@ const run = async () => {
             `https://api.apify.com/v1/${process.env.APIFY_USER_ID}`,
             `/crawlers/${process.env.APIFY_CRAWLER_ID}`,
             `/lastExec/results?token=${process.env.APIFY_TOKEN}`
-        ].join("");
+        ].join("")
 
-        const apifyData = await urlAdapter(jsonURL);
+        const apifyData = await urlAdapter(jsonURL)
 
         const allLegislation = Array.prototype.concat.apply(
             [],
             apifyData.map(b => b.pageFunctionResult)
-        );
+        )
 
-        return allLegislation;
+        return allLegislation
     } catch (ex) {
-        throw ex;
+        throw ex
     }
-};
+}
 
 if (require.main === module) {
     try {
-        run();
+        run()
     } catch (ex) {
-        console.log(ex);
+        console.log(ex)
     }
 } else {
-    module.exports = run;
+    module.exports = run
 }

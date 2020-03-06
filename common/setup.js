@@ -1,6 +1,6 @@
-const fs = require('fs-extra');
-const path = require('path');
-const uuidv1 = require('uuid/v1');
+const fs = require('fs-extra')
+const path = require('path')
+const uuidv1 = require('uuid/v1')
 const constants = require('./constants')
 
 module.exports = async (env, resumeSessionId) => {
@@ -10,32 +10,32 @@ module.exports = async (env, resumeSessionId) => {
         schema: [constants.schemaname],
         error(error, e) {
             if (e.cn) {
-                console.log('CN:', e.cn);
-                console.log('EVENT:', error.message || error);
+                console.log('CN:', e.cn)
+                console.log('EVENT:', error.message || error)
             }
         }
-    };
+    }
 
-    const { Pool } = require("pg");
-    const pgPromise = require('pg-promise')(options);
-    const rootDir = path.resolve(__dirname + '/../');
-    const sessionId = resumeSessionId || uuidv1();
-    const cacheDir = path.join(rootDir, '.cache', sessionId);
-    const logDir = path.join(rootDir, '.logs', sessionId);
+    const { Pool } = require("pg")
+    const pgPromise = require('pg-promise')(options)
+    const rootDir = path.resolve(__dirname + '/../')
+    const sessionId = resumeSessionId || uuidv1()
+    const cacheDir = path.join(rootDir, '.cache', sessionId)
+    const logDir = path.join(rootDir, '.logs', sessionId)
 
     if (!env) {
-        throw new Error('Missing env');
+        throw new Error('Missing env')
     }
 
     require('dotenv').config({
         path: rootDir + '/.env.' + env
-    });
+    })
 
     // Ensure cache directory exists
-    await fs.ensureDir(cacheDir);
+    await fs.ensureDir(cacheDir)
 
     // Ensure log directory exists
-    await fs.ensureDir(logDir);
+    await fs.ensureDir(logDir)
 
     const conn = {
         host: process.env.DB_HOST,
@@ -44,9 +44,9 @@ module.exports = async (env, resumeSessionId) => {
         user: process.env.DB_USER,
         password: process.env.DB_PASS,
         client_encoding: 'UTF8'
-    };
+    }
 
-    let pgPoolConnection = new Pool(conn);
+    let pgPoolConnection = new Pool(conn)
 
     return {
         sessionId,
@@ -54,5 +54,5 @@ module.exports = async (env, resumeSessionId) => {
         logDir,
         pgPromise,
         pgPoolConnection
-    };
-};
+    }
+}
