@@ -1,12 +1,13 @@
 const fs = require('fs-extra');
 const path = require('path');
 const uuidv1 = require('uuid/v1');
+const constants = require('./constants')
 
 module.exports = async (env, resumeSessionId) => {
 
     const options = {
         capSQL: true, // capitalize all generated SQL
-        schema: ['pipeline_cases'],
+        schema: [constants.schemaname],
         error(error, e) {
             if (e.cn) {
                 console.log('CN:', e.cn);

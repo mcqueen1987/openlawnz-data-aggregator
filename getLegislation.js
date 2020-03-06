@@ -1,4 +1,5 @@
 const getDataFile = require('./getDataFile');
+const constants = require('./common/constants')
 
 /**
  * get legislation data then save to databases
@@ -14,7 +15,7 @@ const run = async (pgPool, pgPromise, dataSource, dataLocation) => {
     const legislationData = await getDataFile(pgPool, pgPromise, dataSource, dataLocation);
     let legislationColumnSet = new pgPromise.helpers.ColumnSet(
         ['title', 'link', 'year', 'alerts'],
-        {table: {table: 'legislation', schema: 'aggregator_cases'}}
+        {table: {table: 'legislation', schema: constants.schemaname}}
     );
 
     // insert sql within a transaction
