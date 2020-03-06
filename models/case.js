@@ -1,5 +1,5 @@
 const casestable = require("../constants/casestable")
-const isrequired = require('../functions').isrequired
+const isrequired = require('../common/functions').isrequired
 
 /** construct using the new keyword */
 function construct(

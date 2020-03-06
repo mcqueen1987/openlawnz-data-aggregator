@@ -1,6 +1,6 @@
 const getDataFile = require('./getDataFile')
-const constants = require('./common/constants')
-const legislationmodel = require('./common/models/legislation')
+const constants = require('./constants')
+const legislationmodel = require('./models/legislation')
 
 /**
  * get legislation data then save to databases

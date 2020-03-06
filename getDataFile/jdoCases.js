@@ -1,11 +1,12 @@
-const urlAdapter = require("./generic/url");
-const common = require("../common/functions.js");
+const urlAdapter = require("./generic/url")
+const common = require("../common/functions.js")
+const casemodel = require('../models/case')
 
 // Currently limited to 10 results for testing
-const maxRows = 10;
-const fromDate = "2016-2-27";
+const maxRows = 10
+const fromDate = "2016-2-27"
 const jsonURL = [
-	"https://forms.justice.govt.nz/solr/jdo/select",
+	"https =//forms.justice.govt.nz/solr/jdo/select",
 	"?q=*",
 	"&facet=true",
 	"&facet.field=Location",

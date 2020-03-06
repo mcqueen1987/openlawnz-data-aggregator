@@ -1,5 +1,5 @@
-const constants = require('../common/constants')
-const casemodel = require('../common/models/case')
+const constants = require('../constants')
+const casemodel = require('../models/case')
 
 /**
  * save cases
