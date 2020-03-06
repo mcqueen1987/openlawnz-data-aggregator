@@ -34,9 +34,13 @@ A `case` datastore must return an array of:
   file_provider: "<string>", // e.g. jdo
   file_key: "<string>", // (must be unique) source-date-hash
   file_url: "<string>" // location of pdf file,
-  case_name: "<string>" // case name,
-  case_date: "<string>" // case date,
-  citations: "<array<string>>" // citations string array
+  case_names: "<array<string>>" // case names,
+  case_date: "<date>" // case date,
+  case_citations: "<array<string>>" // citations string array
+  date_processed: '<date>'
+  processing_status: '<enum>' //UNPROCESSED, PROCESSING, PROCESSED
+  sourcecode_hash: '<string>'
+  date_accessed: '<date>'  
 }
 ```
 
@@ -44,10 +48,13 @@ A `legislation` datastore must return an array of:
 
 ```javascript
 {
-  title: "<string>",
-  link: "<string>",
+  title: "<string>"
+  link: "<string>"
   year: "<string>"
   alerts: "<string>"
+  link: '<string>'
+  year: '<string>'
+  date_accessed: '<date_accessed>'
 }
 ```
 
@@ -82,6 +89,12 @@ DELETE FROM ingest.cases;
 DELETE FROM ingest.legislation;
 
 SELECT * FROM ingest.cases;
+```
+
+#### Example Usage
+
+```
+node getCases.js --env=local --datasource=jdo
 ```
 
 #### Get Legislation
