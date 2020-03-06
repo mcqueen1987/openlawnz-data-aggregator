@@ -9,15 +9,7 @@
 - Rename `.env.sample` to .env.`env` (e.g. `.env.local`) and fill in with Postgres details.
 
 ## Database Setup
-We use Docker to download and provision the OpenLaw NZ database. Simply run docker.sh from [openlawnz-orchestration](https://github.com/openlawnz/openlawnz-orchestration) and then update your .env file.
-
-There are 3 schemas:
-`aggregator_cases`: this is populated by running the aggregator getCases
-
-`pipeline_cases`: this is populated by running the pipeline and is not affected by the parsers
-
-`cases`: this is populated and mutated by running the parsers
-And check if it has correctly restored SQL dump file.
+Clone the [database project](https://github.com/openlawnz/openlawnz-database) and follow its readme file to start a local environment database.
 
 ## env
 
@@ -33,7 +25,7 @@ yarn install
 
 ### Description
 
-- Procurement gets data from a `datasource` and loads it into PostgresSQL into a separate immutable database.
+- Procurement gets data from a `datasource` and loads it into a postgres database server named `openlawnz_db` and a schema named `ingest`.
 
 A `case` datastore must return an array of:
 
@@ -59,9 +51,9 @@ A `legislation` datastore must return an array of:
 }
 ```
 
-### Running
+### Running the project
 
-#### Flags
+#### Parameters
 
 *datasource*:
 
@@ -82,15 +74,14 @@ cd pipeline
 node getCases.js --env=<env> --datasource=<datasource>
 ```
 
-*If one insert fails* you have to individually delete the rows of each table an issue has been create to resolve the issue.
+If insertion into the database fails, you have to individually delete the rows of each table.
 
 Like So:  
 ```sql
-DELETE FROM aggregator_cases.cases;
-DELETE FROM aggregator_cases.case_names;
-DELETE FROM aggregator_cases.citations;
+DELETE FROM ingest.cases;
+DELETE FROM ingest.legislation;
 
-SELECT * FROM aggregator_cases.cases;
+SELECT * FROM ingest.cases;
 ```
 
 #### Get Legislation
