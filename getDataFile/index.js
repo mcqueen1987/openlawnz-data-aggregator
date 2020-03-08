@@ -34,11 +34,7 @@ module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, s
             retData = await require("./ttCases")(pgPool, pgPromise, startIndex, batchSize)
             break
         default:
-            try {
-                retData = JSON.stringify(JSON.parse(dataSource))
-            } catch (ex) {
-                throw ex
-            }
+            throw new Error('no datasource specified.')
     }
     return retData
 }
