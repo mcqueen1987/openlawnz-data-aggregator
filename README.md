@@ -91,18 +91,21 @@ DELETE FROM ingest.legislation;
 SELECT * FROM ingest.cases;
 ```
 
-#### Example Usage
-
-```
-node getCases.js --env=local --datasource=jdo
-```
-
 #### Get Legislation
 
 ```bash
 cd pipeline
 node getLegislation.js --env=<env> --datasource=<datasource> [--datalocation=<datalocation>]
 ```
+
+
+#### Example Usage
+
+```
+node getCases.js --env=local --datasource=jdo
+```
+
+You can find an example of the response data in the `/exampledata` folder.
 
 ## NOTICE
 
