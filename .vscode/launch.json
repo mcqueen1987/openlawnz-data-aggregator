@@ -14,7 +14,7 @@
             "program": "${workspaceFolder}/getCases.js",
             "args": [
                 "--env=local",
-                "--datasource=jdo"
+                "--datasource=moj"
             ]
         },
         {
