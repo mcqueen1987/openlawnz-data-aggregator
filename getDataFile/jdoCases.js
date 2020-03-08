@@ -6,7 +6,7 @@ const casemodel = require('../models/case')
 const maxRows = 10
 const fromDate = "2016-2-27"
 const jsonURL = [
-	"https =//forms.justice.govt.nz/solr/jdo/select",
+	"https://forms.justice.govt.nz/solr/jdo/select",
 	"?q=*",
 	"&facet=true",
 	"&facet.field=Location",
