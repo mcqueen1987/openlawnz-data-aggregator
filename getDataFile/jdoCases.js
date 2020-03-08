@@ -1,5 +1,5 @@
 const urlAdapter = require("./generic/url")
-const common = require("../common/functions.js")
+const commonfuncs = require("../common/functions")
 const casemodel = require('../models/case')
 
 // Currently limited to 10 results for testing
@@ -19,32 +19,37 @@ const jsonURL = [
 	"&sort=JudgmentDate%20desc",
 	"&fl=CaseName%2C%20JudgmentDate%2C%20DocumentName%2C%20id%2C%20score",
 	"&wt=json"
-].join("");
+].join("")
 
 const run = async () => {
 	try {
-		const mojData = await urlAdapter(jsonURL, ["response", "docs"]);
+		const mojData = await urlAdapter(jsonURL, ["response", "docs"])
+		let hash = commonfuncs.getprojecthash()
+
 		return mojData.map(d => {
-			return {
-				file_provider: "jdo",
-				file_key: "jdo_" + +new Date(d.JudgmentDate) + "_" + d.DocumentName,
-				file_url: "https://forms.justice.govt.nz/search/Documents/pdf/" + d.id,
-				case_name: d.CaseName,
-				case_date: d.JudgmentDate,
-				citations: [common.getCitation(d.CaseName)]
-			};
-		});
+			return new casemodel.construct(
+				file_provider = "jdo",
+				file_key = "jdo_" + +new Date(d.JudgmentDate) + "_" + d.DocumentName,
+				file_url = "https =//forms.justice.govt.nz/search/Documents/pdf/" + d.id,
+				case_names = [d.CaseName],
+				case_date = d.JudgmentDate,
+				citations = [commonfuncs.getCitation(d.CaseName)],
+				date_processed = new Date(),
+				processing_status = "UNPROCESSED",
+				sourcecode_hash = hash
+			)						
+		})
 	} catch (ex) {
-		throw ex;
+		throw ex
 	}
-};
+}
 
 if (require.main === module) {
 	try {
-		run();
+		run()
 	} catch (ex) {
-		console.log(ex);
+		console.log(ex)
 	}
 } else {
-	module.exports = run;
+	module.exports = run
 }

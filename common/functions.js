@@ -1,6 +1,7 @@
 const crypto = require("crypto")
 const fs = require("fs")
 const path = require("path")
+const childprocess = require('child_process')
 
 module.exports.makeLogger = () => {
 	var logDir
@@ -138,3 +139,6 @@ module.exports.isJsonString = function(str){
 module.exports.isrequired = function() {
 	throw new Error("A function argument was required but not given.")
 }
+
+/** returns the hash of the current commit on the current branch. */
+module.exports.getprojecthash = () => childprocess.execSync('git rev-parse HEAD')

@@ -1,4 +1,5 @@
 const urlAdapter = require("./generic/url")
+const legislation = require('../models/legislation')
 
 const run = async () => {
 
@@ -14,7 +15,14 @@ const run = async () => {
 
         const allLegislation = Array.prototype.concat.apply(
             [],
-            apifyData.map(b => b.pageFunctionResult)
+            apifyData.map(item => {
+                return new legislation.construct(
+                    link = item.link,
+                    year = item.year,
+                    title = item.title,
+                    alerts = item.alerts,
+                    date_accessed = Date())
+            })
         )
 
         return allLegislation
