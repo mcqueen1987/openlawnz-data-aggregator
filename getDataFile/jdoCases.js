@@ -34,9 +34,10 @@ const run = async () => {
 				case_names = [d.CaseName],
 				case_date = d.JudgmentDate,
 				citations = [commonfuncs.getCitation(d.CaseName)],
-				date_processed = new Date(),
+				date_processed = null,
 				processing_status = "UNPROCESSED",
-				sourcecode_hash = hash
+				sourcecode_hash = hash,
+				date_accessed = new Date()
 			)						
 		})
 	} catch (ex) {
