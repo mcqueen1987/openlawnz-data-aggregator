@@ -5,6 +5,8 @@ const constants = require('./constants')
 const BATCH_SIZE = 1000
 // sleep 5 seconds per request
 const REQUEST_INTERVAL_MS = 5000
+const yargs = require("yargs")
+const argv = yargs.argv
 
 /**
  * get cases
@@ -49,21 +51,18 @@ const run = async (pgPoolConnection, pgPromise, argvs) => {
 }
 
 if (require.main === module) {
-    const yargs = require("yargs")
-    let argv = yargs.argv
-    
-    (async () => {
-        try {
-            const {pgPoolConnection, pgPromise} = await require("./common/setup")(argv.env)
-            await run(
-                pgPoolConnection,
-                pgPromise,
-                argv
-            )
-        } catch (ex) {
-            console.log(ex)
-        }
-    })().finally(process.exit)
+    require("./common/setup")(argv.env)
+    .then(async (setupdata) => {
+        const {pgPoolConnection, pgPromise} = setupdata
+        await run(
+            pgPoolConnection,
+            pgPromise,
+            argv
+        )
+        resolve()
+    })    
+    .then(process.exit)
+    .catch(console.log)
 } else {
     module.exports = run
 }
