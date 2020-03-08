@@ -13,7 +13,7 @@ const legislationmodel = require('./models/legislation')
  */
 const run = async (pgPool, pgPromise, dataSource, dataLocation) => {
     // get multi-row insert sql
-    const legislationData = await getDataFile(pgPool, pgPromise, dataSource, dataLocation)
+    const legislationData = await getDataFile(pgPool, pgPromise, dataSource, dataLocation, constants.legislationname)
     let legislationColumnSet = new pgPromise.helpers.ColumnSet(
         legislationmodel.getlabelsarray(),
         {table: {table: constants.legislationname, schema: constants.schemaname}}

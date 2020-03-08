@@ -1,5 +1,6 @@
 const getDataFile = require("./getDataFile")
 const saveAggregatorCases = require("./Database/saveAggregatorCases")
+const constants = require('./constants')
 // case count per request
 const BATCH_SIZE = 1000
 // sleep 5 seconds per request
@@ -18,7 +19,7 @@ const run = async (pgPoolConnection, pgPromise, argvs) => {
     try {
         // without pagination
         if (isNaN(pageSize)) {
-            const dataFile = await getDataFile(pgPoolConnection, pgPromise, dataSource, dataLocation)
+            const dataFile = await getDataFile(pgPoolConnection, pgPromise, dataSource, dataLocation, constants.casesname)
             await saveAggregatorCases(dataFile, pgPoolConnection, pgPromise)
             return Promise.resolve()
         }
@@ -28,7 +29,7 @@ const run = async (pgPoolConnection, pgPromise, argvs) => {
         let startIndex = 0
         const safePageSize = pageSize <= 0 ? BATCH_SIZE : pageSize
         for (let startIndex = 0; startIndex <= totalCaseCount; startIndex += safePageSize) {
-            const dataFile = await getDataFile(pgPoolConnection, pgPromise, dataSource, dataLocation, startIndex, safePageSize)
+            const dataFile = await getDataFile(pgPoolConnection, pgPromise, dataSource, dataLocation, constants.casesname, startIndex, safePageSize)
             if (!dataFile) {
                 return Promise.reject('get empty data from server, need to debug manually!')
             }
@@ -48,7 +49,9 @@ const run = async (pgPoolConnection, pgPromise, argvs) => {
 }
 
 if (require.main === module) {
-    const argv = require("yargs").argv
+    const yargs = require("yargs")
+    let argv = yargs.argv
+    
     (async () => {
         try {
             const {pgPoolConnection, pgPromise} = await require("./common/setup")(argv.env)
