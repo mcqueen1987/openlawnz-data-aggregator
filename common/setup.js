@@ -1,7 +1,7 @@
 const fs = require('fs-extra')
 const path = require('path')
 const uuidv1 = require('uuid/v1')
-const constants = require('./constants')
+const constants = require('../constants')
 
 module.exports = async (env, resumeSessionId) => {
 
