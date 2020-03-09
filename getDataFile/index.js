@@ -13,7 +13,7 @@ module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, s
             retData = await require("./jdoCases")()
             break
         case 'pco':
-            if (!process.env.APIFY_USER_ID || !process.env.APIFY_CRAWLER_ID || !process.env.APIFY_TOKEN) {
+            if (!process.env.APIFY_TASK_ID || !process.env.APIFY_TOKEN) {
                 throw new Error("Missing Apify env variables")
             }
 

@@ -24,10 +24,10 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/getCases.js",
+            "program": "${workspaceFolder}/getLegislation.js",
             "args": [
                 "--env=local",
-                "--datasource=jdo"
+                "--datasource=pco"
             ]
         }
     ]

@@ -110,8 +110,7 @@ You can find an example of the response data in the `/exampledata` folder.
 ## using the PCO data source
 You will need to be given administrative access to the OpenLawNZ Apify account. Add the following variables to your .env file:
 
-- APIFY_USER_ID
-- APIFY_CRAWLER_ID
+- APIFY_TASK_ID
 - APIFY_TOKEN
 
 ## NOTICE

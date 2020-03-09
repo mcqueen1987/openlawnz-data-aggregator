@@ -30,7 +30,7 @@ const run = async () => {
 			return new casemodel.construct(
 				file_provider = "jdo",
 				file_key = "jdo_" + +new Date(d.JudgmentDate) + "_" + d.DocumentName,
-				file_url = "https =//forms.justice.govt.nz/search/Documents/pdf/" + d.id,
+				file_url = "https://forms.justice.govt.nz/search/Documents/pdf/" + d.id,
 				case_names = [d.CaseName],
 				case_date = d.JudgmentDate,
 				citations = [commonfuncs.getCitation(d.CaseName)],

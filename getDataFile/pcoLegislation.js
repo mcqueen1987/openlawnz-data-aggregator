@@ -6,9 +6,11 @@ const run = async () => {
     try {
 
         const jsonURL = [
-            `https://api.apify.com/v1/${process.env.APIFY_USER_ID}`,
-            `/crawlers/${process.env.APIFY_CRAWLER_ID}`,
-            `/lastExec/results?token=${process.env.APIFY_TOKEN}`
+            `https://api.apify.com/v2/actor-tasks/${process.env.APIFY_TASK_ID}`,
+            `/runs/last/dataset/items`,
+            `?token=${process.env.APIFY_TOKEN}`,
+            `&format=json`,
+            `&simplified=true`
         ].join("")
 
         const apifyData = await urlAdapter(jsonURL)
