@@ -1,7 +1,7 @@
 const getDataFile = require('./getDataFile')
 const constants = require('./constants')
 const legislationmodel = require('./models/legislation')
-const startapplication = require('./common/setup')
+const setup = require('./common/setup')
 
 /**
  * get legislation data then save to databases
@@ -38,7 +38,7 @@ const run = async (pgPool, pgPromise, dataSource, dataLocation) => {
 }
 
 if (require.main === module) {
-    startapplication(run)
+    setup.startapplication(run)
 } else {
     module.exports = run
 }

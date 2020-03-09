@@ -1,19 +1,17 @@
 const caser = require('../getCases')
 const legislator = require('../getLegislation')
-const getstartdata = require('../common/setup').getstartdata
+const setup = require('../common/setup')
 const constants = require('../constants')
 const childprocess = require('child_process')
 
 describe('aggregator', () => {
-    const casesentrypoint = 'getCases.js'
-    const legislationentrypoint = 'getLegislation.js'
     const errorlabel = 'Error'
 
     let builder;
     let connection;
 
     beforeAll(async () => {
-        let startdata = await getstartdata()
+        let startdata = await setup.getstartdata()
         const {pgPromise, pgPoolConnection} = startdata
         builder = pgPromise
         connection = pgPoolConnection
@@ -79,8 +77,8 @@ console.log('table results: ' + JSON.stringify(response))
     }
 
     fdescribe("when MOJ cases are aggregated", () => {
-        const runMOJtest = () => {
-            let result = childprocess.execFileSync(casesentrypoint, ['--env=local', 'datasource=moj'])
+        const runMOJtest = async () => {
+            await caser(connection, builder, 'moj', null, null)
             console.log('moj aggregation finished and will be tested...')
             teststringforerrors(result)
         }

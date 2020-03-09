@@ -1,7 +1,7 @@
 const getDataFile = require("./getDataFile")
 const saveAggregatorCases = require("./Database/saveAggregatorCases")
 const constants = require('./constants')
-const startapplication = require('./common/setup')
+const setup = require('./common/setup')
 // case count per request
 const BATCH_SIZE = 1000
 // sleep 5 seconds per request
@@ -51,7 +51,7 @@ const run = async (pgPool, pgPromise, dataSource, dataLocation, pageSize) => {
 }
 
 if (require.main === module) {
-    startapplication(run)
+    setup.startapplication(run)
 } else {
     module.exports = run
 }

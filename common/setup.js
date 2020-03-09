@@ -59,7 +59,7 @@ const setup = async (env, resumeSessionId) => {
 }
 module.exports.getstartdata = setup
 
-module.exports = function startapplication(entrypoint) {
+module.exports.startapplication = function startapplication(entrypoint) {
     let runner = async () => {
         setupdata = await setup(argv.env)    
         const {pgPoolConnection, pgPromise} = setupdata
