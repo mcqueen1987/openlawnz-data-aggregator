@@ -14,5 +14,8 @@
 		"terminate": "^2.1.2",
 		"uuid": "^3.3.2",
 		"yargs": "^13.2.2"
+	},
+	"devDependencies": {
+		"@types/jest": "^25.1.4"
 	}
 }
