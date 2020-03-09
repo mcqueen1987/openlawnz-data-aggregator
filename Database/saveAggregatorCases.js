@@ -36,7 +36,7 @@ const run = async (data, pgPool, pgPromise) => {
             console.log(`skip duplicated data: ${JSON.stringify(onecase)}`)
             return
         }
-        await client.query(citationsSql)
+        await client.query(casesSql)
     }
 
     let client = null
@@ -62,11 +62,14 @@ const run = async (data, pgPool, pgPromise) => {
 
 if (require.main === module) {
     try {
-        throw new Error("cannot be run individually.")
-        //run()
-    } catch (ex) {
+        throw new Error("cannot be run individually.")        
+    } 
+
+    catch (ex) {
         console.log(ex)
     }
-} else {
+} 
+
+else {
     module.exports = run
 }
