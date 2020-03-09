@@ -2,9 +2,10 @@ const fs = require('fs-extra')
 const path = require('path')
 const uuidv1 = require('uuid/v1')
 const constants = require('../constants')
+const yargs = require("yargs")
+const argv = yargs.argv
 
-module.exports = async (env, resumeSessionId) => {
-
+const setup = async (env, resumeSessionId) => {
     const options = {
         capSQL: true, // capitalize all generated SQL
         schema: [constants.schemaname],
@@ -55,4 +56,24 @@ module.exports = async (env, resumeSessionId) => {
         pgPromise,
         pgPoolConnection
     }
+}
+
+module.exports = function startapplication(entrypoint) {
+    let runner = async () => {
+        setupdata = await setup(argv.env)    
+        const {pgPoolConnection, pgPromise} = setupdata
+
+        await entrypoint(
+            pgPoolConnection,
+            pgPromise,
+            argv.datasource,
+            argv.datalocation
+        )
+        
+    }
+    runner().then(() => {
+        console.log('aggregation complete.')
+        process.exit
+    })
+    .catch(console.log)
 }

@@ -1,6 +1,7 @@
 const getDataFile = require('./getDataFile')
 const constants = require('./constants')
 const legislationmodel = require('./models/legislation')
+const startapplication = require('./common/setup')
 
 /**
  * get legislation data then save to databases
@@ -12,6 +13,7 @@ const legislationmodel = require('./models/legislation')
  * @returns {Promise<void>}
  */
 const run = async (pgPool, pgPromise, dataSource, dataLocation) => {
+    console.log('starting getLegislation.js')
     // get multi-row insert sql
     const legislationData = await getDataFile(pgPool, pgPromise, dataSource, dataLocation, constants.legislationname)
     let legislationColumnSet = new pgPromise.helpers.ColumnSet(
@@ -36,20 +38,7 @@ const run = async (pgPool, pgPromise, dataSource, dataLocation) => {
 }
 
 if (require.main === module) {
-    const argv = require("yargs").argv
-    (async () => {
-        try {
-            const {pgPoolConnection, pgPromise} = await require("./common/setup")(argv.env)
-            await run(
-                pgPoolConnection,
-                pgPromise,
-                argv.datasource,
-                argv.datalocation
-            )
-        } catch (ex) {
-            console.log(ex)
-        }
-    })().finally(process.exit)
+    startapplication(run)
 } else {
     module.exports = run
 }
