@@ -57,6 +57,7 @@ const setup = async (env, resumeSessionId) => {
         pgPoolConnection
     }
 }
+module.exports.getstartdata() = setup
 
 module.exports = function startapplication(entrypoint) {
     let runner = async () => {
