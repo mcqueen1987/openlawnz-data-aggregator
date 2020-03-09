@@ -102,10 +102,17 @@ node getLegislation.js --env=<env> --datasource=<datasource> [--datalocation=<da
 #### Example Usage
 
 ```
-node getCases.js --env=local --datasource=jdo
+node getCases.js --env=local --datasource=moj
 ```
 
 You can find an example of the response data in the `/exampledata` folder.
+
+## using the PCO data source
+You will need to be given administrative access to the OpenLawNZ Apify account. Add the following variables to your .env file:
+
+- APIFY_USER_ID
+- APIFY_CRAWLER_ID
+- APIFY_TOKEN
 
 ## NOTICE
 
