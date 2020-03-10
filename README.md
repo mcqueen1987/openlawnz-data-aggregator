@@ -114,7 +114,7 @@ You will need to be given administrative access to the OpenLawNZ Apify account. 
 - APIFY_TOKEN
 
 #### Testing
-run `Jest --detectOpenHandles` in the root directory.
+run `Jest` in the root directory.
 
 Or, prss `F5` to use the vscode breakpoints set up in the launch.json file. 
 
