@@ -14,21 +14,10 @@ const run = async () => {
         ].join("")
 
         const apifyData = await urlAdapter(jsonURL)
-
-        const allLegislation = Array.prototype.concat.apply(
-            [],
-            apifyData.map(item => {
-                return new legislation.construct(
-                    link = item.link,
-                    year = item.year,
-                    title = item.title,
-                    alerts = item.alerts,
-                    date_accessed = new Date())
-            })
-        )
-
-        return allLegislation
-    } catch (ex) {
+        return apifyData
+    } 
+    
+    catch (ex) {
         throw ex
     }
 }

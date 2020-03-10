@@ -29,3 +29,13 @@ module.exports.getlabelsarray = function() {
     ]
 }
 
+module.exports.maparraytolegislation = (inputarray) =>
+    inputarray.map((item) => 
+        new legislation.construct(
+            link = item.link,
+            year = item.year,
+            title = item.title,
+            alerts = item.alerts,
+            date_accessed = new Date()
+        )
+    )

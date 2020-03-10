@@ -23,24 +23,11 @@ const jsonURL = [
 
 const run = async () => {
 	try {
-		const mojData = await urlAdapter(jsonURL, ["response", "docs"])
-		let hash = commonfuncs.getprojecthash()
-
-		return mojData.map(d => {
-			return new casemodel.construct(
-				file_provider = "jdo",
-				file_key = "jdo_" + new Date(d.JudgmentDate) + "_" + d.DocumentName,
-				file_url = "https://forms.justice.govt.nz/search/Documents/pdf/" + d.id,
-				case_names = [d.CaseName],
-				case_date = d.JudgmentDate,
-				citations = [commonfuncs.getCitation(d.CaseName)],
-				date_processed = null,
-				processing_status = "UNPROCESSED",
-				sourcecode_hash = hash,
-				date_accessed = new Date()
-			)						
-		})
-	} catch (ex) {
+		const mojData = await urlAdapter(jsonURL, ["response", "docs"])		
+		return mojData	
+	} 
+	
+	catch (ex) {
 		throw ex
 	}
 }
