@@ -26,7 +26,7 @@ module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, s
             if(datatype !== constants.legislationname) {
                 throw new Error('You can only request legislation from the PCO.')
             }
-            unformatted = await require("./pcoLegislation")()
+            unformatted = await require("./pcoLegislation").run()
             break
 
         case constants.urltype:
@@ -59,12 +59,18 @@ function choosecasesorlegislation(datatype, unformattedresponse) {
     switch(datatype) {
         case constants.casesname:
             let output = unformattedresponse
-            let isnotflat = helpers.isnullorundefined(unformattedresponse.response) === false && 
-                            helpers.isnullorundefined(unformattedresponse.response.docs) === false
 
-            if(isnotflat === true) {
-                output = helpers.getNestedObject(unformattedresponse, MOJconstants.flattenedarraypath)
+            try {
+                let responseisfound = helpers.isnullorundefined(unformattedresponse['response']) === false
+                let docsarefound = helpers.isnullorundefined(unformattedresponse.response['docs']) === false
+                let isnotflat = responseisfound && docsarefound
+
+                if(isnotflat === true) {
+                    output = helpers.getNestedObject(unformattedresponse, MOJconstants.flattenedarraypath)
+                }
             }
+
+            catch(error) {}
             return casesmodel.maparraytocases(output)
 
         case constants.legislationname:
