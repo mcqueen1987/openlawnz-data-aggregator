@@ -6,13 +6,13 @@ module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, s
     }
     let retData
     switch (dataSource) {
-        case 'moj':
+        case constants.mojtype:
             if(datatype !== constants.casesname) {
                 throw new Error('You can only request cases from the MOJ.')
             }
             retData = await require("./jdoCases")()
             break
-        case 'pco':
+        case constants.pcotype:
             if (!process.env.APIFY_TASK_ID || !process.env.APIFY_TOKEN) {
                 throw new Error("Missing Apify env variables")
             }
@@ -22,15 +22,15 @@ module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, s
             }
             retData = await require("./pcoLegislation")()
             break
-        case 'url':
+        case constants.urltype:
             checklocation()
             retData = await require("./generic/url")(dataLocation)
             break
-        case 'localfile':
+        case constants.localfiletype:
             checklocation()
             retData = await require("./generic/localfile")(dataLocation)
             break
-        case 'tt':
+        case constants.TTtype:
             retData = await require("./ttCases")(pgPool, pgPromise, startIndex, batchSize)
             break
         default:

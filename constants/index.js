@@ -9,5 +9,12 @@ const constants = {
     sqlrollback: 'ROLLBACK',
     envfile: '.env.',
     asynctimeout: 60000,
+    mojtype: 'moj',
+    pcotype: 'pco',
+    urltype: 'url',
+    TTtype: 'tt', 
+    localfiletype: 'localfile',
+    caseentrypoint: 'getCases.js',
+    legislationentrypoint: 'getLegislation.js'
 }
 module.exports = constants

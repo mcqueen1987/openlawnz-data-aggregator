@@ -3,7 +3,7 @@ const legislator = require('../getLegislation')
 const constants = require('../constants')
 const helpers = require('./testhelpers')
 
-describe('when MOJ cases are aggregated', () => {
+fdescribe('when MOJ cases are aggregated', () => {    
     let starters;
 
     beforeAll(async () => {
@@ -11,24 +11,18 @@ describe('when MOJ cases are aggregated', () => {
     })
 
     afterEach(async () => {
-        await helpers.cleantables(starters.pgPoolConnection)        
+        await helpers.cleantable(starters.pgPoolConnection, constants.casesname)    
     })
 
-    async function runMOJtest() {
-        try {
-            await caser(starters.pgPoolConnection, starters.pgPromise, 'moj', null, null)
-            console.log('moj aggregation finished and will be tested...')
-        }   
-
-        catch(error) {
-            return Promise.reject(error)
-        }        
+    async function dothething() {
+        await runtest(constants.caseentrypoint, starters.pgPoolConnection, starters.pgPromise, constants.mojtype, null, null)
     }
 
-    it('runs without error', runMOJtest, constants.asynctimeout)
+    it('runs without error', dothething, constants.asynctimeout)
 
     it('can be found in the database', async () => {
-        await runMOJtest()
+        await dothething()
+        console.log(`${constants.mojtype} aggregation finished and will be tested...`)
         await helpers.checktablehasresults(starters.pgPoolConnection, constants.casesname)
     }, constants.asynctimeout)
 })
@@ -41,32 +35,59 @@ fdescribe("when PCO legislation is aggregated", () => {
     })
 
     afterEach(async () => {
-        await helpers.cleantables(starters.pgPoolConnection)        
+        await helpers.cleantable(starters.pgPoolConnection, constants.legislationname)
     })
 
-    async function runPCOtest() {
-        try {
-            await legislator(starters.pgPoolConnection, starters.pgPromise, 'pco', null, null)
-            console.log('pco aggregation finished and will be tested...')
-        }   
-
-        catch(error) {
-            return Promise.reject(error)
-        }        
+    async function dothething() {
+        await runtest(constants.legislationentrypoint, starters.pgPoolConnection, starters.pgPromise, constants.pcotype, null, null)
     }
 
-    it('runs without error', runPCOtest, constants.asynctimeout)
+    it('runs without error', dothething, constants.asynctimeout)
 
     it('can be found in the database', async () => {
-        await runPCOtest()
-        await helpers.checktablehasresults(starters.pgPoolConnection, constants.legislationname)
+        await dothething()
+        console.log(`${constants.pcotype} aggregation finished and will be tested...`)
+        await helpers.checktablehasresults(starters.pgPoolConnection, constants.casesname)
     }, constants.asynctimeout)
 })
 
+async function runtest(entrypoint, pgPool, pgPromise, dataSource, dataLocation, pagesize) {
+    let chosenrunner;
+
+    switch(entrypoint) {
+        case constants.caseentrypoint:
+            chosenrunner = caser
+            break
+
+        case constants.legislationentrypoint:
+            chosenrunner = legislator
+            break
+
+        default:
+            throw new Error(`entrypoint: ${entrypoint} is invalid`)
+    }
+
+    try {
+        await chosenrunner(pgPool, pgPromise, dataSource, dataLocation, pagesize)
+    }   
+
+    catch(error) {
+        return Promise.reject(error)
+    } 
+}
+
 describe("when a URL data source is aggregated", () => {
-    it('aggregates cases without error', () => {
-        
+    let starters;
+
+    beforeAll(async () => {
+        starters = await helpers.getstartdata()
     })
+
+    afterEach(async () => {
+        await helpers.cleantable(starters.pgPoolConnection)        
+    })
+
+    // it('aggregates cases without error', constants.asynctimeout)
 
     it('cases can be found in the database', () => {
         

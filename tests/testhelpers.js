@@ -33,22 +33,21 @@ function getenvfileslabel() {
     
 }
 
-module.exports.cleantables = async function(connection) {
+module.exports.cleantable = async function(connection, tablename) {
     let client = null
 
     try {
         client = await connection.connect()
         let result1 = await client.query(constants.sqlbegin)
-        let result2 = await client.query("TRUNCATE TABLE ingest.cases;")
-        let result3 = await client.query("TRUNCATE TABLE ingest.legislation;")
+        let result2 = await client.query(`TRUNCATE TABLE ingest.${tablename};`)
         let result4 = await client.query(constants.sqlcommit)        
 
         let resul5 = await client.query(constants.sqlbegin)
-        let selectquery = getselectallquery(constants.casesname)
+        let selectquery = getselectallquery(tablename)
         let result6 = await client.query(selectquery)
         let result7 = await client.query(constants.sqlcommit)
         expect(result6.rows).toHaveLength(0)
-        console.log('tables cleaned.')
+        console.log(`${tablename} table cleaned.`)
         return Promise.resolve()
     } 
     
