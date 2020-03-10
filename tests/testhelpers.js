@@ -38,10 +38,16 @@ module.exports.cleantables = async function(connection) {
 
     try {
         client = await connection.connect()
-        await client.query(constants.sqlbegin)
-        await client.query("TRUNCATE TABLE ingest.cases;")
-        await client.query("TRUNCATE TABLE ingest.legislation;")
-        await client.query(constants.sqlcommit)
+        let result1 = await client.query(constants.sqlbegin)
+        let result2 = await client.query("TRUNCATE TABLE ingest.cases;")
+        let result3 = await client.query("TRUNCATE TABLE ingest.legislation;")
+        let result4 = await client.query(constants.sqlcommit)        
+
+        let resul5 = await client.query(constants.sqlbegin)
+        let selectquery = getselectallquery(constants.casesname)
+        let result6 = await client.query(selectquery)
+        let result7 = await client.query(constants.sqlcommit)
+        expect(result6.rows).toHaveLength(0)
         console.log('tables cleaned.')
         return Promise.resolve()
     } 
@@ -59,14 +65,16 @@ module.exports.cleantables = async function(connection) {
 
 module.exports.checktablehasresults = async function(connection, tablename) {
     let client = null
+    let selectquery = getselectallquery(tablename)
 
     try {
         client = await connection.connect()
-        await client.query(constants.sqlbegin)
-        let response = await client.query(`select * from ingest.${tablename};`)
-        await client.query(constants.sqlcommit)
-        console.log('table data found.')
-        return Promise.resolve(response)
+        let result1 = await client.query(constants.sqlbegin)
+        let result2 = await client.query(selectquery)
+        let result4 = await client.query(constants.sqlcommit)
+        expect(result2.rows).not.toHaveLength(0)
+        console.log('table data was found.')
+        return Promise.resolve()
     } 
     
     catch (error) {
@@ -79,3 +87,5 @@ module.exports.checktablehasresults = async function(connection, tablename) {
         client && client.release()
     }
 }
+
+const getselectallquery = (tablename) => `select * from ingest.${tablename};`
