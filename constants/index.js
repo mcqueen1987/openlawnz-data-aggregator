@@ -15,7 +15,8 @@ const constants = {
     TTtype: 'tt', 
     localfiletype: 'localfile',
     caseentrypoint: 'getCases.js',
-    legislationentrypoint: 'getLegislation.js'
+    legislationentrypoint: 'getLegislation.js',
+    unprocessedstatus: 'UNPROCESSED'
 }
 module.exports = constants
 

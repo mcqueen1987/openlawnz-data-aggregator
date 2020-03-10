@@ -1,8 +1,10 @@
 const constants = require('../constants')
-const casesmodel = require('../models/case')
 const legislation = require('../models/legislation')
 const helpers = require('../common/functions')
 const MOJconstants = require('../constants/MOJresponse')
+const jdocases = require('./jdoCases')
+
+const casesonlyerror = 'You can only request cases from the MOJ.'
 
 module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, startIndex = 0, batchSize = 1) => {
     if (!dataSource) {
@@ -13,7 +15,7 @@ module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, s
     switch (dataSource) {
         case constants.mojtype:
             if(datatype !== constants.casesname) {
-                throw new Error('You can only request cases from the MOJ.')
+                throw new Error(casesonlyerror)
             }
             console.log(`aggregating ${constants.mojtype}...`)
             unformatted = await require("./jdoCases").run()
@@ -45,6 +47,9 @@ module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, s
             break
 
         case constants.TTtype:
+            if(datatype !== constants.casesname) {
+                throw new Error(casesonlyerror)
+            }
             console.log(`aggregating ${constants.TTtype}...`)
             unformatted = await require("./ttCases")(pgPool, pgPromise, startIndex, batchSize)
             break
@@ -77,7 +82,7 @@ function choosecasesorlegislation(datatype, unformattedresponse) {
             }
 
             catch(error) {}
-            return casesmodel.maparraytocases(output)
+            return jdocases.maparraytocases(output)
 
         case constants.legislationname:
             return legislation.maparraytolegislation(unformattedresponse)

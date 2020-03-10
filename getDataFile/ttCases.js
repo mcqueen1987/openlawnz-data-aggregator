@@ -2,6 +2,8 @@ const urlAdapter = require("./generic/url")
 const uuidv1 = require('uuid/v1')
 const moment = require('moment')
 const constants = require('../constants')
+const casemodel = require('../models/case')
+const commonfuncs = require('../common/functions')
 
 // search start date. it should not be earlier than 3 years before
 const FROM_DATE = '[NOW-3YEARS TO NOW]'
@@ -50,6 +52,8 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
         console.log(`${constants.TTtype} response received...`)
 
         const casesNumFound = tenancyData['response']['numFound']
+        let hash = commonfuncs.getprojecthash()
+
         const formattedTenancyData = tenancyData['response']['docs'].map(doc => {
             const provider = doc['categoryCode'][0]
             const order_detail = JSON.parse(doc['orderDetailJson_s'][0])
@@ -62,15 +66,19 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
             const citation = '[' + case_date_object.getFullYear() + '] NZ' + provider + ' ' + doc['tenancyCityTown_s'] + ' ' + doc['applicationNumber_s']
             const case_name = doc['casePerOrg_s'].join(' vs ')
             const case_text = doc['document_text_abstract']
-            return {
-                file_provider: provider,
-                file_key: case_key,
-                file_url: pdf_url,
-                name: case_name,
-                case_date: case_date,
-                citations: [citation],
-                case_text: case_text.trim(),
-            }
+
+            return casemodel.construct(
+                file_provider = provider,
+                file_key = case_key,
+                file_url = pdf_url,
+                case_names = [case_name],
+                case_date = case_date,
+                case_citations = [citation],
+                date_processed = null,
+                processing_status = constants.unprocessedstatus,
+                sourcecode_hash = hash,
+                date_accessed = new Date()
+            )
         })
 
         return {

@@ -44,23 +44,4 @@ module.exports.getlabelsarray = function() {
         casestable.date_accessed
     ]
 }
-
-module.exports.maparraytocases = (inputarray) =>
-    inputarray.map((currentitem) => {
-        let hash = commonfuncs.getprojecthash()
-        
-        return new construct(
-            file_provider = "jdo",
-            file_key = "jdo_" + new Date(currentitem.JudgmentDate) + "_" + currentitem.DocumentName,
-            file_url = "https://forms.justice.govt.nz/search/Documents/pdf/" + currentitem.id,
-            case_names = [currentitem.CaseName],
-            case_date = currentitem.JudgmentDate,
-            citations = [commonfuncs.getCitation(currentitem.CaseName)],
-            date_processed = null,
-            processing_status = "UNPROCESSED",
-            sourcecode_hash = hash,
-            date_accessed = new Date()
-        )	
-    })
-
     

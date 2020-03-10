@@ -1,6 +1,8 @@
 const urlAdapter = require("./generic/url")
 const MOJconstants = require('../constants/MOJresponse')
 const constants = require('../constants')
+const casemodel = require('../models/case')
+const commonfuncs = require('../common/functions')
 
 // Currently limited to 10 results for testing
 const maxRows = 10
@@ -45,4 +47,21 @@ if (require.main === module) {
 	module.exports.run = run
 }
 
+module.exports.maparraytocases = (inputarray) =>
+    inputarray.map((currentitem) => {
+        let hash = commonfuncs.getprojecthash()
+        
+        return new casemodel.construct(
+            file_provider = "jdo",
+            file_key = "jdo_" + new Date(currentitem.JudgmentDate) + "_" + currentitem.DocumentName,
+            file_url = "https://forms.justice.govt.nz/search/Documents/pdf/" + currentitem.id,
+            case_names = [currentitem.CaseName],
+            case_date = currentitem.JudgmentDate,
+            citations = [commonfuncs.getCitation(currentitem.CaseName)],
+            date_processed = null,
+            processing_status = constants.unprocessedstatus,
+            sourcecode_hash = hash,
+            date_accessed = new Date()
+        )	
+    })
 

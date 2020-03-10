@@ -121,7 +121,28 @@ describe("when a localfile data source is aggregated", () => {
    
 })
 
-describe("when a TT data source is aggregated", () => {
-    
+fdescribe("when a TT data source is aggregated", () => {
+    let starters;
+
+    beforeAll(async () => {
+        starters = await helpers.getstartdata()
+    }, constants.asynctimeout)
+
+    async function dothething(entrypoint) {
+        await runtest(entrypoint, starters.pgPoolConnection, starters.pgPromise, constants.TTtype, null, null)
+    }
+
+    it('aggregates cases without error', 
+        async () => {
+            await dothething(constants.caseentrypoint)
+            await helpers.cleantable(starters.pgPoolConnection, constants.casesname)
+        }, constants.asynctimeout)
+
+    it('cases can be found in the database', async () => {
+        await dothething(constants.caseentrypoint)
+        console.log(`${constants.urltype} aggregation finished and will be tested...`)
+        await helpers.checktablehasresults(starters.pgPoolConnection, constants.casesname)
+        await helpers.cleantable(starters.pgPoolConnection, constants.casesname)
+    }, constants.asynctimeout)
 })
 
