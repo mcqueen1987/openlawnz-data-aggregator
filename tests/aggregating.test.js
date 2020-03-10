@@ -85,27 +85,27 @@ describe("when a URL data source is aggregated", () => {
         starters = await helpers.getstartdata()
     }, constants.asynctimeout)
 
-    afterEach(async () => {
-        await helpers.cleantable(starters.pgPoolConnection, constants.casesname)
-    }, constants.asynctimeout)
-
     async function dothething(entrypoint, chosenurl) {
         await runtest(entrypoint, starters.pgPoolConnection, starters.pgPromise, constants.urltype, chosenurl, null)
     }
 
     it('aggregates cases without error', 
-        async () => await dothething(constants.caseentrypoint, casesURL), constants.asynctimeout)
+        async () => {
+            await dothething(constants.caseentrypoint, casesURL)
+            await helpers.cleantable(starters.pgPoolConnection, constants.casesname)
+        }, constants.asynctimeout)
 
     it('cases can be found in the database', async () => {
-        let chosenurl = casesURL
-        await dothething(constants.caseentrypoint, chosenurl)
+        await dothething(constants.caseentrypoint, casesURL)
         console.log(`${constants.urltype} aggregation finished and will be tested...`)
         await helpers.checktablehasresults(starters.pgPoolConnection, constants.casesname)
+        await helpers.cleantable(starters.pgPoolConnection, constants.casesname)
     }, constants.asynctimeout)
 
     it('aggregates legislation without error', async () => {
         let url = legislationURL()
         await dothething(constants.legislationentrypoint, url)
+        await helpers.cleantable(starters.pgPoolConnection, constants.legislationname)
     }, constants.asynctimeout)
 
     it('legislation can be found in the database', async () => {
@@ -113,45 +113,14 @@ describe("when a URL data source is aggregated", () => {
         await dothething(constants.legislationentrypoint, url)
         console.log(`${constants.urltype} aggregation finished and will be tested...`)
         await helpers.checktablehasresults(starters.pgPoolConnection, constants.legislationname)
+        await helpers.cleantable(starters.pgPoolConnection, constants.legislationname)
     }, constants.asynctimeout)
 })
 
 describe("when a localfile data source is aggregated", () => {
-    it('aggregates cases without error', () => {
-        
-    })
-
-    it('cases can be found in the database', () => {
-        
-    })
-
-    it('aggregates legislation without error', () => {
-        
-    })
-
-    it('cases can be found in the database', () => {
-        
-    })
+   
 })
 
 describe("when a TT data source is aggregated", () => {
-    it('aggregates cases without error', () => {
-        
-    })
-
-    it('cases can be found in the database', () => {
-        
-    })
-
-    it('aggregates legislation without error', () => {
-        
-    })
-
-    it('cases can be found in the database', () => {
-        
-    })
-
-    it("returns a paginated response", () => {
-
-    })
+    
 })
