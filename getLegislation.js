@@ -23,6 +23,7 @@ const run = async (pgPool, pgPromise, dataSource, dataLocation) => {
 
     // insert sql within a transaction
     let client = null
+    console.log('saving legislation...')
     try {
         client = await pgPool.connect()
         await client.query(constants.sqlbegin)

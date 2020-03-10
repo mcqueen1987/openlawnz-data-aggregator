@@ -1,5 +1,6 @@
 const urlAdapter = require("./generic/url")
 const MOJconstants = require('../constants/MOJresponse')
+const constants = require('../constants')
 
 // Currently limited to 10 results for testing
 const maxRows = 10
@@ -25,6 +26,7 @@ module.exports.URL = URL
 const run = async () => {
 	try {
 		const mojData = await urlAdapter(URL, MOJconstants.flattenedarraypath)
+		console.log(`${constants.mojtype} response received...`)
 		return mojData	
 	} 
 	

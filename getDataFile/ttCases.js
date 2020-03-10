@@ -1,6 +1,7 @@
 const urlAdapter = require("./generic/url")
 const uuidv1 = require('uuid/v1')
 const moment = require('moment')
+const constants = require('../constants')
 
 // search start date. it should not be earlier than 3 years before
 const FROM_DATE = '[NOW-3YEARS TO NOW]'
@@ -46,6 +47,7 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
             console.log("fail to get data from url :", jsonURL)
             return false
         }
+        console.log(`${constants.TTtype} response received...`)
 
         const casesNumFound = tenancyData['response']['numFound']
         const formattedTenancyData = tenancyData['response']['docs'].map(doc => {

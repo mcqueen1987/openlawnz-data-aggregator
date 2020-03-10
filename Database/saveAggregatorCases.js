@@ -40,6 +40,7 @@ const run = async (data, pgPool, pgPromise) => {
     }
 
     let client = null
+    console.log('saving cases...')
     try {
         // insert data into database by transaction
         // 1. initiate transaction

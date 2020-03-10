@@ -1,5 +1,5 @@
 const urlAdapter = require("./generic/url")
-const legislation = require('../models/legislation')
+const constants = require('../constants')
 
 function getURL(){
     return [
@@ -18,6 +18,7 @@ const run = async () => {
     try {
         let url = getURL()
         const apifyData = await urlAdapter(url)
+        console.log(`${constants.pcotype} response received...`)
         return apifyData
     } 
     

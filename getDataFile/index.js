@@ -15,6 +15,7 @@ module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, s
             if(datatype !== constants.casesname) {
                 throw new Error('You can only request cases from the MOJ.')
             }
+            console.log(`aggregating ${constants.mojtype}...`)
             unformatted = await require("./jdoCases").run()
             break
 
@@ -26,20 +27,25 @@ module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, s
             if(datatype !== constants.legislationname) {
                 throw new Error('You can only request legislation from the PCO.')
             }
+            console.log(`aggregating ${constants.pcotype}...`)
             unformatted = await require("./pcoLegislation").run()
             break
 
         case constants.urltype:
             checklocation(dataLocation)
+            console.log(`aggregating ${constants.urltype}...`)
             unformatted = await require("./generic/url")(dataLocation)
+            console.log(`${constants.urltype} response received...`)
             break
 
         case constants.localfiletype:
             checklocation(dataLocation)
+            console.log(`aggregating ${constants.localfiletype}...`)
             unformatted = await require("./generic/localfile")(dataLocation)
             break
 
         case constants.TTtype:
+            console.log(`aggregating ${constants.TTtype}...`)
             unformatted = await require("./ttCases")(pgPool, pgPromise, startIndex, batchSize)
             break
 
