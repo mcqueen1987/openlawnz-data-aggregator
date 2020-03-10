@@ -47,7 +47,7 @@ fdescribe("when PCO legislation is aggregated", () => {
     it('can be found in the database', async () => {
         await dothething()
         console.log(`${constants.pcotype} aggregation finished and will be tested...`)
-        await helpers.checktablehasresults(starters.pgPoolConnection, constants.casesname)
+        await helpers.checktablehasresults(starters.pgPoolConnection, constants.legislationname)
     }, constants.asynctimeout)
 })
 
