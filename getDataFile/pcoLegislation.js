@@ -23,7 +23,7 @@ const run = async () => {
                     year = item.year,
                     title = item.title,
                     alerts = item.alerts,
-                    date_accessed = Date())
+                    date_accessed = new Date())
             })
         )
 

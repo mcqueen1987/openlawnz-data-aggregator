@@ -3,7 +3,7 @@ const legislator = require('../getLegislation')
 const constants = require('../constants')
 const helpers = require('./testhelpers')
 
-fdescribe('when MOJ cases are aggregated', () => {
+describe('when MOJ cases are aggregated', () => {
     let starters;
 
     beforeAll(async () => {
@@ -33,15 +33,34 @@ fdescribe('when MOJ cases are aggregated', () => {
     }, constants.asynctimeout)
 })
 
-describe("when PCO legislation is aggregated", () => {
-    
-    it('runs without error', () => {
-        
+fdescribe("when PCO legislation is aggregated", () => {
+    let starters;
+
+    beforeAll(async () => {
+        starters = await helpers.getstartdata()
     })
 
-    it('results can be found in the database', () => {
-        
+    afterEach(async () => {
+        await helpers.cleantables(starters.pgPoolConnection)        
     })
+
+    async function runPCOtest() {
+        try {
+            await legislator(starters.pgPoolConnection, starters.pgPromise, 'pco', null, null)
+            console.log('pco aggregation finished and will be tested...')
+        }   
+
+        catch(error) {
+            return Promise.reject(error)
+        }        
+    }
+
+    it('runs without error', runPCOtest, constants.asynctimeout)
+
+    it('can be found in the database', async () => {
+        await runPCOtest()
+        await helpers.checktablehasresults(starters.pgPoolConnection, constants.legislationname)
+    }, constants.asynctimeout)
 })
 
 describe("when a URL data source is aggregated", () => {
