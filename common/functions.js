@@ -144,3 +144,4 @@ module.exports.isrequired = function() {
 module.exports.getprojecthash = () => childprocess.execSync('git rev-parse HEAD')
 
 module.exports.isnullorundefined = (subject) => subject === null || subject === undefined
+

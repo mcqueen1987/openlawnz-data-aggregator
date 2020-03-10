@@ -80,3 +80,4 @@ module.exports.startapplication = function startapplication(entrypoint, pagesize
     })
     .catch(console.log)
 }
+

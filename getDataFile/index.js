@@ -80,3 +80,4 @@ function choosecasesorlegislation(datatype, unformattedresponse) {
             throw new Error('invalid data type for URL aggregation.')
     }
 }
+

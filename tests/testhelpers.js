@@ -88,3 +88,4 @@ module.exports.checktablehasresults = async function(connection, tablename) {
 }
 
 const getselectallquery = (tablename) => `select * from ingest.${tablename};`
+

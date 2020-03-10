@@ -7,3 +7,4 @@ const legislationtable = {
     date_accessed: 'date_accessed'
 }
 module.exports = legislationtable
+

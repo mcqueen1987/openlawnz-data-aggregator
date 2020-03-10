@@ -18,3 +18,4 @@ const constants = {
     legislationentrypoint: 'getLegislation.js'
 }
 module.exports = constants
+

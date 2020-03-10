@@ -16,3 +16,4 @@ const MOJresponse = {
     flattenedarraypath: ['response', 'docs']
 }
 module.exports = MOJresponse
+

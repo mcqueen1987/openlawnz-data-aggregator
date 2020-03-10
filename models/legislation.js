@@ -39,3 +39,5 @@ module.exports.maparraytolegislation = (inputarray) =>
             date_accessed = new Date()
         )
     )
+
+    
