@@ -60,14 +60,22 @@ A `legislation` datastore must return an array of:
 
 ### Running the project
 
+There are two entrypoint files depending on which type of data you wish to aggregate: `getCases.js` and `getLegislation.js`. Each take the same parameters.
+
 #### Parameters
 
 *datasource*:
 
-  - `moj` (only works for `getCases.js`)
-  - `pco` (only works for `getLegislation.js`)
-  - `localfile` (requires `datalocation`)
-  - `url` (requires `datalocation`)
+  - `moj` Data from the Ministry of Justice's database. Only works when `getCases.js` is the entrypoint.
+
+  - `pco` Data scraped from the Parliamentary Council Office. Only works when `getLegislation.js` is the entrypoint.
+
+  - `localfile` A JSON file in similar format to data in the /exampledata folder. Requires --datalocation .
+
+  - `url` general URL to cases or legislation. Be very careful with this. Requires --datalocation .
+
+  - `tt` Data from the Tenancy Tribunal's decision search. Requires --pageSize .
+  
 
 *datalocation*:
 
@@ -105,7 +113,7 @@ node getLegislation.js --env=<env> --datasource=<datasource> [--datalocation=<da
 node getCases.js --env=local --datasource=moj
 ```
 
-You can find an example of the response data in the `/exampledata` folder.
+You can find an example of the data from different sources in the `/exampledata` folder.
 
 ## using the PCO data source
 You will need to be given administrative access to the OpenLawNZ Apify account. Add the following variables to your .env file:
