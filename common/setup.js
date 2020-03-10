@@ -4,8 +4,9 @@ const uuidv1 = require('uuid/v1')
 const constants = require('../constants')
 const yargs = require("yargs")
 const argv = yargs.argv
+const dotenv = require('dotenv')
 
-const setup = async (env, resumeSessionId) => {
+const setup = async (environmentfilename, resumeSessionId = 0) => {
     const options = {
         capSQL: true, // capitalize all generated SQL
         schema: [constants.schemaname],
@@ -24,12 +25,12 @@ const setup = async (env, resumeSessionId) => {
     const cacheDir = path.join(rootDir, '.cache', sessionId)
     const logDir = path.join(rootDir, '.logs', sessionId)
 
-    if (!env) {
+    if (!environmentfilename) {
         throw new Error('Missing env')
     }
 
-    require('dotenv').config({
-        path: rootDir + '/.env.' + env
+    dotenv.config({
+        path: rootDir + '/.env.' + environmentfilename
     })
 
     // Ensure cache directory exists

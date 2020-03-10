@@ -6,6 +6,7 @@ const constants = {
     casesname: 'cases',
     sqlbegin: 'BEGIN',
     sqlcommit: 'COMMIT',
-    sqlrollback: 'ROLLBACK'
+    sqlrollback: 'ROLLBACK',
+    envfile: '.env.'
 }
 module.exports = constants

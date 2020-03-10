@@ -40,7 +40,7 @@ const run = async (pgPool, pgPromise, dataSource, dataLocation, pageSize) => {
                 totalCaseCount = dataFile['case_count_from_page']
                 console.log(`total case count: [${totalCaseCount}]`)
             }
-            await saveAggregatorCases(dataFile['data'], pgPool, pgPromise)
+            await saveAggregatorCases(dataFile, pgPool, pgPromise)
             // sleep between calls
             await new Promise(resolve => setTimeout(resolve, REQUEST_INTERVAL_MS))
             console.log(`data saved: start index [${startIndex}] page size [${safePageSize}]`)
