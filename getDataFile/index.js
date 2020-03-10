@@ -1,4 +1,8 @@
 const constants = require('../constants')
+const casesmodel = require('../models/case')
+const legislation = require('../models/legislation')
+const helpers = require('../common/functions')
+const MOJconstants = require('../constants/MOJresponse')
 
 module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, startIndex = 0, batchSize = 1) => {
     if (!dataSource) {
@@ -11,7 +15,7 @@ module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, s
             if(datatype !== constants.casesname) {
                 throw new Error('You can only request cases from the MOJ.')
             }
-            unformatted = await require("./jdoCases")()
+            unformatted = await require("./jdoCases").run()
             break
 
         case constants.pcotype:
@@ -26,12 +30,12 @@ module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, s
             break
 
         case constants.urltype:
-            checklocation()
+            checklocation(dataLocation)
             unformatted = await require("./generic/url")(dataLocation)
             break
 
         case constants.localfiletype:
-            checklocation()
+            checklocation(dataLocation)
             unformatted = await require("./generic/localfile")(dataLocation)
             break
 
@@ -45,7 +49,7 @@ module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, s
     return choosecasesorlegislation(datatype, unformatted)
 }
 
-function checklocation() {
+function checklocation(dataLocation) {
     if (!dataLocation) {
         throw new Error("Missing datalocation")
     }
@@ -54,10 +58,17 @@ function checklocation() {
 function choosecasesorlegislation(datatype, unformattedresponse) {
     switch(datatype) {
         case constants.casesname:
-            return casesmodel.maparraytocases(json)
+            let output = unformattedresponse
+            let isnotflat = helpers.isnullorundefined(unformattedresponse.response) === false && 
+                            helpers.isnullorundefined(unformattedresponse.response.docs) === false
+
+            if(isnotflat === true) {
+                output = helpers.getNestedObject(unformattedresponse, MOJconstants.flattenedarraypath)
+            }
+            return casesmodel.maparraytocases(output)
 
         case constants.legislationname:
-            return legislation.maparraytolegislation(json)
+            return legislation.maparraytolegislation(unformattedresponse)
 
         default:
             throw new Error('invalid data type for URL aggregation.')

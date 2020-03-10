@@ -1,5 +1,6 @@
 const casestable = require("../constants/casestable")
 const isrequired = require('../common/functions').isrequired
+const commonfuncs = require('../common/functions')
 
 /** construct using the new keyword */
 function construct(
@@ -48,7 +49,7 @@ module.exports.maparraytocases = (inputarray) =>
     inputarray.map((currentitem) => {
         let hash = commonfuncs.getprojecthash()
         
-        new casemodel.construct(
+        return new construct(
             file_provider = "jdo",
             file_key = "jdo_" + new Date(currentitem.JudgmentDate) + "_" + currentitem.DocumentName,
             file_url = "https://forms.justice.govt.nz/search/Documents/pdf/" + currentitem.id,

@@ -2,8 +2,9 @@ const caser = require('../getCases')
 const legislator = require('../getLegislation')
 const constants = require('../constants')
 const helpers = require('./testhelpers')
+const casesURL = require('../getDataFile/jdoCases').URL
 
-fdescribe('when MOJ cases are aggregated', () => {    
+describe('when MOJ cases are aggregated', () => {    
     let starters;
 
     beforeAll(async () => {
@@ -27,7 +28,7 @@ fdescribe('when MOJ cases are aggregated', () => {
     }, constants.asynctimeout)
 })
 
-fdescribe("when PCO legislation is aggregated", () => {
+describe("when PCO legislation is aggregated", () => {
     let starters;
 
     beforeAll(async () => {
@@ -76,7 +77,7 @@ async function runtest(entrypoint, pgPool, pgPromise, dataSource, dataLocation, 
     } 
 }
 
-describe("when a URL data source is aggregated", () => {
+fdescribe("when a URL data source is aggregated", () => {
     let starters;
 
     beforeAll(async () => {
@@ -84,10 +85,13 @@ describe("when a URL data source is aggregated", () => {
     })
 
     afterEach(async () => {
-        await helpers.cleantable(starters.pgPoolConnection)        
+        await helpers.cleantable(starters.pgPoolConnection, constants.casesname)
     })
 
-    // it('aggregates cases without error', constants.asynctimeout)
+    it('aggregates cases without error', async () => {
+        await runtest(constants.caseentrypoint, starters.pgPoolConnection, starters.pgPromise, constants.urltype, casesURL, null)
+    }, 
+    constants.asynctimeout)
 
     it('cases can be found in the database', () => {
         
@@ -135,5 +139,9 @@ describe("when a TT data source is aggregated", () => {
 
     it('cases can be found in the database', () => {
         
+    })
+
+    it("returns a paginated response", () => {
+
     })
 })

@@ -1,11 +1,11 @@
 const urlAdapter = require("./generic/url")
-const commonfuncs = require("../common/functions")
-const casemodel = require('../models/case')
+const MOJconstants = require('../constants/MOJresponse')
 
 // Currently limited to 10 results for testing
 const maxRows = 10
 const fromDate = "2016-2-27"
-const jsonURL = [
+
+const URL = [
 	"https://forms.justice.govt.nz/solr/jdo/select",
 	"?q=*",
 	"&facet=true",
@@ -20,10 +20,11 @@ const jsonURL = [
 	"&fl=CaseName%2C%20JudgmentDate%2C%20DocumentName%2C%20id%2C%20score",
 	"&wt=json"
 ].join("")
+module.exports.URL = URL
 
 const run = async () => {
 	try {
-		const mojData = await urlAdapter(jsonURL, ["response", "docs"])		
+		const mojData = await urlAdapter(URL, MOJconstants.flattenedarraypath)
 		return mojData	
 	} 
 	
@@ -39,5 +40,5 @@ if (require.main === module) {
 		console.log(ex)
 	}
 } else {
-	module.exports = run
+	module.exports.run = run
 }

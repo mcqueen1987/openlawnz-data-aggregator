@@ -13,5 +13,6 @@ const MOJresponse = {
     MNC: 'MNC',
     id: 'id',
     timestamp: 'timestamp',
+    flattenedarraypath: ['response', 'docs']
 }
 module.exports = MOJresponse
