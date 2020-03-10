@@ -22,16 +22,15 @@ fdescribe('when MOJ cases are aggregated', () => {
 
         catch(error) {
             return Promise.reject(error)
-        }
-        helpers.teststringforerrors(result)
+        }        
     }
 
-    it('runs without error', runMOJtest)
+    it('runs without error', runMOJtest, constants.asynctimeout)
 
     it('can be found in the database', async () => {
         await runMOJtest()
         await helpers.checktablehasresults(starters.pgPoolConnection, constants.casesname)
-    })
+    }, constants.asynctimeout)
 })
 
 describe("when PCO legislation is aggregated", () => {

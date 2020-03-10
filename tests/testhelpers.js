@@ -57,14 +57,6 @@ module.exports.cleantables = async function(connection) {
     }
 }
 
-const errorlabel = 'Error'
-
-module.exports.teststringforerrors = function(subject) {
-    expect(subject).not.toContain(errorlabel)
-    expect(subject).not.toContain(errorlabel.toLowerCase)
-    expect(subject).not.toContain(errorlabel.toUpperCase)
-}
-
 module.exports.checktablehasresults = async function(connection, tablename) {
     let client = null
 
@@ -73,7 +65,7 @@ module.exports.checktablehasresults = async function(connection, tablename) {
         await client.query(constants.sqlbegin)
         let response = await client.query(`select * from ingest.${tablename};`)
         await client.query(constants.sqlcommit)
-console.log('table results: ' + JSON.stringify(response))
+        console.log('table data found.')
         return Promise.resolve(response)
     } 
     

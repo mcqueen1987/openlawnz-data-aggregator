@@ -7,6 +7,7 @@ const constants = {
     sqlbegin: 'BEGIN',
     sqlcommit: 'COMMIT',
     sqlrollback: 'ROLLBACK',
-    envfile: '.env.'
+    envfile: '.env.',
+    asynctimeout: 60000,
 }
 module.exports = constants
