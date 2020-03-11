@@ -15,7 +15,8 @@
             "args": [
                 "--env=local",
                 "--datasource=moj"
-            ]
+            ],
+            "internalConsoleOptions": "neverOpen"
         },
         {
             "type": "node",
@@ -28,7 +29,8 @@
             "args": [
                 "--env=local",
                 "--datasource=pco"
-            ]
+            ],
+            "internalConsoleOptions": "neverOpen"
         },
         {
             "type": "node",
@@ -36,7 +38,8 @@
             "name": "Jest tests",
             "program": "${workspaceFolder}/node_modules/.bin/jest",
             "console": "integratedTerminal",
-            "disableOptimisticBPs": true
-          },
+            "disableOptimisticBPs": true,
+            "internalConsoleOptions": "neverOpen"
+        },
     ]
 }
