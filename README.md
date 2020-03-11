@@ -9,6 +9,7 @@
 - Rename `.env.sample` to .env.`env` (e.g. `.env.local`) and fill in with Postgres details.
 
 ## Database Setup
+
 Clone the [database project](https://github.com/openlawnz/openlawnz-database) and follow its readme file to start a local environment database.
 
 ## env
@@ -40,7 +41,7 @@ A `case` datastore must return an array of:
   date_processed: '<date>'
   processing_status: '<enum>' //UNPROCESSED, PROCESSING, PROCESSED
   sourcecode_hash: '<string>'
-  date_accessed: '<date>'  
+  date_accessed: '<date>'
 }
 ```
 
@@ -48,13 +49,11 @@ A `legislation` datastore must return an array of:
 
 ```javascript
 {
-  title: "<string>"
-  link: "<string>"
-  year: "<string>"
-  alerts: "<string>"
-  link: '<string>'
-  year: '<string>'
-  date_accessed: '<date_accessed>'
+  title: "<string>";
+  link: "<string>";
+  year: "<string>";
+  alerts: "<string>";
+  date_accessed: "<date_accessed>";
 }
 ```
 
@@ -64,23 +63,22 @@ There are two entrypoint files depending on which type of data you wish to aggre
 
 #### Parameters
 
-*datasource*:
+_datasource_:
 
-  - `moj` Data from the Ministry of Justice's database. Only works when `getCases.js` is the entrypoint.
+- `moj` Data from the Ministry of Justice's database. Only works when `getCases.js` is the entrypoint.
 
-  - `pco` Data scraped from the Parliamentary Council Office. Only works when `getLegislation.js` is the entrypoint.
+- `pco` Data scraped from the Parliamentary Council Office. Only works when `getLegislation.js` is the entrypoint.
 
-  - `localfile` A JSON file in similar format to data in the /exampledata folder. Requires --datalocation .
+- `localfile` A JSON file in similar format to data in the /exampledata folder. Requires --datalocation .
 
-  - `url` general URL to cases or legislation. Be very careful with this. Requires --datalocation .
+- `url` general URL to cases or legislation. Be very careful with this. Requires --datalocation .
 
-  - `tt` Data from the Tenancy Tribunal's decision search. Requires --pageSize .
-  
+- `tt` Data from the Tenancy Tribunal's decision search. Requires --pageSize .
 
-*datalocation*:
+_datalocation_:
 
-  - a local json file OR
-  - a url
+- a local json file OR
+- a url
 
 #### Get Cases
 
@@ -91,7 +89,8 @@ node getCases.js --env=<env> --datasource=<datasource>
 
 If insertion into the database fails, you have to individually delete the rows of each table.
 
-Like So:  
+Like So:
+
 ```sql
 DELETE FROM ingest.cases;
 DELETE FROM ingest.legislation;
@@ -106,7 +105,6 @@ cd pipeline
 node getLegislation.js --env=<env> --datasource=<datasource> [--datalocation=<datalocation>]
 ```
 
-
 #### Example Usage
 
 ```
@@ -116,15 +114,17 @@ node getCases.js --env=local --datasource=moj
 You can find an example of the data from different sources in the `/exampledata` folder.
 
 ## using the PCO data source
+
 You will need to be given administrative access to the OpenLawNZ Apify account. Add the following variables to your .env file:
 
 - APIFY_TASK_ID
 - APIFY_TOKEN
 
 #### Testing
+
 run `Jest` in the root directory.
 
-Or, prss `F5` to use the vscode breakpoints set up in the launch.json file. 
+Or, prss `F5` to use the vscode breakpoints set up in the launch.json file.
 
 ## NOTICE
 
