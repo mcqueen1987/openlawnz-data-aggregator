@@ -55,24 +55,24 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
         let hash = commonfuncs.getprojecthash()
 
         const formattedTenancyData = tenancyData['response']['docs'].map(doc => {
-            const provider = doc['categoryCode'][0]
+            //const provider = doc['categoryCode'][0]
             const order_detail = JSON.parse(doc['orderDetailJson_s'][0])
-            const case_date = order_detail['dateOfIssue']
-            const case_date_object = moment(case_date, "DD/MM/YYYY").toDate()
+            const casedatefound = order_detail['dateOfIssue']
+            const case_date_object = moment(casedatefound, "DD/MM/YYYY").toDate()
             const db_key = uuidv1() + '.pdf'  // like '6c84fb90-12c4-11e1-840d-7b25c5ee775a.pdf'
             const case_key = provider + '_' + case_date_object.getTime() + '_' + db_key
             const pdf_url = BASE_PDF_URL + order_detail['publishedOrderPdfName']
             // citation format : [$year] NZTT $location $applicationNumber e.g '[2019] NZTT Hamilton 4213491'
             const citation = '[' + case_date_object.getFullYear() + '] NZ' + provider + ' ' + doc['tenancyCityTown_s'] + ' ' + doc['applicationNumber_s']
             const case_name = doc['casePerOrg_s'].join(' vs ')
-            const case_text = doc['document_text_abstract']
+            //const case_text = doc['document_text_abstract']
 
             return casemodel.construct(
-                file_provider = provider,
+                file_provider = constants.TTtype,
                 file_key = case_key,
                 file_url = pdf_url,
                 case_names = [case_name],
-                case_date = case_date,
+                case_date = case_date_object,
                 case_citations = [citation],
                 date_processed = null,
                 processing_status = constants.unprocessedstatus,

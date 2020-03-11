@@ -19,7 +19,7 @@ module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, s
             }
             console.log(`aggregating ${constants.mojtype}...`)
             unformatted = await require("./jdoCases").run()
-            break
+            return choosecasesorlegislation(datatype, unformatted)
 
         case constants.pcotype:
             if (!process.env.APIFY_TASK_ID || !process.env.APIFY_TOKEN) {
@@ -31,14 +31,14 @@ module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, s
             }
             console.log(`aggregating ${constants.pcotype}...`)
             unformatted = await require("./pcoLegislation").run()
-            break
+            return choosecasesorlegislation(datatype, unformatted)
 
         case constants.urltype:
             checklocation(dataLocation)
             console.log(`aggregating ${constants.urltype}...`)
             unformatted = await require("./generic/url")(dataLocation)
             console.log(`${constants.urltype} response received...`)
-            break
+            return choosecasesorlegislation(datatype, unformatted)
 
         case constants.localfiletype:
             checklocation(dataLocation)
@@ -52,12 +52,12 @@ module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, s
             }
             console.log(`aggregating ${constants.TTtype}...`)
             unformatted = await require("./ttCases")(pgPool, pgPromise, startIndex, batchSize)
-            break
+            return unformatted
 
         default:
             throw new Error('Incorrect datasource specified.')
     }
-    return choosecasesorlegislation(datatype, unformatted)
+    
 }
 
 function checklocation(dataLocation) {

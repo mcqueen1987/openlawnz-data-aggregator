@@ -47,13 +47,14 @@ if (require.main === module) {
 	module.exports.run = run
 }
 
-module.exports.maparraytocases = (inputarray) =>
-    inputarray.map((currentitem) => {
+module.exports.maparraytocases = (inputarray) => {
+	let output = {}
+	output[constants.datalabel] = inputarray.map((currentitem) => {
         let hash = commonfuncs.getprojecthash()
         
         return new casemodel.construct(
-            file_provider = "jdo",
-            file_key = "jdo_" + new Date(currentitem.JudgmentDate) + "_" + currentitem.DocumentName,
+            file_provider = constants.mojtype,
+            file_key = `${constants.mojtype}_` + new Date(currentitem.JudgmentDate) + "_" + currentitem.DocumentName,
             file_url = "https://forms.justice.govt.nz/search/Documents/pdf/" + currentitem.id,
             case_names = [currentitem.CaseName],
             case_date = currentitem.JudgmentDate,
@@ -63,5 +64,7 @@ module.exports.maparraytocases = (inputarray) =>
             sourcecode_hash = hash,
             date_accessed = new Date()
         )	
-    })
+	})
+	return output
+}
 

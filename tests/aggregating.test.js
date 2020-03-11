@@ -92,7 +92,7 @@ describe("when a URL data source is aggregated", () => {
     it('aggregates cases without error', 
         async () => {
             await dothething(constants.caseentrypoint, casesURL)
-            await helpers.cleantable(starters.pgPoolConnection, constants.casesname)
+            await helpers.cleantable(starters.pgPoolConnection, constants.casesname) //I took this out of afterEach() so that I could clear only one table per test
         }, constants.asynctimeout)
 
     it('cases can be found in the database', async () => {
@@ -123,23 +123,40 @@ describe("when a localfile data source is aggregated", () => {
 
 fdescribe("when a TT data source is aggregated", () => {
     let starters;
+    const inputpagesize = 1000
+    const hugetimeout = constants.asynctimeout * 20
 
     beforeAll(async () => {
         starters = await helpers.getstartdata()
     }, constants.asynctimeout)
 
-    async function dothething(entrypoint) {
-        await runtest(entrypoint, starters.pgPoolConnection, starters.pgPromise, constants.TTtype, null, null)
+    async function dothething(entrypoint, batchsize) {
+        await runtest(entrypoint, starters.pgPoolConnection, starters.pgPromise, constants.TTtype, null, batchsize)
     }
 
-    it('aggregates cases without error', 
+    /** WARNING: VERY SLOW */
+    it('aggregates cases in pages', 
         async () => {
-            await dothething(constants.caseentrypoint)
+            await dothething(constants.caseentrypoint, inputpagesize)
+            await helpers.cleantable(starters.pgPoolConnection, constants.casesname)
+        }, hugetimeout)
+
+    /** WARNING: VERY SLOW */
+    fit('cases can be found in the database after paging', async () => {
+        await dothething(constants.caseentrypoint, inputpagesize)
+        console.log(`${constants.urltype} aggregation finished and will be tested...`)
+        await helpers.checktablehasresults(starters.pgPoolConnection, constants.casesname)
+        await helpers.cleantable(starters.pgPoolConnection, constants.casesname)
+    }, hugetimeout)
+
+    it('aggregates cases', 
+        async () => {
+            await dothething(constants.caseentrypoint, null)
             await helpers.cleantable(starters.pgPoolConnection, constants.casesname)
         }, constants.asynctimeout)
 
     it('cases can be found in the database', async () => {
-        await dothething(constants.caseentrypoint)
+        await dothething(constants.caseentrypoint, null)
         console.log(`${constants.urltype} aggregation finished and will be tested...`)
         await helpers.checktablehasresults(starters.pgPoolConnection, constants.casesname)
         await helpers.cleantable(starters.pgPoolConnection, constants.casesname)

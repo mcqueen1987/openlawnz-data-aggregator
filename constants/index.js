@@ -16,7 +16,9 @@ const constants = {
     localfiletype: 'localfile',
     caseentrypoint: 'getCases.js',
     legislationentrypoint: 'getLegislation.js',
-    unprocessedstatus: 'UNPROCESSED'
+    unprocessedstatus: 'UNPROCESSED',
+    datalabel: 'data',
+    pagecountlabel: 'case_count_from_page'
 }
 module.exports = constants
 

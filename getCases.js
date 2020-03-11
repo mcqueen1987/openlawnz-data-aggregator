@@ -22,8 +22,8 @@ const run = async (pgPool, pgPromise, dataSource, dataLocation, pageSize = null)
     try {
         // without pagination
         if (helpers.isnullorundefined(pageSize)) {
-            const dataFile = await getDataFile(pgPool, pgPromise, dataSource, dataLocation, constants.casesname)
-            await saveAggregatorCases(dataFile, pgPool, pgPromise)
+            const dataresult = await getDataFile(pgPool, pgPromise, dataSource, dataLocation, constants.casesname)
+            await saveAggregatorCases(dataresult[constants.datalabel], pgPool, pgPromise)
             return Promise.resolve()
         }
 
@@ -32,14 +32,14 @@ const run = async (pgPool, pgPromise, dataSource, dataLocation, pageSize = null)
         let startIndex = 0
         const safePageSize = pageSize <= 0 ? BATCH_SIZE : pageSize
         for (let startIndex = 0; startIndex <= totalCaseCount; startIndex += safePageSize) {
-            const dataFile = await getDataFile(pgPool, pgPromise, dataSource, dataLocation, constants.casesname, startIndex, safePageSize)
-
+            const dataresult = await getDataFile(pgPool, pgPromise, dataSource, dataLocation, constants.casesname, startIndex, safePageSize)
+            
             // set total case count if not set
-            if (!totalCaseCount) {
-                totalCaseCount = dataFile['case_count_from_page']
+            if (totalCaseCount === 0) {
+                totalCaseCount = dataresult[constants.pagecountlabel]
                 console.log(`total case count: [${totalCaseCount}]`)
             }
-            await saveAggregatorCases(dataFile['data'], pgPool, pgPromise)
+            await saveAggregatorCases(dataresult[constants.datalabel], pgPool, pgPromise)
             // sleep between calls
             await new Promise(resolve => setTimeout(resolve, REQUEST_INTERVAL_MS))
             console.log(`data saved: start index [${startIndex}] page size [${safePageSize}]`)
