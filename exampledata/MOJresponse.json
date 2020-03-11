@@ -1,0 +1,169 @@
+{
+   "responseHeader": {
+      "status": 0,
+      "QTime": 1079,
+      "params": {
+         "facet": "true",
+         "sort": "JudgmentDate desc",
+         "facet.mincount": "1",
+         "facet.limit": "-1",
+         "json.nl": "map",
+         "wt": "json",
+         "rows": "10",
+         "fl": "CaseName, JudgmentDate, DocumentName, id, score",
+         "q": "*",
+         "facet.field": [
+            "Location",
+            "Jurisdiction"
+         ]
+      }
+   },
+   "response": {
+      "numFound": 31640,
+      "start": 0,
+      "maxScore": 1.0,
+      "docs": [
+         {
+            "JudgmentDate": "2020-03-06T13:00:01Z",
+            "DocumentName": "baaf34d0-55b6-4c96-b6cb-b385caa07a80.pdf",
+            "CaseName": "APPLICATION BY STOKE VALLEY HOLDINGS LIMITED AND SOLITAIRE INVESTMENTS LIMITED [2020] NZHC 430 [6 March 2020]",
+            "id": "jdo/3d/alfresco/service/api/node/content/workspace/SpacesStore/baaf34d0-55b6-4c96-b6cb-b385caa07a80/baaf34d0-55b6-4c96-b6cb-b385caa07a80.pdf",
+            "score": 1.0
+         },
+         {
+            "JudgmentDate": "2020-03-05T13:00:01Z",
+            "DocumentName": "d57bf087-45b5-48f5-8340-38c6ef8fd610.pdf",
+            "CaseName": "MCLEOD v GILES-PAIN & Anor [2020] NZHC 369 [5 March 2020]",
+            "id": "jdo/b1/alfresco/service/api/node/content/workspace/SpacesStore/d57bf087-45b5-48f5-8340-38c6ef8fd610/d57bf087-45b5-48f5-8340-38c6ef8fd610.pdf",
+            "score": 1.0
+         },
+         {
+            "JudgmentDate": "2020-03-05T13:00:01Z",
+            "DocumentName": "1bcfbc87-18a2-42fb-916f-2e01791e7080.pdf",
+            "CaseName": "Lu v Industrial and Commercial Bank of China (New Zealand) Limited [2020] NZHC 402 [5 March 2020]",
+            "id": "jdo/d2/alfresco/service/api/node/content/workspace/SpacesStore/1bcfbc87-18a2-42fb-916f-2e01791e7080/1bcfbc87-18a2-42fb-916f-2e01791e7080.pdf",
+            "score": 1.0
+         },
+         {
+            "JudgmentDate": "2020-03-04T13:00:01Z",
+            "DocumentName": "9803a6ac-afca-4c15-af40-a3f2bf3720bf.pdf",
+            "CaseName": "COMMERCE COMMISSION v STEEL & TUBE HOLDINGS LIMITED [2020] NZCA 39 [4 March 2020]",
+            "id": "jdo/e5/alfresco/service/api/node/content/workspace/SpacesStore/9803a6ac-afca-4c15-af40-a3f2bf3720bf/9803a6ac-afca-4c15-af40-a3f2bf3720bf.pdf",
+            "score": 1.0
+         },
+         {
+            "JudgmentDate": "2020-03-04T13:00:01Z",
+            "DocumentName": "86857e06-c649-4ecf-8cb5-42716afafa97.pdf",
+            "CaseName": "YOUSSEFI v NEW ZEALAND POLICE [2020] NZCA 38 [4 March 2020]",
+            "id": "jdo/18/alfresco/service/api/node/content/workspace/SpacesStore/86857e06-c649-4ecf-8cb5-42716afafa97/86857e06-c649-4ecf-8cb5-42716afafa97.pdf",
+            "score": 1.0
+         },
+         {
+            "JudgmentDate": "2020-03-04T13:00:01Z",
+            "DocumentName": "883ea641-f739-4660-ad93-1a2a9d9509b9.pdf",
+            "CaseName": "ROBERT MATTI NEHO v R [2020] NZSC 13 [4 March 2020]",
+            "id": "jdo/93/alfresco/service/api/node/content/workspace/SpacesStore/883ea641-f739-4660-ad93-1a2a9d9509b9/883ea641-f739-4660-ad93-1a2a9d9509b9.pdf",
+            "score": 1.0
+         },
+         {
+            "JudgmentDate": "2020-03-04T13:00:01Z",
+            "DocumentName": "cfd2a0ce-4936-4cab-b49a-8542785fd2a5.pdf",
+            "CaseName": "A v NATIONAL STANDARDS COMMITTEE [2020] NZHC 392 [4 March 2020]",
+            "id": "jdo/49/alfresco/service/api/node/content/workspace/SpacesStore/cfd2a0ce-4936-4cab-b49a-8542785fd2a5/cfd2a0ce-4936-4cab-b49a-8542785fd2a5.pdf",
+            "score": 1.0
+         },
+         {
+            "JudgmentDate": "2020-03-03T13:00:01Z",
+            "DocumentName": "b3adcb13-64da-4016-be4f-48aeaefe49af.pdf",
+            "CaseName": "POOL v SUMMERLEE [2020] NZCA 35 [3 March 2020]",
+            "id": "jdo/5e/alfresco/service/api/node/content/workspace/SpacesStore/b3adcb13-64da-4016-be4f-48aeaefe49af/b3adcb13-64da-4016-be4f-48aeaefe49af.pdf",
+            "score": 1.0
+         },
+         {
+            "JudgmentDate": "2020-03-03T13:00:01Z",
+            "DocumentName": "ef1c6223-2013-431a-8da1-42a60275ec72.pdf",
+            "CaseName": "SAMSON CORPORATION LTD v RYAN INVESTMENT GROUP LTD [2020] NZHC 370 [3 March 2020]",
+            "id": "jdo/1d/alfresco/service/api/node/content/workspace/SpacesStore/ef1c6223-2013-431a-8da1-42a60275ec72/ef1c6223-2013-431a-8da1-42a60275ec72.pdf",
+            "score": 1.0
+         },
+         {
+            "JudgmentDate": "2020-03-03T13:00:01Z",
+            "DocumentName": "cc92c668-5282-4e1c-a90d-7c0a258649be.pdf",
+            "CaseName": "HOLLYMAN v HOLLYMAN [2020] NZHC 362 [3 March 2020]",
+            "id": "jdo/86/alfresco/service/api/node/content/workspace/SpacesStore/cc92c668-5282-4e1c-a90d-7c0a258649be/cc92c668-5282-4e1c-a90d-7c0a258649be.pdf",
+            "score": 1.0
+         }
+      ]
+   },
+   "facet_counts": {
+      "facet_queries": {},
+      "facet_fields": {
+         "Location": {
+            "": 30,
+            "(AUCKLAND) NELSON": 1,
+            "<NOT SPECIFIED>": 1499,
+            "AUCKALND": 1,
+            "AUCKAND": 5,
+            "AUCKLAND": 12452,
+            "AUCKLAND REGISTRY": 1,
+            "AUCKLAND REGISTRY_x000d__x000d_TE KŌTI MATUA O AOTEAROA_x000d_TĀMAKI MAKAURAU ROHE": 2,
+            "AUCKLAND-": 1,
+            "AUCKLAND]": 1,
+            "AUCKLAND`": 1,
+            "BLENHEIM": 151,
+            "BLENHEIM REGISTRY_x000d_": 1,
+            "CHIRSTCHURCH": 1,
+            "CHRISTCHRUCH": 1,
+            "CHRISTCHURCH": 2511,
+            "CHRISTCHURCH]": 2,
+            "CHRISTCHURCH`": 1,
+            "CHRISTHCURCH": 1,
+            "CHRISTRCHURCH": 1,
+            "DUNEDIN": 546,
+            "FORMTEXT CHRISTCHURCH": 2,
+            "GISBORNE": 135,
+            "GREYMOUTH": 70,
+            "HAMILTON": 1156,
+            "IN ADMIRALTY_x000d_AUCKLAND": 1,
+            "IN ADMIRALTY_x000d_TIMARU": 1,
+            "IN ADMIRALTY_x000d_WELLINGTON": 1,
+            "IN BANKRUPTCY_x000d_CHRISTCHURCH": 1,
+            "INVERCARGILL": 411,
+            "MASTERTON": 49,
+            "NAPIER": 622,
+            "NAPIER (transferred to Christchurch)": 1,
+            "NELSON": 356,
+            "NESLON": 1,
+            "NEW PLYMOUTH": 293,
+            "NEW ZEALAND": 3931,
+            "PALMERSON NORTH": 1,
+            "PALMERSTON NORTH": 467,
+            "QUEENSTOWN": 1,
+            "ROTORUA": 607,
+            "TAURANGA": 690,
+            "TIMARU": 181,
+            "WANGANUI": 93,
+            "WELLINGTOIN": 1,
+            "WELLINGTON": 4599,
+            "WELLLINGTON": 3,
+            "WHANGANUI": 65,
+            "WHANGAREI": 685,
+            "WHANGAREIWHANGAREI": 1,
+            "WHANGREI": 1,
+            "WHĀNGANUI": 1,
+            "[NAME OF REGISTRY]": 3
+         },
+         "Jurisdiction": {
+            "COURT OF APPEAL": 2961,
+            "Court of Appeal": 1695,
+            "HIGH COURT": 5391,
+            "HIGH COURT": 1,
+            "High Court": 19631,
+            "SUPREME COURT": 970,
+            "Supreme Court": 991
+         }
+      },
+      "facet_dates": {},
+      "facet_ranges": {}
+   }
+}

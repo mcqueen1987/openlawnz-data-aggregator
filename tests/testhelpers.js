@@ -8,7 +8,7 @@ module.exports.getstartdata = async function() {
     startdata = await setup.getstartdata(envlabel)
     expect(startdata.pgPromise).toBeTruthy()
     expect(startdata.pgPoolConnection).toBeTruthy()
-    console.log('initialized complete. tests starting...')    
+    console.log('initialization complete. tests starting...')    
     return startdata    
 }
 

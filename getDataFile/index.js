@@ -44,7 +44,7 @@ module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, s
             checklocation(dataLocation)
             console.log(`aggregating ${constants.localfiletype}...`)
             unformatted = await require("./generic/localfile")(dataLocation)
-            break
+            return choosecasesorlegislation(datatype, unformatted)
 
         case constants.TTtype:
             if(datatype !== constants.casesname) {
