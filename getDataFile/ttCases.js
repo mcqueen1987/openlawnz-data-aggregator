@@ -55,7 +55,7 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
         let hash = commonfuncs.getprojecthash()
 
         const formattedTenancyData = tenancyData['response']['docs'].map(doc => {
-            //const provider = doc['categoryCode'][0]
+            const provider = doc['categoryCode'][0]
             const order_detail = JSON.parse(doc['orderDetailJson_s'][0])
             const casedatefound = order_detail['dateOfIssue']
             const case_date_object = moment(casedatefound, "DD/MM/YYYY").toDate()
