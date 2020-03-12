@@ -76,8 +76,11 @@ module.exports.startapplication = function startapplication(entrypoint, pagesize
     }
     runner().then(() => {
         console.log('aggregation complete.')
-        process.exit
+        process.exit()
     })
-    .catch(console.log)
+    .catch((error) => {
+        console.log(error)
+        process.exit()
+    })
 }
 
