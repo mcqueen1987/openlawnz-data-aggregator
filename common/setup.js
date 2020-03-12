@@ -49,14 +49,14 @@ const setup = async (environmentfilename, resumeSessionId = 0) => {
     };
 
     let pgPoolConnection = new Pool(conn);
-
+    let environment = process.env
     return {
         sessionId,
         cacheDir,
         logDir,
         pgPromise,
         pgPoolConnection,
-        environment = process.env
+        environment
     };
 }
 module.exports.getStartData = setup;
