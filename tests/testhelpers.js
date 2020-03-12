@@ -4,6 +4,7 @@ const constants = require('../constants');
 const rng = require('rng')
 const commonfuncs = require('../common/functions');
 const environmentConsts = require('../constants/environment')
+const generator = new rng.MT(5)
 
 const getSelectAllQuery = (tableName) => `select * from ingest.${tableName};`;
 
@@ -127,7 +128,7 @@ module.exports.createFreshTable = async function(connection, newTableName) {
  * the name of the test legislation table. 
  * */
 module.exports.createEnvironmentFile = async function() {    
-    let randomNumber = rng.range(0, 1000000)
+    let randomNumber = generator.range(0, 1000000)
     let testFile = testEnvironmentName + randomNumber
     let testCases = constants.casesName + randomNumber
     let testLegislation = constants.legislationName + randomNumber
@@ -149,10 +150,11 @@ module.exports.createEnvironmentFile = async function() {
 function parseJsonToEnv(inputJson) {
     let output = ''
     const newLine = '/n'
+    let keys = inputJson.keys()
 
-    for(let i = 0; i < inputJson.keys.length; i++) {
-        currentKey = inputJson.keys[i]
-        let currentProp = inputJson[inputJson.keys[i]]
+    for(let i = 0; i < keys.length; i++) {
+        currentKey = keys[i]
+        let currentProp = inputJson[keys[i]]
         output += `${currentKey}=${currentProp}${newLine}`
     }
     output += newLine
