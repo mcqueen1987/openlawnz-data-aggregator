@@ -8,8 +8,8 @@ const legislationtable = {
 }
 module.exports.table = legislationtable;
 
-const createquery = (tableName) => 
-`CREATE TABLE "ingest.${tableName}" (
+const getCreateQuery = (tableName) => 
+`CREATE TABLE ingest.${tableName} (
 link text NOT NULL,
 year text NOT NULL,
 title text NOT NULL,
@@ -18,4 +18,4 @@ date_accessed date NOT NULL
 );
 
 `
-module.exports.createquery = createquery
+module.exports.getCreateQuery = getCreateQuery

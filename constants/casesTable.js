@@ -12,8 +12,8 @@ const casestable = {
 }
 module.exports.table = casestable;
 
-const createQuery = (tableName) => 
-`CREATE TABLE "ingest.${tableName}" (
+const getCreateQuery = (tableName) => 
+`CREATE TABLE ingest.${tableName} (
 file_provider text NOT NULL,
 file_key text NOT NULL,
 file_url text NOT NULL,
@@ -27,4 +27,4 @@ processing_status ingest.processing_status NOT NULL
 );
 
 `
-module.exports.createQuery = createQuery
+module.exports.getCreateQuery = getCreateQuery

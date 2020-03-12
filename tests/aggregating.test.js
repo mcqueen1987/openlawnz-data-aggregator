@@ -12,10 +12,11 @@ fdescribe('when MOJ cases are aggregated', () => {
     let testNames;
 
     beforeEach(async () => {
+        console.log('initializing test...');
         testNames = await helpers.createEnvironmentFile();
         starters = await helpers.getStartData(testNames.testFile);
-        let createScript = caseModel.createQuery(testNames.testCases)
-        await helpers.createFreshTable(starters.pgPoolConnection, createScript);        
+        let createScript = caseModel.getCreateQuery(testNames.testCases);
+        await helpers.createFreshTable(starters.pgPoolConnection, createScript, testNames.testCases);
     }, constants.asyncTimeout)
 
     afterEach(async () => {

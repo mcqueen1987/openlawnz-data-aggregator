@@ -1,19 +1,14 @@
 const setup = require('../common/setup');
 const fs = require('fs');
 const constants = require('../constants');
-const rng = require('rng')
 const commonfuncs = require('../common/functions');
 const environmentConsts = require('../constants/environment')
-
-const generator = new rng.MT(5)
-
-const getSelectAllQuery = (tableName) => `select * from ingest.${tableName};`;
 
 const testEnvironmentName = 'testenvironmentdonttouch'
 module.exports.testEnvironmentName = testEnvironmentName
 
 async function getStartData(overridingEnvironmentName = null) {
-    console.log('initializing tests...');
+    
     let envLabel;
 
     if(commonfuncs.isnullorundefined(overridingEnvironmentName)) {
@@ -26,7 +21,6 @@ async function getStartData(overridingEnvironmentName = null) {
     let startData = await setup.getStartData(envLabel);
     expect(startData.pgPromise).toBeTruthy();
     expect(startData.pgPoolConnection).toBeTruthy();
-    console.log('initialization complete. tests starting...');
     return startData;
 }
 module.exports.getStartData = getStartData
@@ -52,13 +46,13 @@ function getEnvFilesLabel() {
     
 }
 
-module.exports.dropTestTable = async function(connection, dropScript) {
+module.exports.dropTestTable = async function(connection, tableName) {
     let client = null;
 
     try {
         client = await connection.connect();
         let result1 = await client.query(constants.sqlBegin);
-        let result2 = await client.query(dropScript);
+        let result2 = await client.query(`DROP TABLE ingest.${tableName};`);
         let result4 = await client.query(constants.sqlCommit);
         console.log(`${tableName} test table removed.`);
         return Promise.resolve();
@@ -77,7 +71,7 @@ module.exports.dropTestTable = async function(connection, dropScript) {
 
 module.exports.checkTableHasResults = async function(connection, tableName) {
     let client = null;
-    let selectQuery = getSelectAllQuery(tableName);
+    let selectQuery = `select * from ingest.${tableName};`;
 
     try {
         client = await connection.connect();
@@ -100,21 +94,26 @@ module.exports.checkTableHasResults = async function(connection, tableName) {
     }
 }
 
-module.exports.createFreshTable = async function(connection, newTableName) {
+module.exports.createFreshTable = async function(connection, createScript, newTableName) {
     let client;
 
     try {
         client = await connection.connect();
         await client.query(constants.sqlBegin);
-        await client.query(`create table ${newTableName};`);
+        await client.query(createScript);
         await client.query(constants.sqlCommit);
-        console.log('test table created: ' + newTableName)        
-        return Promise.resolve()
+        console.log('test table created: ' + newTableName);
+        return Promise.resolve();
     }
-
-    catch(error) {
-        console.log(error)
-        return Promise.reject(error)
+    
+    catch (error) {
+        client && await client.query(constants.sqlRollback);
+        console.log(error);
+        return Promise.reject(error);
+    } 
+    
+    finally {
+        client && client.release();
     }
 }
 
@@ -122,8 +121,8 @@ module.exports.createFreshTable = async function(connection, newTableName) {
  * the name of the test cases table, 
  * the name of the test legislation table. 
  * */
-module.exports.createEnvironmentFile = async function() {    
-    let randomNumber = generator.range(0, 1000000)
+module.exports.createEnvironmentFile = async function() {   
+    let randomNumber = `${(Math.random() * 100000000)}`.split('.').join('')  //full stops not allowed in table names
     let testFile = testEnvironmentName + randomNumber
     let testCases = constants.casesName + randomNumber
     let testLegislation = constants.legislationName + randomNumber
