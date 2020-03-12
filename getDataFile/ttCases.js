@@ -75,7 +75,7 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
 				caseDate = case_date_object,
 				caseCitations = [citation],
 				dateProcessed = null,
-				processingStatus = constants.unprocessedstatus,
+				processingStatus = constants.unprocessedStatus,
 				sourceCodeHash = hash,
 				dateAccessed = new Date()
 			);

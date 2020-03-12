@@ -1,60 +1,75 @@
 const setup = require('../common/setup');
 const fs = require('fs');
 const constants = require('../constants');
+const rng = require('rng')
+const commonfuncs = require('../common/functions');
+const environmentConsts = require('../constants/environment')
 
-const getselectallquery = (tablename) => `select * from ingest.${tablename};`;
+const getSelectAllQuery = (tableName) => `select * from ingest.${tableName};`;
 
-module.exports.getstartdata = async function() {
+const testEnvironmentName = 'testenvironmentdonttouch'
+module.exports.testEnvironmentName = testEnvironmentName
+
+async function getStartData(overridingEnvironmentName = null) {
     console.log('initializing tests...');
-    let envlabel = getenvfileslabel();
-    startdata = await setup.getstartdata(envlabel);
-    expect(startdata.pgPromise).toBeTruthy();
-    expect(startdata.pgPoolConnection).toBeTruthy();
+    let envLabel;
+
+    if(commonfuncs.isnullorundefined(overridingEnvironmentName)) {
+        envLabel = getEnvFilesLabel();
+    }
+
+    else {
+        envLabel = testEnvironmentName
+    }
+    let startData = await setup.getStartData(envLabel);
+    expect(startData.pgPromise).toBeTruthy();
+    expect(startData.pgPoolConnection).toBeTruthy();
     console.log('initialization complete. tests starting...');
-    return startdata;
+    return startData;
 }
+module.exports.getStartData = getStartData
 
-function getenvfileslabel() {
+function getEnvFilesLabel() {
     console.log('searching for env files...');
-    let filenames = fs.readdirSync('./');
-    const envfileendindex = 5;
+    let fileNames = fs.readdirSync('./');
+    const envFileEndIndex = 5;
 
-    let lastenvfilefound = filenames.reduce((accumulate, currentvalue) => {
-        let possibleenvfile = currentvalue.substring(0, envfileendindex);
+    let lastEnvFileFound = fileNames.reduce((accumulate, currentValue) => {
+        let possibleEnvFile = currentValue.substring(0, envFileEndIndex);
 
-        if(possibleenvfile !== constants.envfile ||
-            currentvalue === `${constants.envfile}sample`) {
+        if(possibleEnvFile !== constants.envFile ||
+            currentValue === `${constants.envFile}sample`) {
             return accumulate;
         }        
-        let fileslabel = currentvalue.substring(envfileendindex);
+        let fileslabel = currentValue.substring(envFileEndIndex);
         return fileslabel;
     }, null);
-    expect(lastenvfilefound).not.toEqual(null);
-    console.log('env label found: ' + lastenvfilefound);
-    return lastenvfilefound;
+    expect(lastEnvFileFound).not.toEqual(null);
+    console.log('env label found: ' + lastEnvFileFound);
+    return lastEnvFileFound;
     
 }
 
-module.exports.cleantable = async function(connection, tablename) {
+module.exports.dropTestTable = async function(connection, tableName) {
     let client = null;
 
     try {
         client = await connection.connect();
-        let result1 = await client.query(constants.sqlbegin);
-        let result2 = await client.query(`TRUNCATE TABLE ingest.${tablename};`);
-        let result4 = await client.query(constants.sqlcommit);
+        let result1 = await client.query(constants.sqlBegin);
+        let result2 = await client.query(`DROP TABLE ingest.${tableName};`);
+        let result4 = await client.query(constants.sqlCommit);
 
-        let result5 = await client.query(constants.sqlbegin);
-        let selectquery = getselectallquery(tablename);
-        let result6 = await client.query(selectquery);
-        let result7 = await client.query(constants.sqlcommit);
+        let result5 = await client.query(constants.sqlBegin);
+        let selectQuery = getSelectAllQuery(tableName);
+        let result6 = await client.query(selectQuery);
+        let result7 = await client.query(constants.sqlCommit);
         expect(result6.rows).toHaveLength(0);
-        console.log(`${tablename} table cleaned.`);
+        console.log(`${tableName} test table removed.`);
         return Promise.resolve();
     } 
     
     catch (error) {
-        client && await client.query(constants.sqlrollback);
+        client && await client.query(constants.sqlRollback);
         console.log(error);
         return Promise.reject(error);
     } 
@@ -64,22 +79,22 @@ module.exports.cleantable = async function(connection, tablename) {
     }
 }
 
-module.exports.checktablehasresults = async function(connection, tablename) {
+module.exports.checkTableHasResults = async function(connection, tableName) {
     let client = null;
-    let selectquery = getselectallquery(tablename);
+    let selectQuery = getSelectAllQuery(tableName);
 
     try {
         client = await connection.connect();
-        let result1 = await client.query(constants.sqlbegin);
-        let result2 = await client.query(selectquery);
-        let result4 = await client.query(constants.sqlcommit);
+        let result1 = await client.query(constants.sqlBegin);
+        let result2 = await client.query(selectQuery);
+        let result4 = await client.query(constants.sqlCommit);
         expect(result2.rows).not.toHaveLength(0);
         console.log('table data was found.');
         return Promise.resolve();
     } 
     
     catch (error) {
-        client && await client.query(constants.sqlrollback);
+        client && await client.query(constants.sqlRollback);
         console.log(error);
         return Promise.reject(error);
     } 
@@ -87,4 +102,59 @@ module.exports.checktablehasresults = async function(connection, tablename) {
     finally {
         client && client.release();
     }
+}
+
+module.exports.createFreshTable = async function(connection, newTableName) {
+    let client;
+
+    try {
+        client = await connection.connect();
+        await client.query(constants.sqlBegin);
+        await client.query(`create table ${newTableName};`);
+        await client.query(constants.sqlCommit);
+        console.log('test table created: ' + newTableName)        
+        return Promise.resolve()
+    }
+
+    catch(error) {
+        console.log(error)
+        return Promise.reject(error)
+    }
+}
+
+/** returns the name of the test environment file, 
+ * the name of the test cases table, 
+ * the name of the test legislation table. 
+ * */
+module.exports.createEnvironmentFile = async function() {    
+    let randomNumber = rng.range(0, 1000000)
+    let testFile = testEnvironmentName + randomNumber
+    let testCases = constants.casesName + randomNumber
+    let testLegislation = constants.legislationName + randomNumber
+    
+    const originalSetup = await getStartData()
+    let environmentCopy = JSON.parse(JSON.stringify(originalSetup.environment))
+    environmentCopy[environmentConsts.casesTableName] = testCases
+    environmentCopy[environmentConsts.legislationName] = testLegislation
+    let fileData = parseJsonToEnv(environmentCopy)
+    fs.writeFileSync(`../${constants.envFile}${testFile}`, fileData)
+
+    return {
+        testFile,
+        testCases,
+        testLegislation
+    }
+}
+
+function parseJsonToEnv(inputJson) {
+    let output = ''
+    const newLine = '/n'
+
+    for(let i = 0; i < inputJson.keys.length; i++) {
+        currentKey = inputJson.keys[i]
+        let currentProp = inputJson[inputJson.keys[i]]
+        output += `${currentKey}=${currentProp}${newLine}`
+    }
+    output += newLine
+    return output
 }

@@ -1,24 +1,24 @@
 
 
 const constants = {
-    schemaname: 'ingest',
-    legislationname: 'legislation',
-    casesname: 'cases',
-    sqlbegin: 'BEGIN',
-    sqlcommit: 'COMMIT',
-    sqlrollback: 'ROLLBACK',
-    envfile: '.env.',
-    asynctimeout: 60000,
-    mojtype: 'moj',
-    pcotype: 'pco',
-    urltype: 'url',
+    schemaName: 'ingest',
+    legislationName: 'legislation',
+    casesName: 'cases',
+    sqlBegin: 'BEGIN',
+    sqlCommit: 'COMMIT',
+    sqlRollback: 'ROLLBACK',
+    envFile: '.env.',
+    asyncTimeout: 60000,
+    mojType: 'moj',
+    pcoType: 'pco',
+    urlType: 'url',
     TTtype: 'tt', 
-    localfiletype: 'localfile',
-    caseentrypoint: 'getCases.js',
-    legislationentrypoint: 'getLegislation.js',
-    unprocessedstatus: 'UNPROCESSED',
-    datalabel: 'data',
-    pagecountlabel: 'case_count_from_page'
+    localFileType: 'localfile',
+    caseEntryPoint: 'getCases.js',
+    legislationEntryPoint: 'getLegislation.js',
+    unprocessedStatus: 'UNPROCESSED',
+    dataLabel: 'data',
+    pageCountLabel: 'case_count_from_page'
 }
 module.exports = constants;
 

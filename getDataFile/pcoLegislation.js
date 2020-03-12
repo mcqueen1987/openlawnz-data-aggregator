@@ -18,7 +18,7 @@ const run = async () => {
     try {
         let url = getURL();
         const apifyData = await urlAdapter(url);
-        console.log(`${constants.pcotype} response received...`);
+        console.log(`${constants.pcoType} response received...`);
         return apifyData;
     } 
     

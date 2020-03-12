@@ -13,41 +13,41 @@ module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, s
     let unformatted;
 
     switch (dataSource) {
-        case constants.mojtype:
-            if(datatype !== constants.casesname) {
+        case constants.mojType:
+            if(datatype !== constants.casesName) {
                 throw new Error(casesonlyerror);
             }
-            console.log(`aggregating ${constants.mojtype}...`);
+            console.log(`aggregating ${constants.mojType}...`);
             unformatted = await require("./jdoCases").run();
             return choosecasesorlegislation(datatype, unformatted);
 
-        case constants.pcotype:
+        case constants.pcoType:
             if (!process.env.APIFY_TASK_ID || !process.env.APIFY_TOKEN) {
                 throw new Error("Missing Apify env variables");
             }
 
-            if(datatype !== constants.legislationname) {
+            if(datatype !== constants.legislationName) {
                 throw new Error('You can only request legislation from the PCO.');
             }
-            console.log(`aggregating ${constants.pcotype}...`);
+            console.log(`aggregating ${constants.pcoType}...`);
             unformatted = await require("./pcoLegislation").run();
             return choosecasesorlegislation(datatype, unformatted);
 
-        case constants.urltype:
+        case constants.urlType:
             checklocation(dataLocation);
-            console.log(`aggregating ${constants.urltype}...`);
+            console.log(`aggregating ${constants.urlType}...`);
             unformatted = await require("./generic/url")(dataLocation);
-            console.log(`${constants.urltype} response received...`);
+            console.log(`${constants.urlType} response received...`);
             return choosecasesorlegislation(datatype, unformatted);
 
-        case constants.localfiletype:
+        case constants.localFileType:
             checklocation(dataLocation);
-            console.log(`aggregating ${constants.localfiletype}...`);
+            console.log(`aggregating ${constants.localFileType}...`);
             unformatted = await require("./generic/localfile")(dataLocation);
             return choosecasesorlegislation(datatype, unformatted);
 
         case constants.TTtype:
-            if(datatype !== constants.casesname) {
+            if(datatype !== constants.casesName) {
                 throw new Error(casesonlyerror);
             }
             console.log(`aggregating ${constants.TTtype}...`);
@@ -68,7 +68,7 @@ function checklocation(dataLocation) {
 
 function choosecasesorlegislation(datatype, unformattedresponse) {
     switch(datatype) {
-        case constants.casesname:
+        case constants.casesName:
             let output = unformattedresponse
 
             try {
@@ -84,7 +84,7 @@ function choosecasesorlegislation(datatype, unformattedresponse) {
             catch(error) {}
             return jdocases.maparraytocases(output)
 
-        case constants.legislationname:
+        case constants.legislationName:
             return legislation.maparraytolegislation(unformattedresponse)
 
         default:

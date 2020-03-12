@@ -3893,6 +3893,11 @@ rimraf@^3.0.0:
   dependencies:
     glob "^7.1.3"
 
+rng@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/rng/-/rng-0.2.2.tgz#df43e80d9bc82ad4430bcfef03f49c717e8b2e8c"
+  integrity sha1-30PoDZvIKtRDC8/vA/SccX6LLow=
+
 rsvp@^4.8.4:
   version "4.8.5"
   resolved "https://registry.yarnpkg.com/rsvp/-/rsvp-4.8.5.tgz#c8f155311d167f68f21e168df71ec5b083113734"

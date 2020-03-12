@@ -1,6 +1,6 @@
 const getDataFile = require('./getDataFile');
 const constants = require('./constants');
-const legislationmodel = require('./models/legislation');
+const legislationModel = require('./models/legislation');
 const setup = require('./common/setup');
 
 /**
@@ -15,10 +15,10 @@ const setup = require('./common/setup');
 const run = async (pgPool, pgPromise, dataSource, dataLocation) => {
     console.log('starting getLegislation.js');
     // get multi-row insert sql
-    const legislationData = await getDataFile(pgPool, pgPromise, dataSource, dataLocation, constants.legislationname);
+    const legislationData = await getDataFile(pgPool, pgPromise, dataSource, dataLocation, constants.legislationName);
     let legislationColumnSet = new pgPromise.helpers.ColumnSet(
-        legislationmodel.getlabelsarray(),
-        {table: {table: constants.legislationname, schema: constants.schemaname}}
+        legislationModel.getlabelsarray(),
+        {table: {table: process.env.LEGISLATION_TABLE_NAME, schema: constants.schemaName}}
     );
 
     // insert sql within a transaction
@@ -26,12 +26,12 @@ const run = async (pgPool, pgPromise, dataSource, dataLocation) => {
     console.log('saving legislation...');
     try {
         client = await pgPool.connect();
-        await client.query(constants.sqlbegin);
+        await client.query(constants.sqlBegin);
         const sql = pgPromise.helpers.insert(legislationData, legislationColumnSet);
         await client.query(sql);
-        await client.query(constants.sqlcommit);
+        await client.query(constants.sqlCommit);
     } catch (err) {
-        await client.query(constants.sqlrollback);
+        await client.query(constants.sqlRollback);
         throw err;
     } finally {
         client && client.release();
@@ -39,7 +39,7 @@ const run = async (pgPool, pgPromise, dataSource, dataLocation) => {
 }
 
 if (require.main === module) {
-    setup.startapplication(run);
+    setup.startApplication(run);
 } else {
     module.exports = run;
 }

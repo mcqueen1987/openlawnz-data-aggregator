@@ -22,8 +22,8 @@ const run = async (pgPool, pgPromise, dataSource, dataLocation, pageSize = null)
     try {
         // without pagination
         if (helpers.isnullorundefined(pageSize)) {
-            const dataresult = await getDataFile(pgPool, pgPromise, dataSource, dataLocation, constants.casesname);
-            await saveAggregatorCases(dataresult[constants.datalabel], pgPool, pgPromise);
+            const dataresult = await getDataFile(pgPool, pgPromise, dataSource, dataLocation, constants.casesName);
+            await saveAggregatorCases(dataresult[constants.dataLabel], pgPool, pgPromise);
             return Promise.resolve();
         }
 
@@ -32,14 +32,14 @@ const run = async (pgPool, pgPromise, dataSource, dataLocation, pageSize = null)
         let startIndex = 0;
         const safePageSize = pageSize <= 0 ? BATCH_SIZE : pageSize;
         for (let startIndex = 0; startIndex <= totalCaseCount; startIndex += safePageSize) {
-            const dataresult = await getDataFile(pgPool, pgPromise, dataSource, dataLocation, constants.casesname, startIndex, safePageSize);
+            const dataresult = await getDataFile(pgPool, pgPromise, dataSource, dataLocation, constants.casesName, startIndex, safePageSize);
             
             // set total case count if not set
             if (totalCaseCount === 0) {
-                totalCaseCount = dataresult[constants.pagecountlabel];
+                totalCaseCount = dataresult[constants.pageCountLabel];
                 console.log(`total case count: [${totalCaseCount}]`);
             }
-            await saveAggregatorCases(dataresult[constants.datalabel], pgPool, pgPromise);
+            await saveAggregatorCases(dataresult[constants.dataLabel], pgPool, pgPromise);
             // sleep between calls
             await new Promise(resolve => setTimeout(resolve, REQUEST_INTERVAL_MS));
             console.log(`data saved: start index [${startIndex}] page size [${safePageSize}]`);
@@ -53,7 +53,7 @@ const run = async (pgPool, pgPromise, dataSource, dataLocation, pageSize = null)
 }
 
 if (require.main === module) {
-    setup.startapplication(run);
+    setup.startApplication(run);
 } else {
     module.exports = run;
 }

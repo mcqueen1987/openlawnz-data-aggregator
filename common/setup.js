@@ -3,12 +3,13 @@ const path = require('path');
 const uuidv1 = require('uuid/v1');
 const constants = require('../constants');
 const yargs = require("yargs");
-const dotenv = require('dotenv');
+const dotEnv = require('dotenv');
+const constEnv = require('../constants/environment');
 
 const setup = async (environmentfilename, resumeSessionId = 0) => {
     const options = {
         capSQL: true, // capitalize all generated SQL
-        schema: [constants.schemaname],
+        schema: [constants.schemaName],
         error(error, e) {
             if (e.cn) {
                 console.log('CN:', e.cn)
@@ -28,7 +29,7 @@ const setup = async (environmentfilename, resumeSessionId = 0) => {
         throw new Error('Missing env')
     };
 
-    dotenv.config({
+    dotEnv.config({
         path: rootDir + '/.env.' + environmentfilename
     });
 
@@ -39,11 +40,11 @@ const setup = async (environmentfilename, resumeSessionId = 0) => {
     await fs.ensureDir(logDir);
 
     const conn = {
-        host: process.env.DB_HOST,
-        database: process.env.DB_NAME,
-        port: process.env.PORT,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASS,
+        host: process.env[constEnv.dbHost],
+        database: process.env[constEnv.dbName],
+        port: process.env[constEnv.port],
+        user: process.env[constEnv.dbUser],
+        password: process.env[constEnv.dbPass],
         client_encoding: 'UTF8'
     };
 
@@ -54,12 +55,13 @@ const setup = async (environmentfilename, resumeSessionId = 0) => {
         cacheDir,
         logDir,
         pgPromise,
-        pgPoolConnection
+        pgPoolConnection,
+        environment = process.env
     };
 }
-module.exports.getstartdata = setup;
+module.exports.getStartData = setup;
 
-module.exports.startapplication = function startapplication(entrypoint, pagesize = null) {
+module.exports.startApplication = function(entrypoint, pagesize = null) {
     const argv = yargs.argv;
 
     let runner = async () => {

@@ -122,7 +122,7 @@ You will need to be given administrative access to the OpenLawNZ Apify account. 
 
 #### Testing
 
-run `Jest` in the root directory.
+run `Jest --runInBand` in the root directory.
 
 Or, prss `F5` to use the vscode breakpoints set up in the launch.json file.
 
