@@ -5,6 +5,6 @@ const legislationtable = {
     title: 'title',
     alerts: 'alerts',
     dateAccessed: 'date_accessed'
-}
-module.exports = legislationtable
+};
+module.exports = legislationtable;
 

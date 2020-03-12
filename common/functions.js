@@ -56,64 +56,6 @@ module.exports.getNestedObject = (nestedObj, pathArr) => {
 	);
 };
 
-module.exports.formatName = function(longName) {
-	const regExName = /^(.*?) \[/;
-	const regExFileNumber = /(.*)(?= HC| COA| SC| FC| DC)/;
-	// regexName gets everything up to square bracket
-	// if that matches, return that
-	if (longName.match(regExName)) {
-		return longName.match(regExName)[1];
-	}
-	// if not, regExLongName matches everything up to the first " HC", coa, sc, fc or dc, those usually signifying the start of case reference
-	else {
-		if (longName.match(regExFileNumber)) {
-			return longName.match(regExFileNumber)[1];
-		} else {
-			return "Unknown case";
-		}
-	}
-};
-
-// From https://github.com/so-ta/sha256-file/blob/master/index.js
-module.exports.sha256File = function(filename, callback) {
-	var sum = crypto.createHash("sha256");
-	if (callback && typeof callback === "function") {
-		var fileStream = fs.createReadStream(filename);
-		fileStream.on("error", function(err) {
-			return callback(err, null);
-		});
-		fileStream.on("data", function(chunk) {
-			try {
-				sum.update(chunk);
-			} catch (ex) {
-				return callback(ex, null);
-			}
-		});
-		fileStream.on("end", function() {
-			return callback(null, sum.digest("hex"));
-		});
-	} else {
-		sum.update(fs.readFileSync(filename));
-		return sum.digest("hex");
-	}
-};
-
-module.exports.encodeURIfix = str => {
-	return encodeURIComponent(str)
-		.replace(/!/g, "%21")
-		.replace(/\(/g, "%28")
-		.replace(/\)/g, "%29")
-		.replace(/'/g, "%27")
-		.replace(/_/g, "%5F")
-		.replace(/\*/g, "%2A")
-		.replace(/\./g, "%2E");
-};
-
-module.exports.slashToDash = function(str) {
-	const regExSlash = /\//g;
-	return str.replace(regExSlash, "-");
-};
-
 module.exports.getCitation = function(str) {
 	const regCite = /(\[?\d{4}\]?)(\s*?)NZ(D|F|H|C|S|L)(A|C|R)(\s.*?)(\d+)*/;
 	// try for neutral citation
