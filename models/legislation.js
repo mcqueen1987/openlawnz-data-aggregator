@@ -7,37 +7,36 @@ function construct(
     year = isrequired(),
     title = isrequired(),
     alerts = isrequired(),
-    date_accessed = isrequired()
-    ) {
-    let output = {}
-    output[legislationtable.link] = link
-    output[legislationtable.year] = year
-    output[legislationtable.title] = title
-    output[legislationtable.alerts] = alerts
-    output[legislationtable.date_accessed] = date_accessed
-    return output
+    dateAccessed = isrequired()
+) {
+    let output = {};
+    output[legislationtable.link] = link;
+    output[legislationtable.year] = year;
+    output[legislationtable.title] = title;
+    output[legislationtable.alerts] = alerts;
+    output[legislationtable.dateAccessed] = dateAccessed;
+    return output;
 }
 module.exports.construct = construct
 
-module.exports.getlabelsarray = function() {
+module.exports.getlabelsarray = function () {
     return [
         legislationtable.link,
         legislationtable.year,
         legislationtable.title,
         legislationtable.alerts,
-        legislationtable.date_accessed
-    ]
+        legislationtable.dateAccessed
+    ];
 }
 
 module.exports.maparraytolegislation = (inputarray) =>
-    inputarray.map((item) => 
+    inputarray.map((item) =>
         new construct(
             link = item.link,
             year = item.year,
             title = item.title,
             alerts = item.alerts,
-            date_accessed = new Date()
+            dateAccessed = new Date()
         )
     )
 
-    

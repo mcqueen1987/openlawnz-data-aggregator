@@ -29,9 +29,9 @@ const run = async () => {
 	try {
 		const mojData = await urlAdapter(URL, MOJconstants.flattenedarraypath)
 		console.log(`${constants.mojtype} response received...`)
-		return mojData	
-	} 
-	
+		return mojData
+	}
+
 	catch (ex) {
 		throw ex
 	}
@@ -51,19 +51,19 @@ module.exports.maparraytocases = (inputarray) => {
 	let output = {}
 	output[constants.datalabel] = inputarray.map((currentitem) => {
 		let hash = commonfuncs.getprojecthash()
-        
-        return new casemodel.construct(
-            file_provider = constants.mojtype,
-            file_key = `${constants.mojtype}_` + new Date(currentitem.JudgmentDate) + "_" + currentitem.DocumentName,
-            file_url = "https://forms.justice.govt.nz/search/Documents/pdf/" + currentitem.id,
-            case_names = [currentitem.CaseName],
-            case_date = currentitem.JudgmentDate,
-            citations = [commonfuncs.getCitation(currentitem.CaseName)],
-            date_processed = null,
-            processing_status = constants.unprocessedstatus,
-            sourcecode_hash = hash,
-            date_accessed = new Date()
-        )	
+
+		return new casemodel.construct(
+			fileProvider = constants.mojtype,
+			fileKey = `${constants.mojtype}_` + new Date(currentitem.JudgmentDate) + "_" + currentitem.DocumentName,
+			fileUrl = "https://forms.justice.govt.nz/search/Documents/pdf/" + currentitem.id,
+			caseNames = [currentitem.CaseName],
+			caseDate = currentitem.JudgmentDate,
+			caseCitations = [commonfuncs.getCitation(currentitem.CaseName)],
+			dateProcessed = null,
+			processingStatus = constants.unprocessedstatus,
+			sourceCodeHash = hash,
+			dateAccessed = new Date()
+		);
 	})
 	return output
 }

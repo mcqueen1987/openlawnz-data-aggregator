@@ -4,7 +4,7 @@ const legislationtable = {
     year: 'year',
     title: 'title',
     alerts: 'alerts',
-    date_accessed: 'date_accessed'
+    dateAccessed: 'date_accessed'
 }
 module.exports = legislationtable
 

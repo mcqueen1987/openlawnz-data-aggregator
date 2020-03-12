@@ -1,47 +1,46 @@
-const casestable = require("../constants/casestable")
-const isrequired = require('../common/functions').isrequired
-const commonfuncs = require('../common/functions')
+const casestable = require("../constants/casestable");
+const isrequired = require("../common/functions").isrequired;
+const commonfuncs = require("../common/functions");
 
 /** construct using the new keyword */
 function construct(
-    file_provider = isrequired(), 
-    file_key = isrequired(), 
-    file_url = isrequired(), 
-    case_names = isrequired(), 
-    case_date = isrequired(), 
-    case_citations = isrequired(), 
-    date_processed = isrequired(), 
-    processing_status = isrequired(), 
-    sourcecode_hash = isrequired(), 
-    date_accessed = isrequired()
-    ) {
-    let output = {}
-    output[casestable.file_provider] = file_provider
-    output[casestable.file_key] = file_key
-    output[casestable.file_url] = file_url
-    output[casestable.case_names] = case_names
-    output[casestable.case_date] = case_date
-    output[casestable.case_citations] = case_citations
-    output[casestable.date_processed] = date_processed
-    output[casestable.processing_status] = processing_status
-    output[casestable.sourcecode_hash] = sourcecode_hash
-    output[casestable.date_accessed] = date_accessed
-    return output
+	fileProvider = isrequired(),
+	fileKey = isrequired(),
+	fileUrl = isrequired(),
+	caseNames = isrequired(),
+	caseDate = isrequired(),
+	caseCitations = isrequired(),
+	dateProcessed = isrequired(),
+	processingStatus = isrequired(),
+	sourceCodeHash = isrequired(),
+	dateAccessed = isrequired()
+) {
+	let output = {};
+	output[casestable.fileProvider] = fileProvider;
+	output[casestable.fileKey] = fileKey;
+	output[casestable.fileUrl] = fileUrl;
+	output[casestable.caseNames] = caseNames;
+	output[casestable.caseDate] = caseDate;
+	output[casestable.caseCitations] = caseCitations;
+	output[casestable.dateProcessed] = dateProcessed;
+	output[casestable.processingStatus] = processingStatus;
+	output[casestable.sourceCodeHash] = sourceCodeHash;
+	output[casestable.dateAccessed] = dateAccessed;
+	return output;
 }
-module.exports.construct = construct
+module.exports.construct = construct;
 
 module.exports.getlabelsarray = function() {
-    return [
-        casestable.file_provider,
-        casestable.file_key,
-        casestable.file_url,
-        casestable.case_names,
-        casestable.case_date,
-        casestable.case_citations,
-        casestable.date_processed,
-        casestable.processing_status,
-        casestable.sourcecode_hash,
-        casestable.date_accessed
-    ]
-}
-    
+	return [
+		casestable.fileProvider,
+		casestable.fileKey,
+		casestable.fileUrl,
+		casestable.caseNames,
+		casestable.caseDate,
+		casestable.caseCitations,
+		casestable.dateProcessed,
+		casestable.processingStatus,
+		casestable.sourceCodeHash,
+		casestable.dateAccessed
+	];
+};
