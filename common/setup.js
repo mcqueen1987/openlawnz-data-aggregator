@@ -3,7 +3,6 @@ const path = require('path')
 const uuidv1 = require('uuid/v1')
 const constants = require('../constants')
 const yargs = require("yargs")
-const argv = yargs.argv
 const dotenv = require('dotenv')
 
 const setup = async (environmentfilename, resumeSessionId = 0) => {
@@ -61,6 +60,8 @@ const setup = async (environmentfilename, resumeSessionId = 0) => {
 module.exports.getstartdata = setup
 
 module.exports.startapplication = function startapplication(entrypoint, pagesize = null) {
+    const argv = yargs.argv
+    
     let runner = async () => {
         setupdata = await setup(argv.env)    
         const {pgPoolConnection, pgPromise} = setupdata
