@@ -16,8 +16,7 @@
     "yargs": "^13.2.2"
   },
   "devDependencies": {
-    "@types/jest": "^25.1.4",
-    "rng": "^0.2.2"
+    "@types/jest": "^25.1.4"
   },
   "scripts": {
     "test": "jest"
