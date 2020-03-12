@@ -1,4 +1,4 @@
-const casestable = require("../constants/casestable");
+const casestable = require("../constants/casesTable").table;
 const isrequired = require("../common/functions").isrequired;
 const commonfuncs = require("../common/functions");
 

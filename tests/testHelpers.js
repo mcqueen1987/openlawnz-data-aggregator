@@ -4,6 +4,7 @@ const constants = require('../constants');
 const rng = require('rng')
 const commonfuncs = require('../common/functions');
 const environmentConsts = require('../constants/environment')
+
 const generator = new rng.MT(5)
 
 const getSelectAllQuery = (tableName) => `select * from ingest.${tableName};`;
@@ -51,20 +52,14 @@ function getEnvFilesLabel() {
     
 }
 
-module.exports.dropTestTable = async function(connection, tableName) {
+module.exports.dropTestTable = async function(connection, dropScript) {
     let client = null;
 
     try {
         client = await connection.connect();
         let result1 = await client.query(constants.sqlBegin);
-        let result2 = await client.query(`DROP TABLE ingest.${tableName};`);
+        let result2 = await client.query(dropScript);
         let result4 = await client.query(constants.sqlCommit);
-
-        let result5 = await client.query(constants.sqlBegin);
-        let selectQuery = getSelectAllQuery(tableName);
-        let result6 = await client.query(selectQuery);
-        let result7 = await client.query(constants.sqlCommit);
-        expect(result6.rows).toHaveLength(0);
         console.log(`${tableName} test table removed.`);
         return Promise.resolve();
     } 
@@ -150,7 +145,7 @@ module.exports.createEnvironmentFile = async function() {
 function parseJsonToEnv(inputJson) {
     let output = ''
     const newLine = '/n'
-    let keys = inputJson.keys()
+    let keys = Object.keys(inputJson)
 
     for(let i = 0; i < keys.length; i++) {
         currentKey = keys[i]

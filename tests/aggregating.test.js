@@ -1,9 +1,11 @@
 const caser = require('../getCases');
 const legislator = require('../getLegislation');
 const constants = require('../constants');
-const helpers = require('./testhelpers');
+const helpers = require('./testHelpers');
 const casesURL = require('../getDataFile/jdoCases').URL;
 const legislationURL = require('../getDataFile/pcoLegislation').URL;
+const caseModel = require('../constants/casesTable');
+const legislationModel = require('../constants/legislationTable')
 
 fdescribe('when MOJ cases are aggregated', () => {    
     let starters;
@@ -12,11 +14,12 @@ fdescribe('when MOJ cases are aggregated', () => {
     beforeEach(async () => {
         testNames = await helpers.createEnvironmentFile();
         starters = await helpers.getStartData(testNames.testFile);
-        await helpers.createFreshTable(starters.pgPoolConnection, testNames.testCases);        
+        let createScript = caseModel.createQuery(testNames.testCases)
+        await helpers.createFreshTable(starters.pgPoolConnection, createScript);        
     }, constants.asyncTimeout)
 
     afterEach(async () => {
-        await helpers.dropTestTable(starters.pgPoolConnection, constants.casesName);
+        await helpers.dropTestTable(starters.pgPoolConnection, testNames.testCases);
     }, constants.asyncTimeout)
 
     async function dothething() {
