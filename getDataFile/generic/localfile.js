@@ -1,30 +1,29 @@
-const fs = require("fs")
-
-const common = require("../../common/functions")
+const fs = require("fs");
+const common = require("../../common/functions");
 
 const run = async (filePath, pathArr) => {
 	try {
-		const jsonData = fs.readFileSync(filePath)
-		const json = JSON.parse(jsonData)
+		const jsonData = fs.readFileSync(filePath);
+		const json = JSON.parse(jsonData);
 		if (!pathArr) {
-			return json
+			return json;
 		} else {
-			return common.getNestedObject(json, pathArr)
+			return common.getNestedObject(json, pathArr);
 		}
 	} catch (ex) {
-		throw ex
+		throw ex;
 	}
 }
 
 if (require.main === module) {
 	try {
-		throw new Error("Cannot be run individually.")
+		throw new Error("Cannot be run individually.");
 		//run()
 	} catch (ex) {
-		console.log(ex)
+		console.log(ex);
 	}
 } else {
-	module.exports = run
+	module.exports = run;
 }
 
 

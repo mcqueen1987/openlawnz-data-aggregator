@@ -7,5 +7,5 @@ const PCOresponse = {
     alerts: 'alerts',
     url: 'url'    
 }
-module.exports = PCOresponse
+module.exports = PCOresponse;
 

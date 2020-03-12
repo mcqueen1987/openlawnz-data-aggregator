@@ -15,5 +15,5 @@ const MOJresponse = {
     timestamp: 'timestamp',
     flattenedarraypath: ['response', 'docs']
 }
-module.exports = MOJresponse
+module.exports = MOJresponse;
 

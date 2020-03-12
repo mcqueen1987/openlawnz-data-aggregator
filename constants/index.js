@@ -20,5 +20,5 @@ const constants = {
     datalabel: 'data',
     pagecountlabel: 'case_count_from_page'
 }
-module.exports = constants
+module.exports = constants;
 

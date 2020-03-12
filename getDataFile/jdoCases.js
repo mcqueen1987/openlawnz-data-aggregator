@@ -1,12 +1,12 @@
-const urlAdapter = require("./generic/url")
-const MOJconstants = require('../constants/MOJresponse')
-const constants = require('../constants')
-const casemodel = require('../models/case')
-const commonfuncs = require('../common/functions')
+const urlAdapter = require("./generic/url");
+const MOJconstants = require('../constants/MOJresponse');
+const constants = require('../constants');
+const casemodel = require('../models/case');
+const commonfuncs = require('../common/functions');
 
 // Currently limited to 10 results for testing
-const maxRows = 10
-const fromDate = "2016-2-27"
+const maxRows = 10;
+const fromDate = "2016-2-27";
 
 const URL = [
 	"https://forms.justice.govt.nz/solr/jdo/select",
@@ -22,35 +22,35 @@ const URL = [
 	"&sort=JudgmentDate%20desc",
 	"&fl=CaseName%2C%20JudgmentDate%2C%20DocumentName%2C%20id%2C%20score",
 	"&wt=json"
-].join("")
-module.exports.URL = URL
+].join("");
+module.exports.URL = URL;
 
 const run = async () => {
 	try {
-		const mojData = await urlAdapter(URL, MOJconstants.flattenedarraypath)
-		console.log(`${constants.mojtype} response received...`)
-		return mojData
+		const mojData = await urlAdapter(URL, MOJconstants.flattenedarraypath);
+		console.log(`${constants.mojtype} response received...`);
+		return mojData;
 	}
 
 	catch (ex) {
-		throw ex
+		throw ex;
 	}
 }
 
 if (require.main === module) {
 	try {
-		run()
+		run();
 	} catch (ex) {
-		console.log(ex)
+		console.log(ex);
 	}
 } else {
-	module.exports.run = run
+	module.exports.run = run;
 }
 
 module.exports.maparraytocases = (inputarray) => {
-	let output = {}
+	let output = {};
 	output[constants.datalabel] = inputarray.map((currentitem) => {
-		let hash = commonfuncs.getprojecthash()
+		let hash = commonfuncs.getprojecthash();
 
 		return new casemodel.construct(
 			fileProvider = constants.mojtype,
@@ -65,6 +65,6 @@ module.exports.maparraytocases = (inputarray) => {
 			dateAccessed = new Date()
 		);
 	})
-	return output
+	return output;
 }
 

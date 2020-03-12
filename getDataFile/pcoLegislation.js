@@ -1,5 +1,5 @@
-const urlAdapter = require("./generic/url")
-const constants = require('../constants')
+const urlAdapter = require("./generic/url");
+const constants = require('../constants');
 
 function getURL(){
     return [
@@ -8,33 +8,33 @@ function getURL(){
         `?token=${process.env.APIFY_TOKEN}`,
         `&format=json`,
         `&simplified=true`
-    ].join("")
+    ].join("");
 }
 
-module.exports.URL = getURL
+module.exports.URL = getURL;
 
 const run = async () => {
 
     try {
-        let url = getURL()
-        const apifyData = await urlAdapter(url)
-        console.log(`${constants.pcotype} response received...`)
-        return apifyData
+        let url = getURL();
+        const apifyData = await urlAdapter(url);
+        console.log(`${constants.pcotype} response received...`);
+        return apifyData;
     } 
     
     catch (ex) {
-        throw ex
+        throw ex;
     }
 }
 
 if (require.main === module) {
     try {
-        run()
+        run();
     } catch (ex) {
-        console.log(ex)
+        console.log(ex);
     }
 } else {
-    module.exports.run = run
+    module.exports.run = run;
 }
 
 

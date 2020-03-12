@@ -1,9 +1,9 @@
-const fs = require('fs-extra')
-const path = require('path')
-const uuidv1 = require('uuid/v1')
-const constants = require('../constants')
-const yargs = require("yargs")
-const dotenv = require('dotenv')
+const fs = require('fs-extra');
+const path = require('path');
+const uuidv1 = require('uuid/v1');
+const constants = require('../constants');
+const yargs = require("yargs");
+const dotenv = require('dotenv');
 
 const setup = async (environmentfilename, resumeSessionId = 0) => {
     const options = {
@@ -15,28 +15,28 @@ const setup = async (environmentfilename, resumeSessionId = 0) => {
                 console.log('EVENT:', error.message || error)
             }
         }
-    }
+    };
 
-    const { Pool } = require("pg")
-    const pgPromise = require('pg-promise')(options)
-    const rootDir = path.resolve(__dirname + '/../')
-    const sessionId = resumeSessionId || uuidv1()
-    const cacheDir = path.join(rootDir, '.cache', sessionId)
-    const logDir = path.join(rootDir, '.logs', sessionId)
+    const { Pool } = require("pg");
+    const pgPromise = require('pg-promise')(options);
+    const rootDir = path.resolve(__dirname + '/../');
+    const sessionId = resumeSessionId || uuidv1();
+    const cacheDir = path.join(rootDir, '.cache', sessionId);
+    const logDir = path.join(rootDir, '.logs', sessionId);
 
     if (!environmentfilename) {
         throw new Error('Missing env')
-    }
+    };
 
     dotenv.config({
         path: rootDir + '/.env.' + environmentfilename
-    })
+    });
 
     // Ensure cache directory exists
-    await fs.ensureDir(cacheDir)
+    await fs.ensureDir(cacheDir);
 
     // Ensure log directory exists
-    await fs.ensureDir(logDir)
+    await fs.ensureDir(logDir);
 
     const conn = {
         host: process.env.DB_HOST,
@@ -45,9 +45,9 @@ const setup = async (environmentfilename, resumeSessionId = 0) => {
         user: process.env.DB_USER,
         password: process.env.DB_PASS,
         client_encoding: 'UTF8'
-    }
+    };
 
-    let pgPoolConnection = new Pool(conn)
+    let pgPoolConnection = new Pool(conn);
 
     return {
         sessionId,
@@ -55,16 +55,16 @@ const setup = async (environmentfilename, resumeSessionId = 0) => {
         logDir,
         pgPromise,
         pgPoolConnection
-    }
+    };
 }
-module.exports.getstartdata = setup
+module.exports.getstartdata = setup;
 
 module.exports.startapplication = function startapplication(entrypoint, pagesize = null) {
-    const argv = yargs.argv
-    
+    const argv = yargs.argv;
+
     let runner = async () => {
-        setupdata = await setup(argv.env)    
-        const {pgPoolConnection, pgPromise} = setupdata
+        setupdata = await setup(argv.env); 
+        const {pgPoolConnection, pgPromise} = setupdata;
 
         await entrypoint(
             pgPoolConnection,
@@ -72,16 +72,16 @@ module.exports.startapplication = function startapplication(entrypoint, pagesize
             argv.datasource,
             argv.datalocation,
             pagesize
-        )
-        
+        );        
     }
     runner().then(() => {
-        console.log('aggregation complete.')
-        process.exit()
+        console.log('aggregation complete.');
     })
     .catch((error) => {
-        console.log(error)
-        process.exit()
+        console.log(error);
+    })
+    .then(() => {
+        process.exit();
     })
 }
 

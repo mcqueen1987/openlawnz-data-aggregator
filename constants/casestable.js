@@ -9,5 +9,5 @@ const casestable = {
 	processingStatus: "processing_status",
 	sourceCodeHash: "sourcecode_hash",
 	dateAccessed: "date_accessed"
-};
+}
 module.exports = casestable;
