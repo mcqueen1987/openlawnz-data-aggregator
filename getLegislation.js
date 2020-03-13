@@ -1,4 +1,8 @@
 const getDataFile = require('./getDataFile');
+const constants = require('./constants');
+const legislationModel = require('./models/legislation');
+const setup = require('./common/setup');
+const helpers = require('./common/functions');
 
 /**
  * get legislation data then save to databases
@@ -6,48 +10,38 @@ const getDataFile = require('./getDataFile');
  * @param pgPool
  * @param pgPromise
  * @param dataSource
- * @param dataLocation
+ * @param resourceLocator
  * @returns {Promise<void>}
  */
-const run = async (pgPool, pgPromise, dataSource, dataLocation) => {
+const run = async (pgPool, pgPromise, dataSource, resourceLocator, tableName = null) => {
+    console.log('starting getLegislation.js');
+    let tableNameUsed = helpers.getTableName(tableName)
     // get multi-row insert sql
-    const legislationData = await getDataFile(pgPool, pgPromise, dataSource, dataLocation);
+    const legislationData = await getDataFile(pgPool, pgPromise, dataSource, resourceLocator, constants.legislationName);
     let legislationColumnSet = new pgPromise.helpers.ColumnSet(
-        ['title', 'link', 'year', 'alerts'],
-        {table: {table: 'legislation', schema: 'aggregator_cases'}}
+        legislationModel.getlabelsarray(),
+        {table: {table: tableNameUsed, schema: constants.schemaName}}
     );
 
     // insert sql within a transaction
     let client = null;
+    console.log('saving legislation...');
     try {
         client = await pgPool.connect();
-        await client.query('BEGIN');
+        await client.query(constants.sqlBegin);
         const sql = pgPromise.helpers.insert(legislationData, legislationColumnSet);
         await client.query(sql);
-        await client.query('COMMIT');
+        await client.query(constants.sqlCommit);
     } catch (err) {
-        await client.query('ROLLBACK');
+        await client.query(constants.sqlRollback);
         throw err;
     } finally {
         client && client.release();
     }
-};
+}
 
 if (require.main === module) {
-    const argv = require("yargs").argv;
-    (async () => {
-        try {
-            const {pgPoolConnection, pgPromise} = await require("./common/setup")(argv.env);
-            await run(
-                pgPoolConnection,
-                pgPromise,
-                argv.datasource,
-                argv.datalocation
-            );
-        } catch (ex) {
-            console.log(ex);
-        }
-    })().finally(process.exit);
+    setup.startApplication(run);
 } else {
     module.exports = run;
 }

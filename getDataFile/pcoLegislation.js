@@ -1,27 +1,31 @@
 const urlAdapter = require("./generic/url");
+const constants = require('../constants');
+
+function getURL(){
+    return [
+        `https://api.apify.com/v2/actor-tasks/${process.env.APIFY_TASK_ID}`,
+        `/runs/last/dataset/items`,
+        `?token=${process.env.APIFY_TOKEN}`,
+        `&format=json`,
+        `&simplified=true`
+    ].join("");
+}
+
+module.exports.URL = getURL;
 
 const run = async () => {
 
     try {
-
-        const jsonURL = [
-            `https://api.apify.com/v1/${process.env.APIFY_USER_ID}`,
-            `/crawlers/${process.env.APIFY_CRAWLER_ID}`,
-            `/lastExec/results?token=${process.env.APIFY_TOKEN}`
-        ].join("");
-
-        const apifyData = await urlAdapter(jsonURL);
-
-        const allLegislation = Array.prototype.concat.apply(
-            [],
-            apifyData.map(b => b.pageFunctionResult)
-        );
-
-        return allLegislation;
-    } catch (ex) {
+        let url = getURL();
+        const apifyData = await urlAdapter(url);
+        console.log(`${constants.pcoType} response received...`);
+        return apifyData;
+    } 
+    
+    catch (ex) {
         throw ex;
     }
-};
+}
 
 if (require.main === module) {
     try {
@@ -30,5 +34,7 @@ if (require.main === module) {
         console.log(ex);
     }
 } else {
-    module.exports = run;
+    module.exports.run = run;
 }
+
+

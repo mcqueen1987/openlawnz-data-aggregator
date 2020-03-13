@@ -1,5 +1,4 @@
 const fs = require("fs");
-
 const common = require("../../common/functions");
 
 const run = async (filePath, pathArr) => {
@@ -14,15 +13,17 @@ const run = async (filePath, pathArr) => {
 	} catch (ex) {
 		throw ex;
 	}
-};
+}
 
 if (require.main === module) {
 	try {
-		throw new Error("Cannot be run individually.")
-		//run();
+		throw new Error("Cannot be run individually.");
+		//run()
 	} catch (ex) {
 		console.log(ex);
 	}
 } else {
 	module.exports = run;
 }
+
+

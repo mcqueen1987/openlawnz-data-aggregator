@@ -1,5 +1,4 @@
 const download = require("download");
-
 const common = require("../../common/functions");
 
 const run = async (url, pathArr) => {
@@ -8,7 +7,7 @@ const run = async (url, pathArr) => {
 
         if (!common.isJsonString(jsonData)) {
             console.log(`data from ${url} is not a valid json: ${jsonData}`);
-            return;
+            return
         }
 
         const json = JSON.parse(jsonData);
@@ -16,15 +15,17 @@ const run = async (url, pathArr) => {
     } catch (ex) {
         throw ex;
     }
-};
+}
 
 if (require.main === module) {
     try {
-        throw new Error("cannot be run individually.")
-        //run();
+        throw new Error("cannot be run individually.");
+        //run()
     } catch (ex) {
         console.log(ex);
     }
 } else {
     module.exports = run;
 }
+
+
