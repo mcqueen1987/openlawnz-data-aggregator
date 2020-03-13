@@ -12,6 +12,8 @@ const BASE_PDF_URL = BASE_URL + 'search/Documents/TTV2/PDF/';
 // the max case count to end loop. Supposed to be < 20000 per year. 20000 * 3 years = 60000
 const MAX_CASE_COUNT = 60000;
 
+const rateLimitError = 'You hit the rate limit in parallel tests! Dont do that.'
+
 /**
  * get Tenancy Tribunal data from server
  *
@@ -45,6 +47,11 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
 		].join("");
 
 		let tenancyData = await urlAdapter(jsonURL);
+
+		if(commonfuncs.isNullOrUndefined(tenancyData)) {
+			throw new Error(rateLimitError)
+		}
+
 		if (!Object.keys(tenancyData).length) {
 			console.log("fail to get data from url :", jsonURL);
 			return false;
@@ -59,7 +66,7 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
 			const orderDetailKey = 'orderDetailJson_s';
 			
 			if(doc[orderDetailKey[0]] === "") {
-				return null;
+				throw new Error(rateLimitError)
 			}
 			let order_detail = JSON.parse(doc[orderDetailKey][0]);
 			const casedatefound = order_detail['dateOfIssue'];

@@ -34,10 +34,6 @@ const run = async (pgPool, pgPromise, dataSource, resourceLocator, tableName = n
         const safePageSize = pageSize <= 0 ? BATCH_SIZE : pageSize;
         for (let startIndex = 0; startIndex <= totalCaseCount; startIndex += safePageSize) {
             const dataresult = await getDataFile(pgPool, pgPromise, dataSource, resourceLocator, constants.casesName, startIndex, safePageSize);
-
-            if(dataresult === null) {
-                continue; //issue with TT datasource's orderDetailJson_s
-            }
             
             // set total case count if not set
             if (totalCaseCount === 0) {
