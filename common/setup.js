@@ -40,12 +40,10 @@ const setup = async (envFileName, resumeSessionId = 0) => {
 
     if(helpers.isNullOrUndefined(process.env[constEnv.apifyTaskId]) ||
         helpers.isNullOrUndefined(process.env[constEnv.apifyToken]) ||
-        helpers.isNullOrUndefined(process.env[constEnv.casesTableName]) ||
         helpers.isNullOrUndefined(process.env[constEnv.dbHost]) ||
         helpers.isNullOrUndefined(process.env[constEnv.dbName]) ||
         helpers.isNullOrUndefined(process.env[constEnv.dbPass]) ||
         helpers.isNullOrUndefined(process.env[constEnv.dbUser]) ||
-        helpers.isNullOrUndefined(process.env[constEnv.legislationTable]) ||
         helpers.isNullOrUndefined(process.env[constEnv.port])) {
             throw new Error(`Missing required line/s in env file ${envFileName}`)
         }
@@ -77,7 +75,7 @@ const setup = async (envFileName, resumeSessionId = 0) => {
 }
 module.exports.getStartData = setup;
 
-module.exports.startApplication = function(entrypoint, pagesize = null) {
+module.exports.startApplication = function(entrypoint) {
     const argv = yargs.argv;
 
     let runner = async () => {
@@ -90,7 +88,7 @@ module.exports.startApplication = function(entrypoint, pagesize = null) {
             argv.datasource,
             argv.resourcelocator,
             argv.tablename,
-            pagesize
+            argv.pagesize
         );        
     }
     runner().then(() => {
