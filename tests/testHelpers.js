@@ -113,7 +113,7 @@ module.exports.createFreshTable = async function(connection, createScript, newTa
  * Returns the name of the test cases table, 
  * the name of the test legislation table. 
  * */
-module.exports.createRandomNames = async function() {   
+module.exports.createRandomNames = function() {   
     let randomNumber = `${(Math.random() * 100000000)}`.split('.').join('')  //full stops not allowed in table names
     let testCases = constants.casesName + randomNumber
     let testLegislation = constants.legislationName + randomNumber
