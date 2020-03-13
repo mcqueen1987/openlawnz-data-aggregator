@@ -128,11 +128,18 @@ module.exports.createEnvironmentFile = async function() {
     let testLegislation = constants.legislationName + randomNumber
     
     const originalSetup = await getStartData()
-    let environmentCopy = JSON.parse(JSON.stringify(originalSetup.environment))
-    environmentCopy[environmentConsts.casesTableName] = testCases
-    environmentCopy[environmentConsts.legislationName] = testLegislation
-    let fileData = parseJsonToEnv(environmentCopy)
-    fs.writeFileSync(`../${constants.envFile}${testFile}`, fileData)
+    let newEnv = {}
+    newEnv[environmentConsts.apifyTaskId] = originalSetup.environment[environmentConsts.apifyTaskId]
+    newEnv[environmentConsts.apifyToken] = originalSetup.environment[environmentConsts.apifyToken]
+    newEnv[environmentConsts.dbHost] = originalSetup.environment[environmentConsts.dbHost]
+    newEnv[environmentConsts.dbName] = originalSetup.environment[environmentConsts.dbName]
+    newEnv[environmentConsts.dbPass] = originalSetup.environment[environmentConsts.dbPass]
+    newEnv[environmentConsts.dbUser] = originalSetup.environment[environmentConsts.dbUser]
+    newEnv[environmentConsts.port] = originalSetup.environment[environmentConsts.port]
+    newEnv[environmentConsts.casesTableName] = testCases
+    newEnv[environmentConsts.legislationTable] = testLegislation
+    let fileData = parseJsonToEnv(newEnv)
+    fs.writeFileSync(`${__dirname}/../${constants.envFile}${testFile}`, fileData)
 
     return {
         testFile,
@@ -143,7 +150,7 @@ module.exports.createEnvironmentFile = async function() {
 
 function parseJsonToEnv(inputJson) {
     let output = ''
-    const newLine = '/n'
+    const newLine = '\r\n'
     let keys = Object.keys(inputJson)
 
     for(let i = 0; i < keys.length; i++) {
