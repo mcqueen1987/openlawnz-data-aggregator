@@ -136,7 +136,7 @@ node getCases.js --env=<local> --datasource=tt --pagesize=1000
 
 #### Testing
 
-run `Jest` in the root directory.
+run `Jest --runInBand` in the root directory. It's important that Tenancy Tribunal tests are run in series as parallel tests can trigger the APIs ratelimit.
 
 Or, prss `F5` to use the vscode breakpoints set up in the launch.json file.
 
