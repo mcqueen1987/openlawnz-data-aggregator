@@ -5,8 +5,9 @@ const constants = require('../constants');
 const yargs = require("yargs");
 const dotEnv = require('dotenv');
 const constEnv = require('../constants/environment');
+const helpers = require('../common/functions')
 
-const setup = async (environmentfilename, resumeSessionId = 0) => {
+const setup = async (envFileName, resumeSessionId = 0) => {
     const options = {
         capSQL: true, // capitalize all generated SQL
         schema: [constants.schemaName],
@@ -25,13 +26,25 @@ const setup = async (environmentfilename, resumeSessionId = 0) => {
     const cacheDir = path.join(rootDir, '.cache', sessionId);
     const logDir = path.join(rootDir, '.logs', sessionId);
 
-    if (!environmentfilename) {
-        throw new Error('Missing env')
+    if (!envFileName) {
+        throw new Error('Missing env file name.')
     };
 
     dotEnv.config({
-        path: rootDir + '/.env.' + environmentfilename
+        path: `${rootDir}/${constants.envFile}${envFileName}`
     });
+
+    if(helpers.isNullOrUndefined(process.env[constEnv.apifyTaskId]) ||
+        helpers.isNullOrUndefined(process.env[constEnv.apifyToken]) ||
+        helpers.isNullOrUndefined(process.env[constEnv.casesTableName]) ||
+        helpers.isNullOrUndefined(process.env[constEnv.dbHost]) ||
+        helpers.isNullOrUndefined(process.env[constEnv.dbName]) ||
+        helpers.isNullOrUndefined(process.env[constEnv.dbPass]) ||
+        helpers.isNullOrUndefined(process.env[constEnv.dbUser]) ||
+        helpers.isNullOrUndefined(process.env[constEnv.legislationTable]) ||
+        helpers.isNullOrUndefined(process.env[constEnv.port])) {
+            throw new Error(`Missing required line/s in env file ${envFileName}`)
+        }
 
     // Ensure cache directory exists
     await fs.ensureDir(cacheDir);
