@@ -4,7 +4,7 @@ const helpers = require('../common/functions');
 const MOJconstants = require('../constants/MOJresponse');
 const jdocases = require('./jdoCases');
 
-const casesonlyerror = 'You can only request cases from the MOJ.';
+const casesonlyerror = 'You can only request cases from that datasource.';
 
 module.exports = async (pgPool, pgPromise, dataSource, resourceLocator, datatype, startIndex = 0, batchSize = 1) => {
     if (!dataSource) {

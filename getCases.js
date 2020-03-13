@@ -18,7 +18,7 @@ const REQUEST_INTERVAL_MS = 5000;
  */
 const run = async (pgPool, pgPromise, dataSource, resourceLocator, tableName = null, pageSize = null) => {
     console.log('starting getCases.js');
-    let tableNameUsed = helpers.getTableName(tableName)
+    let tableNameUsed = helpers.getTableName(constants.casesName, tableName)
 
     try {
         // without pagination

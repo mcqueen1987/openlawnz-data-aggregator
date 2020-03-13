@@ -53,8 +53,8 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
 		}
 
 		if (!Object.keys(tenancyData).length) {
-			console.log("fail to get data from url :", jsonURL);
-			return false;
+			throw new Error("fail to get data from url :", jsonURL);
+			
 		}
 		console.log(`${constants.TTtype} response received...`);
 
@@ -66,9 +66,18 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
 			const orderDetailKey = 'orderDetailJson_s';
 			
 			if(doc[orderDetailKey[0]] === "") {
-				throw new Error(rateLimitError)
+				throw new Error(rateLimitError);
 			}
-			let order_detail = JSON.parse(doc[orderDetailKey][0]);
+			let order_detail;
+
+			try {
+				order_detail = JSON.parse(doc[orderDetailKey][0]);
+			}
+
+			catch(error) {
+				throw new Error(rateLimitError);
+			}
+
 			const casedatefound = order_detail['dateOfIssue'];
 			const case_date_object = moment(casedatefound, "DD/MM/YYYY").toDate();
 			const db_key = uuidv1() + '.pdf';  // like '6c84fb90-12c4-11e1-840d-7b25c5ee775a.pdf'
