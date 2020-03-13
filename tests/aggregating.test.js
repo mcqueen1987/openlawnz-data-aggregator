@@ -177,7 +177,7 @@ describe("when a localfile data source is aggregated", () => {
         await dothething(constants.legislationEntryPoint, pcoPath, testNames.testLegislation);
         await helpers.dropTestTable(starters.pgPoolConnection, testNames.testLegislation);
     }, constants.asyncTimeout)
-    legislationName
+    
     it('legislation can be found in the database', async () => {
         await createlegislationTable(starters.pgPoolConnection, testNames.testLegislation);
         await dothething(constants.legislationEntryPoint, pcoPath, testNames.testLegislation);
@@ -187,7 +187,7 @@ describe("when a localfile data source is aggregated", () => {
     }, constants.asyncTimeout)
 })
 
-fdescribe("when a TT data source is aggregated", () => {
+describe("when a TT data source is aggregated", () => {
     let testNames;
     let starters;
     const inputPageSize = 1000;
@@ -212,7 +212,7 @@ fdescribe("when a TT data source is aggregated", () => {
     }, hugeTimeout)
 
     /** WARNING: VERY SLOW. 20MINUTES APPROX */
-    it('cases can be found in the database after paging', async () => {
+    fit('cases can be found in the database after paging', async () => {
         console.log(slowWarning);
         await createCasesTable(starters.pgPoolConnection, testNames.testCases);
         await doTheThing(constants.caseEntryPoint, inputPageSize, testNames.testCases);
@@ -221,13 +221,13 @@ fdescribe("when a TT data source is aggregated", () => {
         await helpers.dropTestTable(starters.pgPoolConnection, testNames.testCases);
     }, hugeTimeout)
 
-    fit('aggregates cases', async () => {
+    it('aggregates cases', async () => {
             await createCasesTable(starters.pgPoolConnection, testNames.testCases);
             await doTheThing(constants.caseEntryPoint, null, testNames.testCases);
             await helpers.dropTestTable(starters.pgPoolConnection, testNames.testCases);
         }, constants.asyncTimeout)
 
-    fit('cases can be found in the database', async () => {
+    it('cases can be found in the database', async () => {
         await createCasesTable(starters.pgPoolConnection, testNames.testCases);
         await doTheThing(constants.caseEntryPoint, null, testNames.testCases);
         console.log(`${constants.TTtype} aggregation finished and will be tested...`);
