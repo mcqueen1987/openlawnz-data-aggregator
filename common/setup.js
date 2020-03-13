@@ -88,7 +88,8 @@ module.exports.startApplication = function(entrypoint, pagesize = null) {
             pgPoolConnection,
             pgPromise,
             argv.datasource,
-            argv.datalocation,
+            argv.resourcelocator,
+            argv.tablename,
             pagesize
         );        
     }

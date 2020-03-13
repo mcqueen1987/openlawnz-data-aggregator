@@ -75,10 +75,16 @@ _datasource_:
 
 - `tt` Data from the Tenancy Tribunal's decision search. Requires --pageSize .
 
-_datalocation_:
+_resorcelocator_:
 
 - a local json file OR
 - a url
+
+_pagesize_:
+  
+  pagesize of a Tenancy Tribunal (TT) paginated response.
+
+  Requires --datasource=tt
 
 #### Get Cases
 
@@ -102,29 +108,39 @@ SELECT * FROM ingest.cases;
 
 ```bash
 cd pipeline
-node getLegislation.js --env=<env> --datasource=<datasource> [--datalocation=<datalocation>]
+node getLegislation.js --env=<env> --datasource=pco
 ```
 
 #### Example Usage
 
 ```
-node getCases.js --env=local --datasource=moj
+node getCases.js --env=<local> --datasource=moj
 ```
 
 You can find an example of the data from different sources in the `/exampledata` folder.
 
-## using the PCO data source
+## Using the PCO data source
 
 You will need to be given administrative access to the OpenLawNZ Apify account. Add the following variables to your .env file:
 
 - APIFY_TASK_ID
 - APIFY_TOKEN
 
+## Using the TT data source
+
+The Tenancy Tribunal provides a paged response which can be used with the following command.
+
+```
+node getCases.js --env=<local> --datasource=tt --pagesize=1000
+```
+
 #### Testing
 
 run `Jest` in the root directory.
 
 Or, prss `F5` to use the vscode breakpoints set up in the launch.json file.
+
+Table name is passed as argument into the program to isolate side effects between tests.
 
 ## NOTICE
 

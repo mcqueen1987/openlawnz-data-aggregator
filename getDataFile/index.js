@@ -6,7 +6,7 @@ const jdocases = require('./jdoCases');
 
 const casesonlyerror = 'You can only request cases from the MOJ.';
 
-module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, startIndex = 0, batchSize = 1) => {
+module.exports = async (pgPool, pgPromise, dataSource, resourceLocator, datatype, startIndex = 0, batchSize = 1) => {
     if (!dataSource) {
         throw new Error("Missing datasource");
     }
@@ -34,16 +34,16 @@ module.exports = async (pgPool, pgPromise, dataSource, dataLocation, datatype, s
             return choosecasesorlegislation(datatype, unformatted);
 
         case constants.urlType:
-            checklocation(dataLocation);
+            checklocation(resourceLocator);
             console.log(`aggregating ${constants.urlType}...`);
-            unformatted = await require("./generic/url")(dataLocation);
+            unformatted = await require("./generic/url")(resourceLocator);
             console.log(`${constants.urlType} response received...`);
             return choosecasesorlegislation(datatype, unformatted);
 
         case constants.localFileType:
-            checklocation(dataLocation);
+            checklocation(resourceLocator);
             console.log(`aggregating ${constants.localFileType}...`);
-            unformatted = await require("./generic/localfile")(dataLocation);
+            unformatted = await require("./generic/localfile")(resourceLocator);
             return choosecasesorlegislation(datatype, unformatted);
 
         case constants.TTtype:

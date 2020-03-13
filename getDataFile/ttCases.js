@@ -56,7 +56,12 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
 
 		const formattedTenancyData = tenancyData['response']['docs'].map(doc => {
 			const provider = doc['categoryCode'][0];
-			const order_detail = JSON.parse(doc['orderDetailJson_s'][0]);
+			const orderDetailKey = 'orderDetailJson_s';
+			
+			if(doc[orderDetailKey[0]] === "") {
+				return null;
+			}
+			let order_detail = JSON.parse(doc[orderDetailKey][0]);
 			const casedatefound = order_detail['dateOfIssue'];
 			const case_date_object = moment(casedatefound, "DD/MM/YYYY").toDate();
 			const db_key = uuidv1() + '.pdf';  // like '6c84fb90-12c4-11e1-840d-7b25c5ee775a.pdf'
@@ -86,6 +91,7 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
 			case_count_from_page: casesNumFound,
 		};
 	} catch (ex) {
+		console.log(ex)
 		throw ex;
 	}
 }

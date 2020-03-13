@@ -16,14 +16,14 @@ const REQUEST_INTERVAL_MS = 5000;
  * @param argvs
  * @returns Promise<void>
  */
-const run = async (pgPool, pgPromise, dataSource, dataLocation, tableName = null, pageSize = null) => {
+const run = async (pgPool, pgPromise, dataSource, resourceLocator, tableName = null, pageSize = null) => {
     console.log('starting getCases.js');
     let tableNameUsed = helpers.getTableName(tableName)
 
     try {
         // without pagination
         if (helpers.isNullOrUndefined(pageSize)) {
-            const dataresult = await getDataFile(pgPool, pgPromise, dataSource, dataLocation, constants.casesName);
+            const dataresult = await getDataFile(pgPool, pgPromise, dataSource, resourceLocator, constants.casesName);
             await saveAggregatorCases(dataresult[constants.dataLabel], pgPool, pgPromise, tableNameUsed);
             return Promise.resolve();
         }
@@ -33,7 +33,11 @@ const run = async (pgPool, pgPromise, dataSource, dataLocation, tableName = null
         let startIndex = 0;
         const safePageSize = pageSize <= 0 ? BATCH_SIZE : pageSize;
         for (let startIndex = 0; startIndex <= totalCaseCount; startIndex += safePageSize) {
-            const dataresult = await getDataFile(pgPool, pgPromise, dataSource, dataLocation, constants.casesName, startIndex, safePageSize);
+            const dataresult = await getDataFile(pgPool, pgPromise, dataSource, resourceLocator, constants.casesName, startIndex, safePageSize);
+
+            if(dataresult === null) {
+                continue; //issue with TT datasource's orderDetailJson_s
+            }
             
             // set total case count if not set
             if (totalCaseCount === 0) {
