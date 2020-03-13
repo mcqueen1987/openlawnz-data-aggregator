@@ -21,6 +21,7 @@ describe('when MOJ cases are aggregated', () => {
 
     afterEach(async () => {
         await helpers.dropTestTable(starters.pgPoolConnection, testNames.testCases);
+        helpers.removeEnvFile(testNames.testFile);
     }, constants.asyncTimeout)
 
     async function dothething() {
@@ -50,6 +51,7 @@ describe("when PCO legislation is aggregated", () => {
 
     afterEach(async () => {
         await helpers.dropTestTable(starters.pgPoolConnection, testNames.testLegislation);
+        helpers.removeEnvFile(testNames.testFile);
     }, constants.asyncTimeout)
 
     async function dothething() {
@@ -61,7 +63,7 @@ describe("when PCO legislation is aggregated", () => {
     it('can be found in the database', async () => {
         await dothething();
         console.log(`${constants.pcoType} aggregation finished and will be tested...`);
-        await helpers.checkTableHasResults(starters.pgPoolConnection, constants.legislationName);
+        await helpers.checkTableHasResults(starters.pgPoolConnection, testNames.testLegislation);
     }, constants.asyncTimeout)
 })
 
@@ -90,41 +92,62 @@ async function runTest(entrypoint, pgPool, pgPromise, dataSource, dataLocation, 
     } 
 }
 
-describe("when a URL data source is aggregated", () => {
-    let starters;
+async function createCasesTable(pgPool, tableName) {
+    let casesCreateScript = caseModel.getCreateQuery(tableName);
+    await helpers.createFreshTable(pgPool, casesCreateScript, tableName);
+}
 
-    beforeAll(async () => {
-        starters = await helpers.getStartData();
+async function createlegislationTable(pgPool, tableName) {
+    let legislationCreateScript = legislationModel.getCreateQuery(tableName);
+    await helpers.createFreshTable(pgPool, legislationCreateScript, tableName);
+}
+
+fdescribe("when a URL data source is aggregated", () => {
+    let starters;
+    let testNames;
+
+    beforeEach(async () => {
+        console.log('initializing test...');
+        testNames = await helpers.createEnvironmentFile();
+        starters = await helpers.getStartData(testNames.testFile);
     }, constants.asyncTimeout)
 
-    async function dothething(entrypoint, chosenurl) {
-        await runTest(entrypoint, starters.pgPoolConnection, starters.pgPromise, constants.urlType, chosenurl, null);
+    afterEach(() => {
+        helpers.removeEnvFile(testNames.testFile);
+    })
+
+    async function dothething(entryPoint, chosenUrl) {
+        await runTest(entryPoint, starters.pgPoolConnection, starters.pgPromise, constants.urlType, chosenUrl, null);
     }
 
     it('aggregates cases without error', async () => {
+        await createCasesTable(starters.pgPoolConnection, testNames.testCases);
         await dothething(constants.caseEntryPoint, casesURL);
-        await helpers.dropTestTable(starters.pgPoolConnection, constants.casesName); //I took this out of afterEach() so that I could clear only one table per test
+        await helpers.dropTestTable(starters.pgPoolConnection, testNames.testCases);  //I took this out of afterEach() so that I could clear only one table per test
     }, constants.asyncTimeout)
 
     it('cases can be found in the database', async () => {
+        await createCasesTable(starters.pgPoolConnection, testNames.testCases);
         await dothething(constants.caseEntryPoint, casesURL);
         console.log(`${constants.urlType} aggregation finished and will be tested...`);
-        await helpers.checkTableHasResults(starters.pgPoolConnection, constants.casesName);
-        await helpers.dropTestTable(starters.pgPoolConnection, constants.casesName);
+        await helpers.checkTableHasResults(starters.pgPoolConnection, testNames.testCases);
+        await helpers.dropTestTable(starters.pgPoolConnection, testNames.testCases);
     }, constants.asyncTimeout)
 
     it('aggregates legislation without error', async () => {
+        await createlegislationTable(starters.pgPoolConnection, testNames.testLegislation);
         let url = legislationURL();
         await dothething(constants.legislationEntryPoint, url);
-        await helpers.dropTestTable(starters.pgPoolConnection, constants.legislationName);
+        await helpers.dropTestTable(starters.pgPoolConnection, testNames.testLegislation);
     }, constants.asyncTimeout)
 
     it('legislation can be found in the database', async () => {
+        await createlegislationTable(starters.pgPoolConnection, testNames.testLegislation);
         let url = legislationURL();
         await dothething(constants.legislationEntryPoint, url);
         console.log(`${constants.urlType} aggregation finished and will be tested...`);
-        await helpers.checkTableHasResults(starters.pgPoolConnection, constants.legislationName);
-        await helpers.dropTestTable(starters.pgPoolConnection, constants.legislationName);
+        await helpers.checkTableHasResults(starters.pgPoolConnection, testNames.testLegislation);
+        await helpers.dropTestTable(starters.pgPoolConnection, testNames.testLegislation);
     }, constants.asyncTimeout)
 })
 

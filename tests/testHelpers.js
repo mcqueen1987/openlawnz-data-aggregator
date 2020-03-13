@@ -3,6 +3,7 @@ const fs = require('fs');
 const constants = require('../constants');
 const commonfuncs = require('../common/functions');
 const environmentConsts = require('../constants/environment')
+const path = require('path')
 
 const testEnvironmentName = 'testenvironmentdonttouch'
 module.exports.testEnvironmentName = testEnvironmentName
@@ -139,7 +140,8 @@ module.exports.createEnvironmentFile = async function() {
     newEnv[environmentConsts.casesTableName] = testCases
     newEnv[environmentConsts.legislationTable] = testLegislation
     let fileData = parseJsonToEnv(newEnv)
-    fs.writeFileSync(`${__dirname}/../${constants.envFile}${testFile}`, fileData)
+    let filePath = path.resolve(`${__dirname}/../${constants.envFile}${testFile}`)
+    fs.writeFileSync(filePath, fileData)
 
     return {
         testFile,
@@ -160,4 +162,9 @@ function parseJsonToEnv(inputJson) {
     }
     output += newLine
     return output
+}
+
+module.exports.removeEnvFile = function(nameUniquePart) {
+    let filePath = path.resolve(`${__dirname}/../${constants.envFile}${testFile}`)
+    fs.unlinkSync(filePath)
 }
