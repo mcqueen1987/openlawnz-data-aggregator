@@ -212,7 +212,7 @@ describe("when a TT data source is aggregated", () => {
     }, hugeTimeout)
 
     /** WARNING: VERY SLOW. 20MINUTES APPROX */
-    fit('cases can be found in the database after paging', async () => {
+    it('cases can be found in the database after paging', async () => {
         console.log(slowWarning);
         await createCasesTable(starters.pgPoolConnection, testNames.testCases);
         await doTheThing(constants.caseEntryPoint, inputPageSize, testNames.testCases);
