@@ -93,8 +93,8 @@ module.exports.getprojecthash = () =>
 const isNullOrUndefined = subject => subject === null || subject === undefined;
 module.exports.isNullOrUndefined = isNullOrUndefined;
 
-module.exports.getTableName = function(inputTableName) {
-	let tableNameUsed = constants.casesName;
+module.exports.getTableName = function(defaultName, inputTableName) {
+	let tableNameUsed = defaultName;
 
     if(isNullOrUndefined(inputTableName) === false) {
         tableNameUsed = inputTableName;
