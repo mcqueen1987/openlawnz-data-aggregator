@@ -80,6 +80,8 @@ _resorcelocator_:
 - a local json file OR
 - a url
 
+It should be within double quotes otherwise it may not send the entire url.
+
 _pagesize_:
   
   pagesize of a Tenancy Tribunal (TT) paginated response.
