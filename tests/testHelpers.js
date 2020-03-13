@@ -53,7 +53,7 @@ module.exports.dropTestTable = async function(connection, tableName) {
     try {
         client = await connection.connect();
         let result1 = await client.query(constants.sqlBegin);
-        let result2 = await client.query(`DROP TABLE ingest.${tableName};`);
+        let result2 = await client.query(`DROP TABLE ${constants.schemaName}.${tableName};`);
         let result4 = await client.query(constants.sqlCommit);
         console.log(`${tableName} test table removed.`);
         return Promise.resolve();
@@ -72,7 +72,7 @@ module.exports.dropTestTable = async function(connection, tableName) {
 
 module.exports.checkTableHasResults = async function(connection, tableName) {
     let client = null;
-    let selectQuery = `select * from ingest.${tableName};`;
+    let selectQuery = `select * from ${constants.schemaName}.${tableName};`;
 
     try {
         client = await connection.connect();

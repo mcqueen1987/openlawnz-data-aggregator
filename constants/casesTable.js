@@ -1,3 +1,5 @@
+const constants = require('../constants')
+
 const casestable = {
 	fileProvider: "file_provider",
 	fileKey: "file_key",
@@ -13,7 +15,13 @@ const casestable = {
 module.exports.table = casestable;
 
 const getCreateQuery = (tableName) => 
-`CREATE TABLE ingest.${tableName} (
+`CREATE TYPE ${constants.schemaName}.processing_status AS ENUM (
+    'UNPROCESSED',
+    'PROCESSING',
+    'PROCESSED'
+);
+
+CREATE TABLE ${constants.schemaName}.${tableName} (
 file_provider text NOT NULL,
 file_key text NOT NULL,
 file_url text NOT NULL,
@@ -23,7 +31,7 @@ case_citations text[] NOT NULL,
 date_processed date,
 sourcecode_hash text NOT NULL,
 date_accessed date NOT NULL,
-processing_status ingest.processing_status NOT NULL
+processing_status ${constants.schemaName}.processing_status NOT NULL
 );
 
 `

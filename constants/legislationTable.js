@@ -1,3 +1,4 @@
+const constants = require('../constants')
 
 const legislationTable = {
     link: 'link',
@@ -9,7 +10,7 @@ const legislationTable = {
 module.exports.table = legislationTable;
 
 const getCreateQuery = (tableName) => 
-`CREATE TABLE ingest.${tableName} (
+`CREATE TABLE ${constants.schemaName}.${tableName} (
 link text NOT NULL,
 year text NOT NULL,
 title text NOT NULL,
