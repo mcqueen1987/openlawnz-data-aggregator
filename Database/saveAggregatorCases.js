@@ -1,6 +1,6 @@
 const constants = require('../constants');
 const casemodel = require('../models/case');
-const environmentconsts = require('../constants/environment')
+const environmentConsts = require('../constants/environment')
 
 /**
  * save cases
@@ -15,7 +15,7 @@ const run = async (data, pgPool, pgPromise) => {
     const getInsertCaseSql = (onecase) => {
         let casesColumnSet = new pgPromise.helpers.ColumnSet(
             casemodel.getlabelsarray(),
-            {table: {table: process.env[environmentconsts.casesTableName], schema: constants.schemaName}}
+            {table: {table: process.env[environmentConsts.casesTableName], schema: constants.schemaName}}
         );
         return pgPromise.helpers.insert(onecase, casesColumnSet);
     }

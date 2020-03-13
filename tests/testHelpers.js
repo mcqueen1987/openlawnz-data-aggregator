@@ -11,7 +11,7 @@ async function getStartData(overridingEnvironmentName = null) {
     
     let envLabel;
 
-    if(commonfuncs.isnullorundefined(overridingEnvironmentName)) {
+    if(commonfuncs.isNullOrUndefined(overridingEnvironmentName)) {
         envLabel = getEnvFilesLabel();
     }
 

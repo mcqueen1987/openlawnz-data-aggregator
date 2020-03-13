@@ -1,12 +1,12 @@
 
-const legislationtable = {
+const legislationTable = {
     link: 'link',
     year: 'year',
     title: 'title',
     alerts: 'alerts',
     dateAccessed: 'date_accessed'
 }
-module.exports.table = legislationtable;
+module.exports.table = legislationTable;
 
 const getCreateQuery = (tableName) => 
 `CREATE TABLE ingest.${tableName} (

@@ -89,5 +89,5 @@ module.exports.isrequired = function() {
 module.exports.getprojecthash = () =>
 	childprocess.execSync("git rev-parse HEAD");
 
-const isnullorundefined = subject => subject === null || subject === undefined;
-module.exports.isnullorundefined = isnullorundefined;
+const isNullOrUndefined = subject => subject === null || subject === undefined;
+module.exports.isNullOrUndefined = isNullOrUndefined;

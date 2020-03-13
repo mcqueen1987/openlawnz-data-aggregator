@@ -21,7 +21,7 @@ const run = async (pgPool, pgPromise, dataSource, dataLocation, pageSize = null)
 
     try {
         // without pagination
-        if (helpers.isnullorundefined(pageSize)) {
+        if (helpers.isNullOrUndefined(pageSize)) {
             const dataresult = await getDataFile(pgPool, pgPromise, dataSource, dataLocation, constants.casesName);
             await saveAggregatorCases(dataresult[constants.dataLabel], pgPool, pgPromise);
             return Promise.resolve();

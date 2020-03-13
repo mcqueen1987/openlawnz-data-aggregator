@@ -72,8 +72,8 @@ function choosecasesorlegislation(datatype, unformattedresponse) {
             let output = unformattedresponse
 
             try {
-                let responseisfound = helpers.isnullorundefined(unformattedresponse['response']) === false
-                let docsarefound = helpers.isnullorundefined(unformattedresponse.response['docs']) === false
+                let responseisfound = helpers.isNullOrUndefined(unformattedresponse['response']) === false
+                let docsarefound = helpers.isNullOrUndefined(unformattedresponse.response['docs']) === false
                 let isnotflat = responseisfound && docsarefound
 
                 if(isnotflat === true) {

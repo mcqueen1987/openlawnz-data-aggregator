@@ -1,31 +1,31 @@
-const legislationtable = require('../constants/legislationTable').table
-const isrequired = require('../common/functions').isrequired
+const legislationTable = require('../constants/legislationTable').legislationTable
+const isRequired = require('../common/functions').isrequired
 
 /** construct using the new keyword */
 function construct(
-    link = isrequired(),
-    year = isrequired(),
-    title = isrequired(),
-    alerts = isrequired(),
-    dateAccessed = isrequired()
+    link = isRequired(),
+    year = isRequired(),
+    title = isRequired(),
+    alerts = isRequired(),
+    dateAccessed = isRequired()
 ) {
     let output = {};
-    output[legislationtable.link] = link;
-    output[legislationtable.year] = year;
-    output[legislationtable.title] = title;
-    output[legislationtable.alerts] = alerts;
-    output[legislationtable.dateAccessed] = dateAccessed;
+    output[legislationTable.link] = link;
+    output[legislationTable.year] = year;
+    output[legislationTable.title] = title;
+    output[legislationTable.alerts] = alerts;
+    output[legislationTable.dateAccessed] = dateAccessed;
     return output;
 }
 module.exports.construct = construct
 
 module.exports.getlabelsarray = function () {
     return [
-        legislationtable.link,
-        legislationtable.year,
-        legislationtable.title,
-        legislationtable.alerts,
-        legislationtable.dateAccessed
+        legislationTable.link,
+        legislationTable.year,
+        legislationTable.title,
+        legislationTable.alerts,
+        legislationTable.dateAccessed
     ];
 }
 

@@ -2,7 +2,7 @@ const getDataFile = require('./getDataFile');
 const constants = require('./constants');
 const legislationModel = require('./models/legislation');
 const setup = require('./common/setup');
-const environmentconsts = require('./constants/environment')
+const environmentConsts = require('./constants/environment')
 
 /**
  * get legislation data then save to databases
@@ -19,7 +19,7 @@ const run = async (pgPool, pgPromise, dataSource, dataLocation) => {
     const legislationData = await getDataFile(pgPool, pgPromise, dataSource, dataLocation, constants.legislationName);
     let legislationColumnSet = new pgPromise.helpers.ColumnSet(
         legislationModel.getlabelsarray(),
-        {table: {table: process.env[environmentconsts.legislationTable], schema: constants.schemaName}}
+        {table: {table: process.env[environmentConsts.legislationTable], schema: constants.schemaName}}
     );
 
     // insert sql within a transaction
