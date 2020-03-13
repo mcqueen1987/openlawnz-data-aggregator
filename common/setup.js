@@ -30,9 +30,13 @@ const setup = async (envFileName, resumeSessionId = 0) => {
         throw new Error('Missing env file name.')
     };
 
-    dotEnv.config({
+    let envResult = dotEnv.config({
         path: `${rootDir}/${constants.envFile}${envFileName}`
     });
+
+    if(envResult.error) {
+        throw envResult.error
+    }
 
     if(helpers.isNullOrUndefined(process.env[constEnv.apifyTaskId]) ||
         helpers.isNullOrUndefined(process.env[constEnv.apifyToken]) ||
@@ -62,14 +66,13 @@ const setup = async (envFileName, resumeSessionId = 0) => {
     };
 
     let pgPoolConnection = new Pool(conn);
-    let environment = process.env
+    
     return {
         sessionId,
         cacheDir,
         logDir,
         pgPromise,
-        pgPoolConnection,
-        environment
+        pgPoolConnection
     };
 }
 module.exports.getStartData = setup;

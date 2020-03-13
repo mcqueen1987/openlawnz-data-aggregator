@@ -16,14 +16,15 @@ const REQUEST_INTERVAL_MS = 5000;
  * @param argvs
  * @returns Promise<void>
  */
-const run = async (pgPool, pgPromise, dataSource, dataLocation, pageSize = null) => {
+const run = async (pgPool, pgPromise, dataSource, dataLocation, tableName = null, pageSize = null) => {
     console.log('starting getCases.js');
+    let tableNameUsed = helpers.getTableName(tableName)
 
     try {
         // without pagination
         if (helpers.isNullOrUndefined(pageSize)) {
             const dataresult = await getDataFile(pgPool, pgPromise, dataSource, dataLocation, constants.casesName);
-            await saveAggregatorCases(dataresult[constants.dataLabel], pgPool, pgPromise);
+            await saveAggregatorCases(dataresult[constants.dataLabel], pgPool, pgPromise, tableNameUsed);
             return Promise.resolve();
         }
 
@@ -39,7 +40,7 @@ const run = async (pgPool, pgPromise, dataSource, dataLocation, pageSize = null)
                 totalCaseCount = dataresult[constants.pageCountLabel];
                 console.log(`total case count: [${totalCaseCount}]`);
             }
-            await saveAggregatorCases(dataresult[constants.dataLabel], pgPool, pgPromise);
+            await saveAggregatorCases(dataresult[constants.dataLabel], pgPool, pgPromise, tableNameUsed);
             // sleep between calls
             await new Promise(resolve => setTimeout(resolve, REQUEST_INTERVAL_MS));
             console.log(`data saved: start index [${startIndex}] page size [${safePageSize}]`);

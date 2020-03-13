@@ -15,13 +15,7 @@ const casestable = {
 module.exports.table = casestable;
 
 const getCreateQuery = (tableName) => 
-`CREATE TYPE ${constants.schemaName}.processing_status AS ENUM (
-    'UNPROCESSED',
-    'PROCESSING',
-    'PROCESSED'
-);
-
-CREATE TABLE ${constants.schemaName}.${tableName} (
+`CREATE TABLE ${constants.schemaName}.${tableName} (
 file_provider text NOT NULL,
 file_key text NOT NULL,
 file_url text NOT NULL,

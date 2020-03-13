@@ -4,22 +4,13 @@ const constants = require('../constants');
 const commonfuncs = require('../common/functions');
 const environmentConsts = require('../constants/environment')
 const path = require('path')
+const dotenv = require('dotenv')
 
-const testEnvironmentName = 'testenvironmentdonttouch'
-module.exports.testEnvironmentName = testEnvironmentName
+const ancestorDir = '/../'
 
-async function getStartData(overridingEnvironmentName = null) {
-    
-    let envLabel;
-
-    if(commonfuncs.isNullOrUndefined(overridingEnvironmentName)) {
-        envLabel = getEnvFilesLabel();
-    }
-
-    else {
-        envLabel = testEnvironmentName
-    }
-    let startData = await setup.getStartData(envLabel);
+async function getStartData() {    
+    let envName = getEnvFilesLabel();
+    let startData = await setup.getStartData(envName);
     expect(startData.pgPromise).toBeTruthy();
     expect(startData.pgPoolConnection).toBeTruthy();
     return startData;
@@ -35,7 +26,7 @@ function getEnvFilesLabel() {
         let possibleEnvFile = currentValue.substring(0, envFileEndIndex);
 
         if(possibleEnvFile !== constants.envFile ||
-            currentValue === `${constants.envFile}sample`) {
+            currentValue === `${constants.envFile}sample`){
             return accumulate;
         }        
         let fileslabel = currentValue.substring(envFileEndIndex);
@@ -118,53 +109,17 @@ module.exports.createFreshTable = async function(connection, createScript, newTa
     }
 }
 
-/** returns the name of the test environment file, 
- * the name of the test cases table, 
+/** 
+ * Returns the name of the test cases table, 
  * the name of the test legislation table. 
  * */
-module.exports.createEnvironmentFile = async function() {   
+module.exports.createRandomNames = async function() {   
     let randomNumber = `${(Math.random() * 100000000)}`.split('.').join('')  //full stops not allowed in table names
-    let testFile = testEnvironmentName + randomNumber
     let testCases = constants.casesName + randomNumber
     let testLegislation = constants.legislationName + randomNumber
-    
-    const originalSetup = await getStartData()
-    let newEnv = {}
-    newEnv[environmentConsts.apifyTaskId] = originalSetup.environment[environmentConsts.apifyTaskId]
-    newEnv[environmentConsts.apifyToken] = originalSetup.environment[environmentConsts.apifyToken]
-    newEnv[environmentConsts.dbHost] = originalSetup.environment[environmentConsts.dbHost]
-    newEnv[environmentConsts.dbName] = originalSetup.environment[environmentConsts.dbName]
-    newEnv[environmentConsts.dbPass] = originalSetup.environment[environmentConsts.dbPass]
-    newEnv[environmentConsts.dbUser] = originalSetup.environment[environmentConsts.dbUser]
-    newEnv[environmentConsts.port] = originalSetup.environment[environmentConsts.port]
-    newEnv[environmentConsts.casesTableName] = testCases
-    newEnv[environmentConsts.legislationTable] = testLegislation
-    let fileData = parseJsonToEnv(newEnv)
-    let filePath = path.resolve(`${__dirname}/../${constants.envFile}${testFile}`)
-    fs.writeFileSync(filePath, fileData)
 
     return {
-        testFile,
         testCases,
         testLegislation
     }
-}
-
-function parseJsonToEnv(inputJson) {
-    let output = ''
-    const newLine = '\r\n'
-    let keys = Object.keys(inputJson)
-
-    for(let i = 0; i < keys.length; i++) {
-        currentKey = keys[i]
-        let currentProp = inputJson[keys[i]]
-        output += `${currentKey}=${currentProp}${newLine}`
-    }
-    output += newLine
-    return output
-}
-
-module.exports.removeEnvFile = function(nameUniquePart) {
-    let filePath = path.resolve(`${__dirname}/../${constants.envFile}${testFile}`)
-    fs.unlinkSync(filePath)
 }

@@ -1,4 +1,4 @@
-const legislationTable = require('../constants/legislationTable').legislationTable
+const legislationTable = require('../constants/legislationTable').table
 const isRequired = require('../common/functions').isrequired
 
 /** construct using the new keyword */
