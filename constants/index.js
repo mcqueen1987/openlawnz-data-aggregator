@@ -18,7 +18,7 @@ const constants = {
     legislationEntryPoint: 'getLegislation.js',
     unprocessedStatus: 'UNPROCESSED',
     dataLabel: 'data',
-    pageCountLabel: 'case_count_from_page',
+    pageCountLabel: 'caseCountFromPage',
     carriageReturnNewLine: '\r\n'
 }
 module.exports = constants;

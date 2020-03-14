@@ -2,17 +2,19 @@ const urlAdapter = require("./generic/url");
 const uuidv1 = require('uuid/v1');
 const moment = require('moment');
 const constants = require('../constants');
-const casemodel = require('../models/case');
-const commonfuncs = require('../common/functions');
+const caseModel = require('../models/case');
+const commonFuncs = require('../common/functions');
 
 // search start date. it should not be earlier than 3 years before
-const FROM_DATE = '[NOW-3YEARS TO NOW]';
-const BASE_URL = 'https://forms.justice.govt.nz/';
-const BASE_PDF_URL = BASE_URL + 'search/Documents/TTV2/PDF/';
+const fromDate = '[NOW-3YEARS TO NOW]';
+const baseUrl = 'https://forms.justice.govt.nz/';
+const basePdfUrl = baseUrl + 'search/Documents/TTV2/PDF/';
 // the max case count to end loop. Supposed to be < 20000 per year. 20000 * 3 years = 60000
-const MAX_CASE_COUNT = 60000;
+const maxCaseCount = 60000;
 
-const rateLimitError = 'You hit the rate limit in parallel tests! Dont do that.'
+const rateLimitError = 'You hit the rate limit in parallel tests! Dont do that.';
+const orderDetailKey = 'orderDetailJson_s';
+
 
 /**
  * get Tenancy Tribunal data from server
@@ -26,12 +28,12 @@ const rateLimitError = 'You hit the rate limit in parallel tests! Dont do that.'
 const run = async (pgPool, pgPromise, startIndex, batchSize) => {
 	try {
 		console.log(`get data: start case: [${startIndex}], page size : [${batchSize}]`);
-		if (startIndex > MAX_CASE_COUNT) {
-			console.log(`the case index [${startIndex}] reach to the max case count [${MAX_CASE_COUNT}], end the loop`);
+		if (startIndex > maxCaseCount) {
+			console.log(`the case index [${startIndex}] reach to the max case count [${maxCaseCount}], end the loop`);
 			return false;
 		}
 		const jsonURL = [
-			BASE_URL + 'solr/TTV2/select?',
+			baseUrl + 'solr/TTV2/select?',
 			'facet=true',
 			'&start=' + startIndex,
 			'&rows=' + batchSize,
@@ -42,13 +44,13 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
 			'&sort=decisionDateIndex_l%20desc',
 			'&json.nl=map',
 			'&q=*',
-			'&fq=jurisdictionCode_s%3ATT%20AND%20publishedDate_dt%3A' + encodeURI(FROM_DATE),
+			'&fq=jurisdictionCode_s%3ATT%20AND%20publishedDate_dt%3A' + encodeURI(fromDate),
 			'&wt=json'
 		].join("");
 
 		let tenancyData = await urlAdapter(jsonURL);
 
-		if(commonfuncs.isNullOrUndefined(tenancyData)) {
+		if(commonFuncs.isNullOrUndefined(tenancyData)) {
 			throw new Error(rateLimitError)
 		}
 
@@ -59,41 +61,33 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
 		console.log(`${constants.TTtype} response received...`);
 
 		const casesNumFound = tenancyData['response']['numFound'];
-		let hash = commonfuncs.getprojecthash();
+		let hash = commonFuncs.getprojecthash();
 
 		const formattedTenancyData = tenancyData['response']['docs'].map(doc => {
-			const provider = doc['categoryCode'][0];
-			const orderDetailKey = 'orderDetailJson_s';
-			
-			if(doc[orderDetailKey[0]] === "") {
-				throw new Error(rateLimitError);
-			}
-			let order_detail;
+			const provider = doc['categoryCode'][0];			
+			const dateObject = moment(doc["publishedDate_s"][0], "DD/MM/YYYY").toDate();
+			const dbKey = uuidv1() + '.pdf';  // like '6c84fb90-12c4-11e1-840d-7b25c5ee775a.pdf'
+			const caseKey = provider + '_' + dateObject.getTime() + '_' + dbKey;
+			const caseName = doc['casePerOrg_s'].join(' vs ');
+			let pdfUrl = null;
 
 			try {
-				order_detail = JSON.parse(doc[orderDetailKey][0]);
+				pdfUrl = basePdfUrl + doc[orderDetailKey][0]['publishedOrderPdfName'];
 			}
 
 			catch(error) {
-				throw new Error(rateLimitError);
+				console.log(`TT record: ${caseName} didnt come with a backing pdf file!`);
 			}
-
-			const casedatefound = order_detail['dateOfIssue'];
-			const case_date_object = moment(casedatefound, "DD/MM/YYYY").toDate();
-			const db_key = uuidv1() + '.pdf';  // like '6c84fb90-12c4-11e1-840d-7b25c5ee775a.pdf'
-			const case_key = provider + '_' + case_date_object.getTime() + '_' + db_key;
-			const pdf_url = BASE_PDF_URL + order_detail['publishedOrderPdfName'];
 			// citation format : [$year] NZTT $location $applicationNumber e.g '[2019] NZTT Hamilton 4213491'
-			const citation = '[' + case_date_object.getFullYear() + '] NZ' + provider + ' ' + doc['tenancyCityTown_s'] + ' ' + doc['applicationNumber_s'];
-			const case_name = doc['casePerOrg_s'].join(' vs ');
+			const citation = '[' + dateObject.getFullYear() + '] NZ' + provider + ' ' + doc['tenancyCityTown_s'] + ' ' + doc['applicationNumber_s'];			
 			//const case_text = doc['document_text_abstract']
 
-			return casemodel.construct(
+			return caseModel.construct(
 				fileProvider = constants.TTtype,
-				fileKey = case_key,
-				fileUrl = pdf_url,
-				caseNames = [case_name],
-				caseDate = case_date_object,
+				fileKey = caseKey,
+				fileUrl = pdfUrl,
+				caseNames = [caseName],
+				caseDate = dateObject,
 				caseCitations = [citation],
 				dateProcessed = null,
 				processingStatus = constants.unprocessedStatus,
@@ -102,11 +96,14 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
 			);
 		})
 
-		return {
-			data: formattedTenancyData,
-			case_count_from_page: casesNumFound,
+		let output = {
+			data: formattedTenancyData			
 		};
-	} catch (ex) {
+		output[constants.pageCountLabel] = casesNumFound;
+		return output;
+	} 
+	
+	catch (ex) {
 		console.log(ex)
 		throw ex;
 	}
