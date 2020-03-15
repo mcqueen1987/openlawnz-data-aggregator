@@ -2,7 +2,7 @@ const urlAdapter = require("./generic/url");
 const MOJconstants = require('../constants/MOJresponse');
 const constants = require('../constants');
 const caseModel = require('../models/case');
-const commonFuncs = require('../common/functions');
+const helpers = require('../common/functions');
 
 // Currently limited to 10 results for testing
 const maxRows = 10;
@@ -50,7 +50,7 @@ if (require.main === module) {
 module.exports.mapArrayToCases = (inputarray) => {
 	let output = {};
 	output[constants.dataLabel] = inputarray.map((currentitem) => {
-		let hash = commonFuncs.getProjectHash();
+		let hash = helpers.getProjectHash();
 
 		return new caseModel.construct(
 			fileProvider = constants.mojType,
@@ -58,7 +58,7 @@ module.exports.mapArrayToCases = (inputarray) => {
 			fileUrl = "https://forms.justice.govt.nz/search/Documents/pdf/" + currentitem.id,
 			caseNames = [currentitem.CaseName],
 			caseDate = currentitem.JudgmentDate,
-			caseCitations = [commonFuncs.getCitation(currentitem.CaseName)],
+			caseCitations = [helpers.getCitation(currentitem.CaseName)],
 			dateProcessed = null,
 			processingStatus = constants.unprocessedStatus,
 			sourceCodeHash = hash,
