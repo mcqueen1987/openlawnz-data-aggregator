@@ -50,7 +50,7 @@ if (require.main === module) {
 module.exports.maparraytocases = (inputarray) => {
 	let output = {};
 	output[constants.dataLabel] = inputarray.map((currentitem) => {
-		let hash = commonfuncs.getprojecthash();
+		let hash = commonfuncs.getProjectHash();
 
 		return new casemodel.construct(
 			fileProvider = constants.mojType,

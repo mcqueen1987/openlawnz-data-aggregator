@@ -61,7 +61,7 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
 		console.log(`${constants.TTtype} response received...`);
 
 		const casesNumFound = tenancyData['response']['numFound'];
-		let hash = commonFuncs.getprojecthash();
+		let hash = commonFuncs.getProjectHash();
 
 		const formattedTenancyData = tenancyData['response']['docs'].map(doc => {
 			const provider = doc['categoryCode'][0];			

@@ -79,7 +79,7 @@ module.exports.isrequired = function() {
 };
 
 /** returns the hash of the current commit on the current branch. */
-module.exports.getprojecthash = () =>
+module.exports.getProjectHash = () =>
 	childprocess.execSync('git rev-parse HEAD');
 
 const isNullOrUndefined = subject => subject === null || subject === undefined;
