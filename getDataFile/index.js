@@ -3,6 +3,7 @@ const legislation = require('../models/legislation');
 const helpers = require('../common/functions');
 const MOJconstants = require('../constants/MOJresponse');
 const jdocases = require('./jdoCases');
+const envConsts = require('../constants/environment');
 
 const casesonlyerror = 'You can only request cases from that datasource.';
 
@@ -22,7 +23,7 @@ module.exports = async (pgPool, pgPromise, dataSource, resourceLocator, datatype
             return choosecasesorlegislation(datatype, unformatted);
 
         case constants.pcoType:
-            if (!process.env.APIFY_TASK_ID || !process.env.APIFY_TOKEN) {
+            if (!process.env[envConsts.apifyTaskId] || !process.env[envConsts.apifyToken]) {
                 throw new Error("Missing Apify env variables");
             }
 
