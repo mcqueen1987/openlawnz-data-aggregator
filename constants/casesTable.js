@@ -1,6 +1,6 @@
 const constants = require('../constants');
 
-const casestable = {
+const casesTable = {
 	fileProvider: "file_provider",
 	fileKey: "file_key",
 	fileUrl: "file_url",
@@ -12,7 +12,7 @@ const casestable = {
 	sourceCodeHash: "sourcecode_hash",
 	dateAccessed: "date_accessed"
 };
-module.exports.table = casestable;
+module.exports.table = casesTable;
 
 const getCreateQuery = (tableName) => 
 `CREATE TABLE ${constants.schemaName}.${tableName} (

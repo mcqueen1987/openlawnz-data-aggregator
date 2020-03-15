@@ -1,5 +1,5 @@
 const constants = require('../constants');
-const casemodel = require('../models/case');
+const caseModel = require('../models/case');
 
 /**
  * save cases
@@ -11,12 +11,12 @@ const casemodel = require('../models/case');
  */
 const run = async (data, pgPool, pgPromise, tableName) => {
 
-    const getInsertCaseSql = (onecase) => {
+    const getInsertCaseSql = (oneCase) => {
         let casesColumnSet = new pgPromise.helpers.ColumnSet(
-            casemodel.getLabelsArray(),
+            caseModel.getLabelsArray(),
             {table: {table: tableName, schema: constants.schemaName}}
         );
-        return pgPromise.helpers.insert(onecase, casesColumnSet);
+        return pgPromise.helpers.insert(oneCase, casesColumnSet);
     };
 
 
@@ -25,15 +25,15 @@ const run = async (data, pgPool, pgPromise, tableName) => {
      * when insert ON CONFLICT(file_url), DO NOT save data to any table
      *
      * @param client
-     * @param onecase
+     * @param oneCase
      * @returns {Promise<void>}
      */
-    const insertOneRow = async (client, onecase) => {
+    const insertOneRow = async (client, oneCase) => {
         // insert cases
-        const casesSql = getInsertCaseSql(onecase);
+        const casesSql = getInsertCaseSql(oneCase);
         const ret = await client.query(casesSql);
         if (!ret['rowCount']) {
-            console.log(`skip duplicated data: ${JSON.stringify(onecase)}`);
+            console.log(`skip duplicated data: ${JSON.stringify(oneCase)}`);
             return;
         }
         await client.query(casesSql);

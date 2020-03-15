@@ -1,18 +1,18 @@
 const casestable = require("../constants/casesTable").table;
-const isrequired = require("../common/functions").isrequired;
+const isRequired = require("../common/functions").isRequired;
 
 /** construct using the new keyword */
 function construct(
-	fileProvider = isrequired(),
-	fileKey = isrequired(),
-	fileUrl = isrequired(),
-	caseNames = isrequired(),
-	caseDate = isrequired(),
-	caseCitations = isrequired(),
-	dateProcessed = isrequired(),
-	processingStatus = isrequired(),
-	sourceCodeHash = isrequired(),
-	dateAccessed = isrequired()
+	fileProvider = isRequired(),
+	fileKey = isRequired(),
+	fileUrl = isRequired(),
+	caseNames = isRequired(),
+	caseDate = isRequired(),
+	caseCitations = isRequired(),
+	dateProcessed = isRequired(),
+	processingStatus = isRequired(),
+	sourceCodeHash = isRequired(),
+	dateAccessed = isRequired()
 ) {
 	let output = {};
 	output[casestable.fileProvider] = fileProvider;

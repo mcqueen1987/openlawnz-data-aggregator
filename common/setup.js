@@ -76,14 +76,14 @@ const setup = async (envFileName, resumeSessionId = 0) => {
 };
 module.exports.getStartData = setup;
 
-module.exports.startApplication = function(entrypoint) {
+module.exports.startApplication = function(entryPoint) {
     const argv = yargs.argv;
 
     let runner = async () => {
-        setupdata = await setup(argv.env); 
-        const {pgPoolConnection, pgPromise} = setupdata;
+        let setupData = await setup(argv.env); 
+        const {pgPoolConnection, pgPromise} = setupData;
 
-        await entrypoint(
+        await entryPoint(
             pgPoolConnection,
             pgPromise,
             argv.datasource,

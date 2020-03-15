@@ -74,7 +74,7 @@ module.exports.isJsonString = function(str) {
 	return true;
 };
 
-module.exports.isrequired = function() {
+module.exports.isRequired = function() {
 	throw new Error('A function argument was required but not given.');
 };
 
