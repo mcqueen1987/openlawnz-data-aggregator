@@ -18,7 +18,7 @@ const REQUEST_INTERVAL_MS = 5000;
  */
 const run = async (pgPool, pgPromise, dataSource, resourceLocator, tableName = null, pageSize = null) => {
     console.log('starting getCases.js');
-    let tableNameUsed = helpers.getTableName(constants.casesName, tableName)
+    let tableNameUsed = helpers.getTableName(constants.casesName, tableName);
 
     try {
         // without pagination
@@ -30,7 +30,7 @@ const run = async (pgPool, pgPromise, dataSource, resourceLocator, tableName = n
 
         // get and save data by pagination, one page per request, default page size is BATCH_SIZE
         let totalCaseCount = 0;
-        let startIndex = 0;
+        
         const safePageSize = pageSize <= 0 ? BATCH_SIZE : pageSize;
         for (let startIndex = 0; startIndex <= totalCaseCount; startIndex += safePageSize) {
             const dataresult = await getDataFile(pgPool, pgPromise, dataSource, resourceLocator, constants.casesName, startIndex, safePageSize);
@@ -51,7 +51,7 @@ const run = async (pgPool, pgPromise, dataSource, resourceLocator, tableName = n
     catch (err) {
         return Promise.reject(err);
     }
-}
+};
 
 if (require.main === module) {
     setup.startApplication(run);

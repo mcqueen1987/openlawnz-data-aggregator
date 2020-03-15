@@ -144,6 +144,14 @@ Or, prss `F5` to use the vscode breakpoints set up in the launch.json file.
 
 Table name is passed as argument into the program to isolate side effects between tests.
 
+### Linting
+
+run the following command to check any mistakes regarding our style convention:
+
+```
+npm run eslint "./**/*.js"
+```
+
 ## NOTICE
 
 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

@@ -14,6 +14,6 @@ const MOJresponse = {
     id: 'id',
     timestamp: 'timestamp',
     flattenedarraypath: ['response', 'docs']
-}
+};
 module.exports = MOJresponse;
 

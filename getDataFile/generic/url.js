@@ -7,7 +7,7 @@ const run = async (url, pathArr) => {
 
         if (!common.isJsonString(jsonData)) {
             console.log(`data from ${url} is not a valid json: ${jsonData}`);
-            return
+            return;
         }
 
         const json = JSON.parse(jsonData);
@@ -15,7 +15,7 @@ const run = async (url, pathArr) => {
     } catch (ex) {
         throw ex;
     }
-}
+};
 
 if (require.main === module) {
     try {

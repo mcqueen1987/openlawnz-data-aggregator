@@ -1,5 +1,5 @@
-const legislationTable = require('../constants/legislationTable').table
-const isRequired = require('../common/functions').isrequired
+const legislationTable = require('../constants/legislationTable').table;
+const isRequired = require('../common/functions').isrequired;
 
 /** construct using the new keyword */
 function construct(
@@ -17,7 +17,7 @@ function construct(
     output[legislationTable.dateAccessed] = dateAccessed;
     return output;
 }
-module.exports.construct = construct
+module.exports.construct = construct;
 
 module.exports.getlabelsarray = function () {
     return [
@@ -27,7 +27,7 @@ module.exports.getlabelsarray = function () {
         legislationTable.alerts,
         legislationTable.dateAccessed
     ];
-}
+};
 
 module.exports.maparraytolegislation = (inputarray) =>
     inputarray.map((item) =>
@@ -38,5 +38,5 @@ module.exports.maparraytolegislation = (inputarray) =>
             alerts = item.alerts,
             dateAccessed = new Date()
         )
-    )
+    );
 

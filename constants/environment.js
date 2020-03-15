@@ -9,5 +9,5 @@ const environment = {
     apifyTaskId: 'APIFY_TASK_ID',
     casesTableName: 'CASES_TABLE_NAME',
     legislationTable: 'LEGISLATION_TABLE_NAME',
-}
-module.exports = environment
+};
+module.exports = environment;

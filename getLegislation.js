@@ -15,7 +15,7 @@ const helpers = require('./common/functions');
  */
 const run = async (pgPool, pgPromise, dataSource, resourceLocator, tableName = null) => {
     console.log('starting getLegislation.js');
-    let tableNameUsed = helpers.getTableName(constants.legislationName, tableName)
+    let tableNameUsed = helpers.getTableName(constants.legislationName, tableName);
     // get multi-row insert sql
     const legislationData = await getDataFile(pgPool, pgPromise, dataSource, resourceLocator, constants.legislationName);
     let legislationColumnSet = new pgPromise.helpers.ColumnSet(
@@ -38,7 +38,7 @@ const run = async (pgPool, pgPromise, dataSource, resourceLocator, tableName = n
     } finally {
         client && client.release();
     }
-}
+};
 
 if (require.main === module) {
     setup.startApplication(run);

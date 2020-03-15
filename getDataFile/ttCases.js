@@ -51,7 +51,7 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
 		let tenancyData = await urlAdapter(jsonURL);
 
 		if(commonFuncs.isNullOrUndefined(tenancyData)) {
-			throw new Error(rateLimitError)
+			throw new Error(rateLimitError);
 		}
 
 		if (!Object.keys(tenancyData).length) {
@@ -94,7 +94,7 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
 				sourceCodeHash = hash,
 				dateAccessed = new Date()
 			);
-		})
+		});
 
 		let output = {
 			data: formattedTenancyData			
@@ -104,10 +104,10 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
 	} 
 	
 	catch (ex) {
-		console.log(ex)
+		console.log(ex);
 		throw ex;
 	}
-}
+};
 
 if (require.main === module) {
 	try {

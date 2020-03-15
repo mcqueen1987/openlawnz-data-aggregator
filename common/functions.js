@@ -1,8 +1,6 @@
-const crypto = require("crypto");
-const fs = require("fs");
-const path = require("path");
-const childprocess = require("child_process");
-const constants = require('../constants');
+const fs = require('fs');
+const path = require('path');
+const childprocess = require('child_process');
 
 module.exports.makeLogger = () => {
 	var logDir;
@@ -16,9 +14,9 @@ module.exports.makeLogger = () => {
 		},
 		setLogFile: fileName => {
 			logFile = path.basename(fileName);
-			var logFileSplit = logFile.split(".");
+			var logFileSplit = logFile.split('.');
 			logFileWithoutExtension = logFileSplit[0];
-			logFileExtension = "txt";
+			logFileExtension = 'txt';
 		},
 		log: (data, append, appendFileName) => {
 			if (!process.env.SUPPRESS_LOGGING) {
@@ -26,16 +24,16 @@ module.exports.makeLogger = () => {
 					console.log(data);
 				} else {
 					if (Array.isArray(data)) {
-						data = data.join("\t");
+						data = data.join('\t');
 					}
 					var method = !append ? fs.writeFileSync : fs.appendFileSync;
 					var currentLogFile = !appendFileName
 						? logFile
 						: logFileWithoutExtension +
-						  "-" +
-						  appendFileName +
-						  "." +
-						  logFileExtension;
+						'-' +
+						appendFileName +
+						'.' +
+						logFileExtension;
 					method(path.join(logDir, currentLogFile), data);
 				}
 			}
@@ -52,7 +50,7 @@ module.exports.insertSlash = function(citation, insertString) {
 // https://hackernoon.com/accessing-nested-objects-in-javascript-f02f1bd6387f
 module.exports.getNestedObject = (nestedObj, pathArr) => {
 	return pathArr.reduce(
-		(obj, key) => (obj && obj[key] !== "undefined" ? obj[key] : undefined),
+		(obj, key) => (obj && obj[key] !== 'undefined' ? obj[key] : undefined),
 		nestedObj
 	);
 };
@@ -83,12 +81,12 @@ module.exports.isJsonString = function(str) {
 };
 
 module.exports.isrequired = function() {
-	throw new Error("A function argument was required but not given.");
+	throw new Error('A function argument was required but not given.');
 };
 
 /** returns the hash of the current commit on the current branch. */
 module.exports.getprojecthash = () =>
-	childprocess.execSync("git rev-parse HEAD");
+	childprocess.execSync('git rev-parse HEAD');
 
 const isNullOrUndefined = subject => subject === null || subject === undefined;
 module.exports.isNullOrUndefined = isNullOrUndefined;
@@ -96,9 +94,9 @@ module.exports.isNullOrUndefined = isNullOrUndefined;
 module.exports.getTableName = function(defaultName, inputTableName) {
 	let tableNameUsed = defaultName;
 
-    if(isNullOrUndefined(inputTableName) === false) {
-        tableNameUsed = inputTableName;
-        console.log(`using tablename: ${tableNameUsed}`);
+	if(isNullOrUndefined(inputTableName) === false) {
+		tableNameUsed = inputTableName;
+		console.log(`using tablename: ${tableNameUsed}`);
 	}    
 	return tableNameUsed;
-}
+};

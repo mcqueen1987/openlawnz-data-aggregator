@@ -1,6 +1,5 @@
 const casestable = require("../constants/casesTable").table;
 const isrequired = require("../common/functions").isrequired;
-const commonfuncs = require("../common/functions");
 
 /** construct using the new keyword */
 function construct(

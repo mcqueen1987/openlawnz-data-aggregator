@@ -25,7 +25,7 @@ const run = async () => {
     catch (ex) {
         throw ex;
     }
-}
+};
 
 if (require.main === module) {
     try {

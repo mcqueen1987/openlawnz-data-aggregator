@@ -58,37 +58,37 @@ module.exports = async (pgPool, pgPromise, dataSource, resourceLocator, datatype
             throw new Error('Incorrect datasource specified.');
     }
     
-}
+};
 
 function checklocation(dataLocation) {
     if (!dataLocation) {
-        throw new Error("Missing datalocation")
+        throw new Error("Missing datalocation");
     }
 }
 
 function choosecasesorlegislation(datatype, unformattedresponse) {
     switch(datatype) {
         case constants.casesName:
-            let output = unformattedresponse
+            let output = unformattedresponse;
 
             try {
-                let responseisfound = helpers.isNullOrUndefined(unformattedresponse['response']) === false
-                let docsarefound = helpers.isNullOrUndefined(unformattedresponse.response['docs']) === false
-                let isnotflat = responseisfound && docsarefound
+                let responseisfound = helpers.isNullOrUndefined(unformattedresponse['response']) === false;
+                let docsarefound = helpers.isNullOrUndefined(unformattedresponse.response['docs']) === false;
+                let isnotflat = responseisfound && docsarefound;
 
                 if(isnotflat === true) {
-                    output = helpers.getNestedObject(unformattedresponse, MOJconstants.flattenedarraypath)
+                    output = helpers.getNestedObject(unformattedresponse, MOJconstants.flattenedarraypath);
                 }
             }
 
             catch(error) {}
-            return jdocases.maparraytocases(output)
+            return jdocases.maparraytocases(output);
 
         case constants.legislationName:
-            return legislation.maparraytolegislation(unformattedresponse)
+            return legislation.maparraytolegislation(unformattedresponse);
 
         default:
-            throw new Error('invalid data type for URL aggregation.')
+            throw new Error('invalid data type for URL aggregation.');
     }
 }
 

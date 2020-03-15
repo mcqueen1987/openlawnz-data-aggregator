@@ -12,15 +12,13 @@
         "ecmaVersion": 2018
     },
     "rules": {
-        "linebreak-style": [
-            "warning",
-            "unix"
-        ],
-        "semi": [
-            "warning",
-            "always"
-        ],
+        "linebreak-style": 1,
+        "semi": 1,
         "camelcase": 1,
-        "eol-last": "warn"
+        "eol-last": 1,
+        "no-undef": 0,
+        "no-useless-catch": 0,
+        "no-empty": 0,
+        "no-case-declarations": 0
     }
 }

@@ -1,4 +1,4 @@
-const constants = require('../constants')
+const constants = require('../constants');
 
 const legislationTable = {
     link: 'link',
@@ -6,7 +6,7 @@ const legislationTable = {
     title: 'title',
     alerts: 'alerts',
     dateAccessed: 'date_accessed'
-}
+};
 module.exports.table = legislationTable;
 
 const getCreateQuery = (tableName) => 
@@ -18,5 +18,5 @@ alerts text NOT NULL,
 date_accessed date NOT NULL
 );
 
-`
-module.exports.getCreateQuery = getCreateQuery
+`;
+module.exports.getCreateQuery = getCreateQuery;

@@ -1,6 +1,5 @@
 const constants = require('../constants');
 const casemodel = require('../models/case');
-const environmentConsts = require('../constants/environment')
 
 /**
  * save cases
@@ -18,7 +17,7 @@ const run = async (data, pgPool, pgPromise, tableName) => {
             {table: {table: tableName, schema: constants.schemaName}}
         );
         return pgPromise.helpers.insert(onecase, casesColumnSet);
-    }
+    };
 
 
     /**
@@ -34,14 +33,14 @@ const run = async (data, pgPool, pgPromise, tableName) => {
         const casesSql = getInsertCaseSql(onecase);
         const ret = await client.query(casesSql);
         if (!ret['rowCount']) {
-            console.log(`skip duplicated data: ${JSON.stringify(onecase)}`)
-            return
+            console.log(`skip duplicated data: ${JSON.stringify(onecase)}`);
+            return;
         }
         await client.query(casesSql);
-    }
+    };
 
-    let client = null
-    console.log('saving cases...')
+    let client = null;
+    console.log('saving cases...');
     try {
         // insert data into database by transaction
         // 1. initiate transaction
@@ -59,7 +58,7 @@ const run = async (data, pgPool, pgPromise, tableName) => {
     } finally {
         client && client.release();
     }
-}
+};
 
 if (require.main === module) {
     try {
