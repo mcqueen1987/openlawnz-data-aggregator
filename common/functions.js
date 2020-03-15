@@ -27,13 +27,7 @@ module.exports.makeLogger = () => {
 						data = data.join('\t');
 					}
 					var method = !append ? fs.writeFileSync : fs.appendFileSync;
-					var currentLogFile = !appendFileName
-						? logFile
-						: logFileWithoutExtension +
-						'-' +
-						appendFileName +
-						'.' +
-						logFileExtension;
+					var currentLogFile = !appendFileName ? logFile: `${logFileWithoutExtension}-${appendFileName}.${logFileExtension}`;
 					method(path.join(logDir, currentLogFile), data);
 				}
 			}
