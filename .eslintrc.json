@@ -12,26 +12,15 @@
         "ecmaVersion": 2018
     },
     "rules": {
-        "indent": [
-            "error",
-            "tab"
-        ],
         "linebreak-style": [
-            "error",
+            "warning",
             "unix"
         ],
-        "quotes": [
-            "error",
-            "single"
-        ],
         "semi": [
-            "error",
+            "warning",
             "always"
         ],
-        "camelcase": {
-            "properties": "always",
-            "ignoreDestructuring": false,
-            "ignoreImports": false
-        }
+        "camelcase": 1,
+        "eol-last": "warn"
     }
 }
