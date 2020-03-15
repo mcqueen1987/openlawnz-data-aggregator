@@ -62,9 +62,9 @@ module.exports.checkTableHasResults = async function(connection, tableName) {
     try {
         client = await connection.connect();
         await client.query(constants.sqlBegin);
-        await client.query(selectQuery);
+        let result = await client.query(selectQuery);
         await client.query(constants.sqlCommit);
-        expect(result2.rows).not.toHaveLength(0);
+        expect(result.rows).not.toHaveLength(0);
         console.log('table data was found.');
         return Promise.resolve();
     } 
