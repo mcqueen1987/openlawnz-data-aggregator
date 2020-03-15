@@ -19,7 +19,7 @@ function construct(
 }
 module.exports.construct = construct;
 
-module.exports.getlabelsarray = function () {
+module.exports.getLabelsArray = function () {
     return [
         legislationTable.link,
         legislationTable.year,
@@ -29,7 +29,7 @@ module.exports.getlabelsarray = function () {
     ];
 };
 
-module.exports.maparraytolegislation = (inputarray) =>
+module.exports.mapArrayToLegislation = (inputarray) =>
     inputarray.map((item) =>
         new construct(
             link = item.link,

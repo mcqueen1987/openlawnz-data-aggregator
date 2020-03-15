@@ -19,7 +19,7 @@ const run = async (pgPool, pgPromise, dataSource, resourceLocator, tableName = n
     // get multi-row insert sql
     const legislationData = await getDataFile(pgPool, pgPromise, dataSource, resourceLocator, constants.legislationName);
     let legislationColumnSet = new pgPromise.helpers.ColumnSet(
-        legislationModel.getlabelsarray(),
+        legislationModel.getLabelsArray(),
         {table: {table: tableNameUsed, schema: constants.schemaName}}
     );
 

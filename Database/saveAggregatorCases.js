@@ -13,7 +13,7 @@ const run = async (data, pgPool, pgPromise, tableName) => {
 
     const getInsertCaseSql = (onecase) => {
         let casesColumnSet = new pgPromise.helpers.ColumnSet(
-            casemodel.getlabelsarray(),
+            casemodel.getLabelsArray(),
             {table: {table: tableName, schema: constants.schemaName}}
         );
         return pgPromise.helpers.insert(onecase, casesColumnSet);

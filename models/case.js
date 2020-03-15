@@ -29,7 +29,7 @@ function construct(
 }
 module.exports.construct = construct;
 
-module.exports.getlabelsarray = function() {
+module.exports.getLabelsArray = function() {
 	return [
 		casestable.fileProvider,
 		casestable.fileKey,

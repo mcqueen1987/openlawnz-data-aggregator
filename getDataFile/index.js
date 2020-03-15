@@ -85,7 +85,7 @@ function choosecasesorlegislation(datatype, unformattedresponse) {
             return jdocases.maparraytocases(output);
 
         case constants.legislationName:
-            return legislation.maparraytolegislation(unformattedresponse);
+            return legislation.mapArrayToLegislation(unformattedresponse);
 
         default:
             throw new Error('invalid data type for URL aggregation.');
