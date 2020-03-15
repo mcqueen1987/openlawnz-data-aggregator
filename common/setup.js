@@ -7,7 +7,7 @@ const dotEnv = require('dotenv');
 const constEnv = require('../constants/environment');
 const helpers = require('../common/functions');
 
-const setup = async (envFileName, resumeSessionId = 0) => {
+const setup = (envFileName, resumeSessionId = 0) => {
     const options = {
         capSQL: true, // capitalize all generated SQL
         schema: [constants.schemaName],
@@ -50,10 +50,10 @@ const setup = async (envFileName, resumeSessionId = 0) => {
     }
 
     // Ensure cache directory exists
-    await fs.ensureDir(cacheDir);
+    fs.ensureDirSync(cacheDir);
 
     // Ensure log directory exists
-    await fs.ensureDir(logDir);
+    fs.ensureDirSync(logDir);
 
     const conn = {
         host: process.env[constEnv.dbHost],
@@ -80,7 +80,7 @@ module.exports.startApplication = function(entryPoint) {
     const argv = yargs.argv;
 
     let runner = async () => {
-        let setupData = await setup(argv.env); 
+        let setupData = setup(argv.env); 
         const {pgPoolConnection, pgPromise} = setupData;
 
         await entryPoint(
