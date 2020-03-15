@@ -61,7 +61,7 @@ const setup = async (envFileName, resumeSessionId = 0) => {
         port: process.env[constEnv.port],
         user: process.env[constEnv.dbUser],
         password: process.env[constEnv.dbPass],
-        client_encoding: 'UTF8' //eslint warns but this case is required to interface with pg
+        client_encoding: 'UTF8' // eslint-disable-line
     };
 
     let pgPoolConnection = new Pool(conn);
