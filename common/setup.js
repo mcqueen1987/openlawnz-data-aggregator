@@ -45,8 +45,9 @@ const setup = async (envFileName, resumeSessionId = 0) => {
         helpers.isNullOrUndefined(process.env[constEnv.dbPass]) ||
         helpers.isNullOrUndefined(process.env[constEnv.dbUser]) ||
         helpers.isNullOrUndefined(process.env[constEnv.port])) {
-            throw new Error(`Missing required line/s in env file ${envFileName}`);
-        }
+            
+        throw new Error(`Missing required line/s in env file ${envFileName}`);
+    }
 
     // Ensure cache directory exists
     await fs.ensureDir(cacheDir);
@@ -60,7 +61,7 @@ const setup = async (envFileName, resumeSessionId = 0) => {
         port: process.env[constEnv.port],
         user: process.env[constEnv.dbUser],
         password: process.env[constEnv.dbPass],
-        client_encoding: 'UTF8'
+        client_encoding: 'UTF8' //eslint warns but this case is required to interface with pg
     };
 
     let pgPoolConnection = new Pool(conn);
