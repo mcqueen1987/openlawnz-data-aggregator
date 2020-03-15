@@ -142,6 +142,8 @@ run `Jest --runInBand` in the root directory. It's important that Tenancy Tribun
 
 Or, prss `F5` to use the vscode breakpoints set up in the launch.json file.
 
+WARNING: It is EXTREMELY IMPORTANT that we don't DDOS the government servers due to overtesting!
+
 Table name is passed as argument into the program to isolate side effects between tests.
 
 ### Linting
