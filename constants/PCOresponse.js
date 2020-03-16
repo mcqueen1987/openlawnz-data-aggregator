@@ -6,6 +6,6 @@ const PCOresponse = {
     year: 'year',
     alerts: 'alerts',
     url: 'url'    
-}
+};
 module.exports = PCOresponse;
 

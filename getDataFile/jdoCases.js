@@ -1,8 +1,8 @@
 const urlAdapter = require("./generic/url");
 const MOJconstants = require('../constants/MOJresponse');
 const constants = require('../constants');
-const casemodel = require('../models/case');
-const commonfuncs = require('../common/functions');
+const caseModel = require('../models/case');
+const helpers = require('../common/functions');
 
 // Currently limited to 10 results for testing
 const maxRows = 10;
@@ -27,7 +27,7 @@ module.exports.URL = URL;
 
 const run = async () => {
 	try {
-		const mojData = await urlAdapter(URL, MOJconstants.flattenedarraypath);
+		const mojData = await urlAdapter(URL, MOJconstants.flattenedArrayPath);
 		console.log(`${constants.mojType} response received...`);
 		return mojData;
 	}
@@ -35,7 +35,7 @@ const run = async () => {
 	catch (ex) {
 		throw ex;
 	}
-}
+};
 
 if (require.main === module) {
 	try {
@@ -47,24 +47,24 @@ if (require.main === module) {
 	module.exports.run = run;
 }
 
-module.exports.maparraytocases = (inputarray) => {
+module.exports.mapArrayToCases = (inputarray) => {
 	let output = {};
 	output[constants.dataLabel] = inputarray.map((currentitem) => {
-		let hash = commonfuncs.getprojecthash();
+		let hash = helpers.getProjectHash();
 
-		return new casemodel.construct(
+		return new caseModel.construct(
 			fileProvider = constants.mojType,
 			fileKey = `${constants.mojType}_` + new Date(currentitem.JudgmentDate) + "_" + currentitem.DocumentName,
 			fileUrl = "https://forms.justice.govt.nz/search/Documents/pdf/" + currentitem.id,
 			caseNames = [currentitem.CaseName],
 			caseDate = currentitem.JudgmentDate,
-			caseCitations = [commonfuncs.getCitation(currentitem.CaseName)],
+			caseCitations = [helpers.getCitation(currentitem.CaseName)],
 			dateProcessed = null,
 			processingStatus = constants.unprocessedStatus,
 			sourceCodeHash = hash,
 			dateAccessed = new Date()
 		);
-	})
+	});
 	return output;
-}
+};
 

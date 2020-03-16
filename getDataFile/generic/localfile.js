@@ -13,7 +13,7 @@ const run = async (filePath, pathArr) => {
 	} catch (ex) {
 		throw ex;
 	}
-}
+};
 
 if (require.main === module) {
 	try {

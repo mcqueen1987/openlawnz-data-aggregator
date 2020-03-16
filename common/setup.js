@@ -5,16 +5,16 @@ const constants = require('../constants');
 const yargs = require("yargs");
 const dotEnv = require('dotenv');
 const constEnv = require('../constants/environment');
-const helpers = require('../common/functions')
+const helpers = require('../common/functions');
 
-const setup = async (envFileName, resumeSessionId = 0) => {
+const setup = (envFileName, resumeSessionId = 0) => {
     const options = {
         capSQL: true, // capitalize all generated SQL
         schema: [constants.schemaName],
         error(error, e) {
             if (e.cn) {
-                console.log('CN:', e.cn)
-                console.log('EVENT:', error.message || error)
+                console.log('CN:', e.cn);
+                console.log('EVENT:', error.message || error);
             }
         }
     };
@@ -27,15 +27,15 @@ const setup = async (envFileName, resumeSessionId = 0) => {
     const logDir = path.join(rootDir, '.logs', sessionId);
 
     if (!envFileName) {
-        throw new Error('Missing env file name.')
-    };
+        throw new Error('Missing env file name.');
+    }
 
     let envResult = dotEnv.config({
         path: `${rootDir}/${constants.envFile}${envFileName}`
     });
 
     if(envResult.error) {
-        throw envResult.error
+        throw envResult.error;
     }
 
     if(helpers.isNullOrUndefined(process.env[constEnv.apifyTaskId]) ||
@@ -45,14 +45,15 @@ const setup = async (envFileName, resumeSessionId = 0) => {
         helpers.isNullOrUndefined(process.env[constEnv.dbPass]) ||
         helpers.isNullOrUndefined(process.env[constEnv.dbUser]) ||
         helpers.isNullOrUndefined(process.env[constEnv.port])) {
-            throw new Error(`Missing required line/s in env file ${envFileName}`)
-        }
+            
+        throw new Error(`Missing required line/s in env file ${envFileName}`);
+    }
 
     // Ensure cache directory exists
-    await fs.ensureDir(cacheDir);
+    fs.ensureDirSync(cacheDir);
 
     // Ensure log directory exists
-    await fs.ensureDir(logDir);
+    fs.ensureDirSync(logDir);
 
     const conn = {
         host: process.env[constEnv.dbHost],
@@ -60,7 +61,7 @@ const setup = async (envFileName, resumeSessionId = 0) => {
         port: process.env[constEnv.port],
         user: process.env[constEnv.dbUser],
         password: process.env[constEnv.dbPass],
-        client_encoding: 'UTF8'
+        client_encoding: 'UTF8' // eslint-disable-line
     };
 
     let pgPoolConnection = new Pool(conn);
@@ -72,17 +73,17 @@ const setup = async (envFileName, resumeSessionId = 0) => {
         pgPromise,
         pgPoolConnection
     };
-}
+};
 module.exports.getStartData = setup;
 
-module.exports.startApplication = function(entrypoint) {
+module.exports.startApplication = function(entryPoint) {
     const argv = yargs.argv;
 
     let runner = async () => {
-        setupdata = await setup(argv.env); 
-        const {pgPoolConnection, pgPromise} = setupdata;
+        let setupData = setup(argv.env); 
+        const {pgPoolConnection, pgPromise} = setupData;
 
-        await entrypoint(
+        await entryPoint(
             pgPoolConnection,
             pgPromise,
             argv.datasource,
@@ -90,7 +91,7 @@ module.exports.startApplication = function(entrypoint) {
             argv.tablename,
             argv.pagesize
         );        
-    }
+    };
     runner().then(() => {
         console.log('aggregation complete.');
     })
@@ -99,6 +100,6 @@ module.exports.startApplication = function(entrypoint) {
     })
     .then(() => {
         process.exit();
-    })
-}
+    });
+};
 

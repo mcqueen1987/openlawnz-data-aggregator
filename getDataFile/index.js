@@ -2,9 +2,10 @@ const constants = require('../constants');
 const legislation = require('../models/legislation');
 const helpers = require('../common/functions');
 const MOJconstants = require('../constants/MOJresponse');
-const jdocases = require('./jdoCases');
+const jdoCases = require('./jdoCases');
+const envConsts = require('../constants/environment');
 
-const casesonlyerror = 'You can only request cases from that datasource.';
+const casesOnlyError = 'You can only request cases from that datasource.';
 
 module.exports = async (pgPool, pgPromise, dataSource, resourceLocator, datatype, startIndex = 0, batchSize = 1) => {
     if (!dataSource) {
@@ -15,14 +16,14 @@ module.exports = async (pgPool, pgPromise, dataSource, resourceLocator, datatype
     switch (dataSource) {
         case constants.mojType:
             if(datatype !== constants.casesName) {
-                throw new Error(casesonlyerror);
+                throw new Error(casesOnlyError);
             }
             console.log(`aggregating ${constants.mojType}...`);
             unformatted = await require("./jdoCases").run();
-            return choosecasesorlegislation(datatype, unformatted);
+            return chooseCasesOrLegislation(datatype, unformatted);
 
         case constants.pcoType:
-            if (!process.env.APIFY_TASK_ID || !process.env.APIFY_TOKEN) {
+            if (!process.env[envConsts.apifyTaskId] || !process.env[envConsts.apifyToken]) {
                 throw new Error("Missing Apify env variables");
             }
 
@@ -31,24 +32,24 @@ module.exports = async (pgPool, pgPromise, dataSource, resourceLocator, datatype
             }
             console.log(`aggregating ${constants.pcoType}...`);
             unformatted = await require("./pcoLegislation").run();
-            return choosecasesorlegislation(datatype, unformatted);
+            return chooseCasesOrLegislation(datatype, unformatted);
 
         case constants.urlType:
-            checklocation(resourceLocator);
+            checkLocation(resourceLocator);
             console.log(`aggregating ${constants.urlType}...`);
             unformatted = await require("./generic/url")(resourceLocator);
             console.log(`${constants.urlType} response received...`);
-            return choosecasesorlegislation(datatype, unformatted);
+            return chooseCasesOrLegislation(datatype, unformatted);
 
         case constants.localFileType:
-            checklocation(resourceLocator);
+            checkLocation(resourceLocator);
             console.log(`aggregating ${constants.localFileType}...`);
             unformatted = await require("./generic/localfile")(resourceLocator);
-            return choosecasesorlegislation(datatype, unformatted);
+            return chooseCasesOrLegislation(datatype, unformatted);
 
         case constants.TTtype:
             if(datatype !== constants.casesName) {
-                throw new Error(casesonlyerror);
+                throw new Error(casesOnlyError);
             }
             console.log(`aggregating ${constants.TTtype}...`);
             unformatted = await require("./ttCases")(pgPool, pgPromise, startIndex, batchSize);
@@ -58,37 +59,37 @@ module.exports = async (pgPool, pgPromise, dataSource, resourceLocator, datatype
             throw new Error('Incorrect datasource specified.');
     }
     
-}
+};
 
-function checklocation(dataLocation) {
+function checkLocation(dataLocation) {
     if (!dataLocation) {
-        throw new Error("Missing datalocation")
+        throw new Error("Missing datalocation");
     }
 }
 
-function choosecasesorlegislation(datatype, unformattedresponse) {
-    switch(datatype) {
+function chooseCasesOrLegislation(dataType, unformattedResponse) {
+    switch(dataType) {
         case constants.casesName:
-            let output = unformattedresponse
+            let output = unformattedResponse;
 
             try {
-                let responseisfound = helpers.isNullOrUndefined(unformattedresponse['response']) === false
-                let docsarefound = helpers.isNullOrUndefined(unformattedresponse.response['docs']) === false
-                let isnotflat = responseisfound && docsarefound
+                let responseisfound = helpers.isNullOrUndefined(unformattedResponse['response']) === false;
+                let docsAreFound = helpers.isNullOrUndefined(unformattedResponse.response['docs']) === false;
+                let isNotFlat = responseisfound && docsAreFound;
 
-                if(isnotflat === true) {
-                    output = helpers.getNestedObject(unformattedresponse, MOJconstants.flattenedarraypath)
+                if(isNotFlat === true) {
+                    output = helpers.getNestedObject(unformattedResponse, MOJconstants.flattenedArrayPath);
                 }
             }
 
             catch(error) {}
-            return jdocases.maparraytocases(output)
+            return jdoCases.mapArrayToCases(output);
 
         case constants.legislationName:
-            return legislation.maparraytolegislation(unformattedresponse)
+            return legislation.mapArrayToLegislation(unformattedResponse);
 
         default:
-            throw new Error('invalid data type for URL aggregation.')
+            throw new Error('invalid data type for URL aggregation.');
     }
 }
 

@@ -1,6 +1,6 @@
-const constants = require('../constants')
+const constants = require('../constants');
 
-const casestable = {
+const casesTable = {
 	fileProvider: "file_provider",
 	fileKey: "file_key",
 	fileUrl: "file_url",
@@ -11,8 +11,8 @@ const casestable = {
 	processingStatus: "processing_status",
 	sourceCodeHash: "sourcecode_hash",
 	dateAccessed: "date_accessed"
-}
-module.exports.table = casestable;
+};
+module.exports.table = casesTable;
 
 const getCreateQuery = (tableName) => 
 `CREATE TABLE ${constants.schemaName}.${tableName} (
@@ -28,5 +28,5 @@ date_accessed date NOT NULL,
 processing_status ${constants.schemaName}.processing_status NOT NULL
 );
 
-`
-module.exports.getCreateQuery = getCreateQuery
+`;
+module.exports.getCreateQuery = getCreateQuery;

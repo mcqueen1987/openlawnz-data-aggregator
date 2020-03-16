@@ -1,11 +1,12 @@
 const urlAdapter = require("./generic/url");
 const constants = require('../constants');
+const envConsts = require('../constants/environment');
 
 function getURL(){
     return [
-        `https://api.apify.com/v2/actor-tasks/${process.env.APIFY_TASK_ID}`,
+        `https://api.apify.com/v2/actor-tasks/${process.env[envConsts.apifyTaskId]}`,
         `/runs/last/dataset/items`,
-        `?token=${process.env.APIFY_TOKEN}`,
+        `?token=${process.env[envConsts.apifyToken]}`,
         `&format=json`,
         `&simplified=true`
     ].join("");
@@ -25,7 +26,7 @@ const run = async () => {
     catch (ex) {
         throw ex;
     }
-}
+};
 
 if (require.main === module) {
     try {

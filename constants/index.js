@@ -20,6 +20,7 @@ const constants = {
     dataLabel: 'data',
     pageCountLabel: 'caseCountFromPage',
     carriageReturnNewLine: '\r\n'
-}
+};
 module.exports = constants;
+
 

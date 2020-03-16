@@ -1,6 +1,5 @@
 const constants = require('../constants');
-const casemodel = require('../models/case');
-const environmentConsts = require('../constants/environment')
+const caseModel = require('../models/case');
 
 /**
  * save cases
@@ -12,13 +11,13 @@ const environmentConsts = require('../constants/environment')
  */
 const run = async (data, pgPool, pgPromise, tableName) => {
 
-    const getInsertCaseSql = (onecase) => {
+    const getInsertCaseSql = (oneCase) => {
         let casesColumnSet = new pgPromise.helpers.ColumnSet(
-            casemodel.getlabelsarray(),
+            caseModel.getLabelsArray(),
             {table: {table: tableName, schema: constants.schemaName}}
         );
-        return pgPromise.helpers.insert(onecase, casesColumnSet);
-    }
+        return pgPromise.helpers.insert(oneCase, casesColumnSet);
+    };
 
 
     /**
@@ -26,22 +25,22 @@ const run = async (data, pgPool, pgPromise, tableName) => {
      * when insert ON CONFLICT(file_url), DO NOT save data to any table
      *
      * @param client
-     * @param onecase
+     * @param oneCase
      * @returns {Promise<void>}
      */
-    const insertOneRow = async (client, onecase) => {
+    const insertOneRow = async (client, oneCase) => {
         // insert cases
-        const casesSql = getInsertCaseSql(onecase);
+        const casesSql = getInsertCaseSql(oneCase);
         const ret = await client.query(casesSql);
         if (!ret['rowCount']) {
-            console.log(`skip duplicated data: ${JSON.stringify(onecase)}`)
-            return
+            console.log(`skip duplicated data: ${JSON.stringify(oneCase)}`);
+            return;
         }
         await client.query(casesSql);
-    }
+    };
 
-    let client = null
-    console.log('saving cases...')
+    let client = null;
+    console.log('saving cases...');
     try {
         // insert data into database by transaction
         // 1. initiate transaction
@@ -59,7 +58,7 @@ const run = async (data, pgPool, pgPromise, tableName) => {
     } finally {
         client && client.release();
     }
-}
+};
 
 if (require.main === module) {
     try {

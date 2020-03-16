@@ -12,8 +12,8 @@ const MOJresponse = {
     Location: 'Location',
     MNC: 'MNC',
     id: 'id',
-    timestamp: 'timestamp',
-    flattenedarraypath: ['response', 'docs']
-}
+    timeStamp: 'timestamp',
+    flattenedArrayPath: ['response', 'docs']
+};
 module.exports = MOJresponse;
 

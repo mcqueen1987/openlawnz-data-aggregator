@@ -1,12 +1,6 @@
 const setup = require('../common/setup');
 const fs = require('fs');
 const constants = require('../constants');
-const commonfuncs = require('../common/functions');
-const environmentConsts = require('../constants/environment')
-const path = require('path')
-const dotenv = require('dotenv')
-
-const ancestorDir = '/../'
 
 async function getStartData() {    
     let envName = getEnvFilesLabel();
@@ -15,7 +9,7 @@ async function getStartData() {
     expect(startData.pgPoolConnection).toBeTruthy();
     return startData;
 }
-module.exports.getStartData = getStartData
+module.exports.getStartData = getStartData;
 
 function getEnvFilesLabel() {
     console.log('searching for env files...');
@@ -43,9 +37,9 @@ module.exports.dropTestTable = async function(connection, tableName) {
 
     try {
         client = await connection.connect();
-        let result1 = await client.query(constants.sqlBegin);
-        let result2 = await client.query(`DROP TABLE ${constants.schemaName}.${tableName};`);
-        let result4 = await client.query(constants.sqlCommit);
+        await client.query(constants.sqlBegin);
+        await client.query(`DROP TABLE ${constants.schemaName}.${tableName};`);
+        await client.query(constants.sqlCommit);
         console.log(`${tableName} test table removed.`);
         return Promise.resolve();
     } 
@@ -59,7 +53,7 @@ module.exports.dropTestTable = async function(connection, tableName) {
     finally {
         client && client.release();
     }
-}
+};
 
 module.exports.checkTableHasResults = async function(connection, tableName) {
     let client = null;
@@ -67,10 +61,10 @@ module.exports.checkTableHasResults = async function(connection, tableName) {
 
     try {
         client = await connection.connect();
-        let result1 = await client.query(constants.sqlBegin);
-        let result2 = await client.query(selectQuery);
-        let result4 = await client.query(constants.sqlCommit);
-        expect(result2.rows).not.toHaveLength(0);
+        await client.query(constants.sqlBegin);
+        let result = await client.query(selectQuery);
+        await client.query(constants.sqlCommit);
+        expect(result.rows).not.toHaveLength(0);
         console.log('table data was found.');
         return Promise.resolve();
     } 
@@ -84,7 +78,7 @@ module.exports.checkTableHasResults = async function(connection, tableName) {
     finally {
         client && client.release();
     }
-}
+};
 
 module.exports.createFreshTable = async function(connection, createScript, newTableName) {
     let client;
@@ -107,19 +101,19 @@ module.exports.createFreshTable = async function(connection, createScript, newTa
     finally {
         client && client.release();
     }
-}
+};
 
 /** 
  * Returns the name of the test cases table, 
  * the name of the test legislation table. 
  * */
 module.exports.createRandomNames = function() {   
-    let randomNumber = `${(Math.random() * 100000000)}`.split('.').join('')  //full stops not allowed in table names
-    let testCases = constants.casesName + randomNumber
-    let testLegislation = constants.legislationName + randomNumber
+    let randomNumber = `${(Math.random() * 100000000)}`.split('.').join('');  //full stops not allowed in table names
+    let testCases = constants.casesName + randomNumber;
+    let testLegislation = constants.legislationName + randomNumber;
 
     return {
         testCases,
         testLegislation
-    }
-}
+    };
+};

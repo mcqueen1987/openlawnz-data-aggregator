@@ -3,7 +3,7 @@ const uuidv1 = require('uuid/v1');
 const moment = require('moment');
 const constants = require('../constants');
 const caseModel = require('../models/case');
-const commonFuncs = require('../common/functions');
+const helpers = require('../common/functions');
 
 // search start date. it should not be earlier than 3 years before
 const fromDate = '[NOW-3YEARS TO NOW]';
@@ -50,8 +50,8 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
 
 		let tenancyData = await urlAdapter(jsonURL);
 
-		if(commonFuncs.isNullOrUndefined(tenancyData)) {
-			throw new Error(rateLimitError)
+		if(helpers.isNullOrUndefined(tenancyData)) {
+			throw new Error(rateLimitError);
 		}
 
 		if (!Object.keys(tenancyData).length) {
@@ -61,7 +61,7 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
 		console.log(`${constants.TTtype} response received...`);
 
 		const casesNumFound = tenancyData['response']['numFound'];
-		let hash = commonFuncs.getprojecthash();
+		let hash = helpers.getProjectHash();
 
 		const formattedTenancyData = tenancyData['response']['docs'].map(doc => {
 			const provider = doc['categoryCode'][0];			
@@ -94,7 +94,7 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
 				sourceCodeHash = hash,
 				dateAccessed = new Date()
 			);
-		})
+		});
 
 		let output = {
 			data: formattedTenancyData			
@@ -104,10 +104,10 @@ const run = async (pgPool, pgPromise, startIndex, batchSize) => {
 	} 
 	
 	catch (ex) {
-		console.log(ex)
+		console.log(ex);
 		throw ex;
 	}
-}
+};
 
 if (require.main === module) {
 	try {
