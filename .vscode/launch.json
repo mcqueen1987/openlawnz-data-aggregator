@@ -1,0 +1,48 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch cases aggregation",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/getCases.js",
+            "args": [
+                "--env=local",
+                "--datasource=moj"
+            ],
+            "internalConsoleOptions": "neverOpen"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch legislation aggregation",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/getLegislation.js",
+            "args": [
+                "--env=local",
+                "--datasource=pco"
+            ],
+            "internalConsoleOptions": "neverOpen"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Jest tests",
+            "program": "${workspaceFolder}/node_modules/.bin/jest",
+            "console": "integratedTerminal",
+            "disableOptimisticBPs": true,
+            "internalConsoleOptions": "neverOpen",
+            "args": [
+                "--runInBand"
+            ]
+        },
+    ]
+}

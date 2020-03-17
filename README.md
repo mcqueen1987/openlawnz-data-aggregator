@@ -9,15 +9,8 @@
 - Rename `.env.sample` to .env.`env` (e.g. `.env.local`) and fill in with Postgres details.
 
 ## Database Setup
-We use Docker to download and provision the OpenLaw NZ database. Simply run docker.sh from [openlawnz-orchestration](https://github.com/openlawnz/openlawnz-orchestration) and then update your .env file.
 
-There are 3 schemas:
-`aggregator_cases`: this is populated by running the aggregator getCases
-
-`pipeline_cases`: this is populated by running the pipeline and is not affected by the parsers
-
-`cases`: this is populated and mutated by running the parsers
-And check if it has correctly restored SQL dump file.
+Clone the [database project](https://github.com/openlawnz/openlawnz-database) and follow its readme file to start a local environment database.
 
 ## env
 
@@ -33,7 +26,7 @@ yarn install
 
 ### Description
 
-- Procurement gets data from a `datasource` and loads it into PostgresSQL into a separate immutable database.
+- Procurement gets data from a `datasource` and loads it into a postgres database server named `openlawnz_db` and a schema named `ingest`.
 
 A `case` datastore must return an array of:
 
@@ -42,9 +35,13 @@ A `case` datastore must return an array of:
   file_provider: "<string>", // e.g. jdo
   file_key: "<string>", // (must be unique) source-date-hash
   file_url: "<string>" // location of pdf file,
-  case_name: "<string>" // case name,
-  case_date: "<string>" // case date,
-  citations: "<array<string>>" // citations string array
+  case_names: "<array<string>>" // case names,
+  case_date: "<date>" // case date,
+  case_citations: "<array<string>>" // citations string array
+  date_processed: '<date>'
+  processing_status: '<enum>' //UNPROCESSED, PROCESSING, PROCESSED
+  sourcecode_hash: '<string>'
+  date_accessed: '<date>'
 }
 ```
 
@@ -52,28 +49,44 @@ A `legislation` datastore must return an array of:
 
 ```javascript
 {
-  title: "<string>",
-  link: "<string>",
-  year: "<string>"
-  alerts: "<string>"
+  title: "<string>";
+  link: "<string>";
+  year: "<string>";
+  alerts: "<string>";
+  date_accessed: "<date_accessed>";
 }
 ```
 
-### Running
+### Running the project
 
-#### Flags
+There are two entrypoint files depending on which type of data you wish to aggregate: `getCases.js` and `getLegislation.js`. Each take the same parameters.
 
-*datasource*:
+#### Parameters
 
-  - `moj` (only works for `getCases.js`)
-  - `pco` (only works for `getLegislation.js`)
-  - `localfile` (requires `datalocation`)
-  - `url` (requires `datalocation`)
+_datasource_:
 
-*datalocation*:
+- `moj` Data from the Ministry of Justice's database. Only works when `getCases.js` is the entrypoint.
 
-  - a local json file OR
-  - a url
+- `pco` Data scraped from the Parliamentary Council Office. Only works when `getLegislation.js` is the entrypoint.
+
+- `localfile` A JSON file in similar format to data in the /exampledata folder. Requires --datalocation .
+
+- `url` general URL to cases or legislation. Be very careful with this. Requires --datalocation .
+
+- `tt` Data from the Tenancy Tribunal's decision search. Requires --pageSize .
+
+_resorcelocator_:
+
+- a local json file OR
+- a url
+
+It should be within double quotes otherwise it may not send the entire url.
+
+_pagesize_:
+  
+  pagesize of a Tenancy Tribunal (TT) paginated response.
+
+  Requires --datasource=tt
 
 #### Get Cases
 
@@ -82,22 +95,63 @@ cd pipeline
 node getCases.js --env=<env> --datasource=<datasource>
 ```
 
-*If one insert fails* you have to individually delete the rows of each table an issue has been create to resolve the issue.
+If insertion into the database fails, you have to individually delete the rows of each table.
 
-Like So:  
+Like So:
+
 ```sql
-DELETE FROM aggregator_cases.cases;
-DELETE FROM aggregator_cases.case_names;
-DELETE FROM aggregator_cases.citations;
+DELETE FROM ingest.cases;
+DELETE FROM ingest.legislation;
 
-SELECT * FROM aggregator_cases.cases;
+SELECT * FROM ingest.cases;
 ```
 
 #### Get Legislation
 
 ```bash
 cd pipeline
-node getLegislation.js --env=<env> --datasource=<datasource> [--datalocation=<datalocation>]
+node getLegislation.js --env=<env> --datasource=pco
+```
+
+#### Example Usage
+
+```
+node getCases.js --env=<local> --datasource=moj
+```
+
+You can find an example of the data from different sources in the `/exampledata` folder.
+
+## Using the PCO data source
+
+You will need to be given administrative access to the OpenLawNZ Apify account. Add the following variables to your .env file:
+
+- APIFY_TASK_ID
+- APIFY_TOKEN
+
+## Using the TT data source
+
+The Tenancy Tribunal provides a paged response which can be used with the following command.
+
+```
+node getCases.js --env=<local> --datasource=tt --pagesize=1000
+```
+
+#### Testing
+
+run `Jest --runInBand` in the root directory. It's important that Tenancy Tribunal tests are run in series as parallel tests can trigger the APIs ratelimit.
+
+Or, prss `F5` to use the vscode breakpoints set up in the launch.json file.
+
+WARNING: It is EXTREMELY IMPORTANT that we don't DDOS the government servers due to overtesting!
+
+Table name is passed as argument into the program to isolate side effects between tests.
+
+### Linting
+
+run the following command to check any mistakes regarding our style convention:
+
+```
+npm run eslint "./**/*.js"
 ```
 
 ## NOTICE

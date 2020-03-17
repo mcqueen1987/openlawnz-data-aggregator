@@ -1,5 +1,4 @@
 const download = require("download");
-
 const common = require("../../common/functions");
 
 const run = async (url, pathArr) => {
@@ -20,11 +19,13 @@ const run = async (url, pathArr) => {
 
 if (require.main === module) {
     try {
-        throw new Error("cannot be run individually.")
-        //run();
+        throw new Error("cannot be run individually.");
+        //run()
     } catch (ex) {
         console.log(ex);
     }
 } else {
     module.exports = run;
 }
+
+

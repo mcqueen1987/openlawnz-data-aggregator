@@ -1,5 +1,8 @@
 const getDataFile = require("./getDataFile");
-const saveAggregaterCases = require("./Database/saveAggregaterCases");
+const saveAggregatorCases = require("./Database/saveAggregatorCases");
+const constants = require('./constants');
+const setup = require('./common/setup');
+const helpers = require('./common/functions');
 // case count per request
 const BATCH_SIZE = 1000;
 // sleep 5 seconds per request
@@ -8,59 +11,50 @@ const REQUEST_INTERVAL_MS = 5000;
 /**
  * get cases
  *
- * @param pgPoolConnection
+ * @param pgPool
  * @param pgPromise
  * @param argvs
- * @returns {Promise<*>}
+ * @returns Promise<void>
  */
-const run = async (pgPoolConnection, pgPromise, argvs) => {
-    const {'datasource': dataSource, 'datalocation': dataLocation, 'pagesize': pageSize} = argvs;
+const run = async (pgPool, pgPromise, dataSource, resourceLocator, tableName = null, pageSize = null) => {
+    console.log('starting getCases.js');
+    let tableNameUsed = helpers.getTableName(constants.casesName, tableName);
+
     try {
         // without pagination
-        if (isNaN(pageSize)) {
-            const dataFile = await getDataFile(pgPoolConnection, pgPromise, dataSource, dataLocation);
-            await saveAggregaterCases(dataFile, pgPoolConnection, pgPromise);
+        if (helpers.isNullOrUndefined(pageSize)) {
+            const dataResult = await getDataFile(pgPool, pgPromise, dataSource, resourceLocator, constants.casesName);
+            await saveAggregatorCases(dataResult[constants.dataLabel], pgPool, pgPromise, tableNameUsed);
             return Promise.resolve();
         }
 
-        // get and save data by pagination, one page per request, default page size is BATCH_SIZE;
+        // get and save data by pagination, one page per request, default page size is BATCH_SIZE
         let totalCaseCount = 0;
-        let startIndex = 0;
+        
         const safePageSize = pageSize <= 0 ? BATCH_SIZE : pageSize;
         for (let startIndex = 0; startIndex <= totalCaseCount; startIndex += safePageSize) {
-            const dataFile = await getDataFile(pgPoolConnection, pgPromise, dataSource, dataLocation, startIndex, safePageSize);
-            if (!dataFile) {
-                return Promise.reject('get empty data from server, need to debug manually!');
-            }
+            const dataResult = await getDataFile(pgPool, pgPromise, dataSource, resourceLocator, constants.casesName, startIndex, safePageSize);
+            
             // set total case count if not set
-            if (!totalCaseCount) {
-                totalCaseCount = dataFile['case_count_from_page'];
+            if (totalCaseCount === 0) {
+                totalCaseCount = dataResult[constants.pageCountLabel];
                 console.log(`total case count: [${totalCaseCount}]`);
             }
-            await saveAggregaterCases(dataFile['data'], pgPoolConnection, pgPromise);
+            await saveAggregatorCases(dataResult[constants.dataLabel], pgPool, pgPromise, tableNameUsed);
             // sleep between calls
             await new Promise(resolve => setTimeout(resolve, REQUEST_INTERVAL_MS));
             console.log(`data saved: start index [${startIndex}] page size [${safePageSize}]`);
         }
-    } catch (err) {
+        return Promise.resolve();
+    } 
+    
+    catch (err) {
         return Promise.reject(err);
     }
 };
 
 if (require.main === module) {
-    const argv = require("yargs").argv;
-    (async () => {
-        try {
-            const {pgPoolConnection, pgPromise} = await require("./common/setup")(argv.env);
-            await run(
-                pgPoolConnection,
-                pgPromise,
-                argv
-            );
-        } catch (ex) {
-            console.log(ex);
-        }
-    })().finally(process.exit);
+    setup.startApplication(run);
 } else {
     module.exports = run;
 }
