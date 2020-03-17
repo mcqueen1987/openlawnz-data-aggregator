@@ -2,7 +2,7 @@
   "name": "openlawnz-data-aggregator",
   "version": "1.0.0",
   "dependencies": {
-    "aws-sdk": "^2.437.0",
+    "aws-sdk": "^2.640.0",
     "dotenv": "^7.0.0",
     "download": "^7.1.0",
     "find-process": "^1.4.1",
