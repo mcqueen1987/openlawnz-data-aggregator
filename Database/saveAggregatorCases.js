@@ -38,7 +38,6 @@ const run = async (data, pgPool, pgPromise, tableName) => {
             console.log(`skip duplicated data: ${JSON.stringify(oneCase)}`);
             return;
         }
-        await client.query(casesSql);
     };
 
     let client = null;
