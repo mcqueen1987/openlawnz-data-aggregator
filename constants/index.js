@@ -9,7 +9,7 @@ const constants = {
     sqlRollback: 'ROLLBACK',
     envFile: '.env.',
     asyncTimeout: 60000,
-    mojType: 'moj',
+    mojType: 'jdo',
     pcoType: 'pco',
     urlType: 'url',
     TTtype: 'tt', 

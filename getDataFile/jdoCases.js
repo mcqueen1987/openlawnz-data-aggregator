@@ -21,8 +21,8 @@ const URL = [
 	`&fq=JudgmentDate%3A%5B${fromDate}T00%3A00%3A00Z%20TO%20*%20%5D`,
 	"&sort=JudgmentDate%20desc",
 	"&fl=CaseName%2C%20JudgmentDate%2C%20DocumentName%2C%20id%2C%20score",
-	"&wt=json"
-].join("");
+	"&wt=json" 
+].join(""); 
 module.exports.URL = URL;
 
 const run = async () => {
@@ -54,7 +54,7 @@ module.exports.mapArrayToCases = (inputarray) => {
 
 		return new caseModel.construct(
 			fileProvider = constants.mojType,
-			fileKey = `${constants.mojType}_` + new Date(currentitem.JudgmentDate) + "_" + currentitem.DocumentName,
+			fileKey = `${constants.mojType}_` + (+new Date(currentitem.JudgmentDate)) + "_" + currentitem.DocumentName,
 			fileUrl = "https://forms.justice.govt.nz/search/Documents/pdf/" + currentitem.id,
 			caseNames = [currentitem.CaseName],
 			caseDate = currentitem.JudgmentDate,
