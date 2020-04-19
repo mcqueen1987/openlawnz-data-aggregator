@@ -16,7 +16,9 @@ const run = async (data, pgPool, pgPromise, tableName) => {
             caseModel.getLabelsArray(),
             {table: {table: tableName, schema: constants.schemaName}}
         );
-        return pgPromise.helpers.insert(oneCase, casesColumnSet);
+
+        const onConflictSql = ' ON CONFLICT(file_url) DO NOTHING RETURNING file_key';
+        return pgPromise.helpers.insert(oneCase, casesColumnSet) + onConflictSql;
     };
 
 
