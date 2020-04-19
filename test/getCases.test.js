@@ -94,3 +94,18 @@ test('save aggregator cases', async () => {
     expect(newCitationsInserted).toBe(totalCitationsFromPage);
     // all test data gonna be deleted in function afterAll()
 }, 30000);
+
+
+test('save duplicate aggregator cases', async () => {
+    // initiate mock data
+    const mockData = '{"data":[{"file_provider":"TT","file_key":"TT_1574852400000_bdffbb30-3003-11ea-9aeb-fbc6abc9b81d.pdf","file_url":"https://forms.justice.govt.nz/search/Documents/TTV2/PDF/5095372-Tenancy_Tribunal_Order.pdf","name":"...","case_date":"28/11/2019","citations":["[2019] NZTT Hamilton 4213491"],"case_text":"..."},{"file_provider":"TT","file_key":"TT_1574852400000_bdffbb30-3003-11ea-9aeb-fbc6abc9b81d.pdf","file_url":"https://forms.justice.govt.nz/search/Documents/TTV2/PDF/5095373-Tenancy_Tribunal_Order.pdf","name":"...","case_date":"28/11/2019","citations":["[2019] NZTT Hamilton 4213491"],"case_text":"..."}],"case_count_from_page":40400}';
+    const cases = JSON.parse(mockData);
+
+    try {
+        // save to db
+        await saveAggregatorCases(pgPool, pgPromise, cases['data'], mockSchemaName);
+    } catch (e) {
+        expect(e.message).toBe('duplicate key value violates unique constraint "cases_pkey"');
+    }
+    // all test data gonna be deleted in function afterAll()
+}, 3000);
