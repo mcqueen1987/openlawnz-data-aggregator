@@ -16,7 +16,9 @@ const run = async (data, pgPool, pgPromise, tableName) => {
             caseModel.getLabelsArray(),
             {table: {table: tableName, schema: constants.schemaName}}
         );
-        return pgPromise.helpers.insert(oneCase, casesColumnSet);
+
+        const onConflictSql = ' ON CONFLICT(file_url) DO NOTHING RETURNING file_key';
+        return pgPromise.helpers.insert(oneCase, casesColumnSet) + onConflictSql;
     };
 
 
@@ -36,7 +38,6 @@ const run = async (data, pgPool, pgPromise, tableName) => {
             console.log(`skip duplicated data: ${JSON.stringify(oneCase)}`);
             return;
         }
-        await client.query(casesSql);
     };
 
     let client = null;
